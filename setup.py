@@ -42,7 +42,8 @@ setup(name='spherepy',
           'Programming Language :: Python :: 2.7',
           'Topic :: Scientific/Engineering :: Mathematics'
       ],
-      url='http://github.com/rdireen/spherepy',
+      url='https://github.com/rdireen/spherepy', #url to github repo
+      download_url = 'https://github.com/rdireen/spherepy/tarball/0.1',
       license='GPLv3',
       install_requires=['numpy','setuptools','matplotlib'],
       packages=['spherepy'],
