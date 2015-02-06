@@ -16,6 +16,7 @@ def readme():
 
 __version__ = _info['version']
 __author__ = _info['author']
+__email__ = _info['email']
 
 try:
     from setuptools import setup, find_packages
@@ -31,8 +32,8 @@ description = 'Numerical routines for working with spherical harmonic ' + \
 
 setup(name='spherepy',
       version=__version__,
-      author="Randy Direen",
-      author_email='spherepy.direentech.com',
+      author=__author__,
+      author_email=__email__,
       description=description,
       long_description=readme(),
       classifiers=[
@@ -45,7 +46,7 @@ setup(name='spherepy',
       url='https://github.com/rdireen/spherepy', #url to github repo
       download_url = 'https://github.com/rdireen/spherepy/tarball/0.1',
       license='GPLv3',
-      install_requires=['numpy','setuptools','matplotlib'],
+      install_requires=['numpy','setuptools'],
       packages=['spherepy'],
       package_dir={'spherepy':'spherepy','test':'spherepy/test'},
       package_data={'spherepy':['pkg_info.json']},

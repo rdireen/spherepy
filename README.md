@@ -7,7 +7,11 @@ It's capabilities include:
 	* scalar and vector spherical harmonic decompositions
 	* objects for algebraically manipulating harmonic coefficients
 	* plotting capabilities using the matplotlib library
+	
+Plotting
+========
 
+If you would like to use the plotting routines within SpherePy, install matplotlib (example, pip install matplotlib).
 
 License
 =======
