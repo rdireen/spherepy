@@ -32,7 +32,8 @@ class SpherePyError(Exception):
     pass
 
 class ScalarCoefs:
-    """Holds the scalar coefficients that represent a spherical pattern"""
+    """Holds the scalar coefficients that represent a spherical pattern the 
+    function spht returns this object"""
     def __init__(self,vec,nmax,mmax):
 
         self._vec = vec
