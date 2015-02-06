@@ -7,7 +7,7 @@ import json
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-with open('spherepy/pkg_info.json') as fp:
+with open(os.path.join(here,'spherepy/pkg_info.json')) as fp:
     _info = json.load(fp)
 
 def readme():
