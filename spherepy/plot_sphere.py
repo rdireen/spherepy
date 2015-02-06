@@ -1,6 +1,18 @@
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import numpy as np
+import spherepy as sp
+
+
+def simple_plot(n,m):
+
+    c = sp.zeros_coefs(48,48)
+    c[n,m] = 1.0
+    p = sp.ispht(c,100,100)
+    T = np.abs(p.array)
+
+    plot_mag_on_sphere(T)
+
 
 def plot_mag_on_sphere(T):
 

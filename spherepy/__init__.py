@@ -11,6 +11,7 @@ __author__ = _info['author']
 
 from .spherepy import *
 from .sbessel import *
+from .plot_sphere import *
 
 
 __all__ = []

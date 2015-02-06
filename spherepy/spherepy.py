@@ -20,6 +20,7 @@ import numbers
 import pysphi
 from functools import wraps
 
+
 """***************************************************************************
                             Objects
 ***************************************************************************"""
@@ -652,6 +653,8 @@ def ispht(scoefs,nrows,ncols):
 def L2_coef(scoef):
 
     return np.sqrt(np.sum(np.abs(scoef._vec)**2))
+
+
 
 
 
