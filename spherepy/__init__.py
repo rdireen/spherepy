@@ -11,7 +11,11 @@ __author__ = _info['author']
 
 from .spherepy import *
 from .sbessel import *
-from .plot_sphere import *
+
+try:
+    from .plot_sphere import *
+except:
+    pass
 
 
 __all__ = ['pysphi']

@@ -1,9 +1,44 @@
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.pyplot as plt
+# Copyright (C) 2015  Randy Direen <spherepy@direentech.com>
+#
+# This file is part of SpherePy.
+#
+# SpherePy is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# SpherePy is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with SpherePy.  If not, see <http://www.gnu.org/licenses/>
+
 import numpy as np
 import spherepy as sp
+from functools import wraps
 
+MPLINSTALLED = True
+try:
+    from mpl_toolkits.mplot3d import Axes3D
+    import matplotlib.pyplot as plt
+except:
+    MPLINSTALLED = False
 
+msg = """Plotting requires matplotlib. You can install matplotlib by typing 'pip install matplotlib' at the command line. If that doesn't work, google it."""
+
+def matplotlibensure(func):  
+    @wraps(func)
+    def wrap(*args):
+        if MPLINSTALLED == False:
+            raise sp.SpherePyError(msg)
+        
+        return func(*args)   
+        
+    return wrap
+    
+@matplotlibensure
 def simple_plot(n,m):
 
     c = sp.zeros_coefs(48,48)
@@ -13,7 +48,7 @@ def simple_plot(n,m):
 
     plot_mag_on_sphere(T)
 
-
+@matplotlibensure
 def plot_mag_on_sphere(T):
 
     (nrows,ncols) = T.shape
@@ -25,8 +60,10 @@ def plot_mag_on_sphere(T):
     X = T*np.cos(phi)*np.sin(theta)
     Y = T*np.sin(phi)*np.sin(theta)
     Z = T*np.cos(theta)
-    #ax.plot_surface(X,Y, Z,rstride=1, cstride=1, cmap= 'jet',alpha=.5,linewidth=0.5)
-    ax.plot_surface(X,Y, Z,rstride=1, cstride=1, cmap= 'jet',alpha=.5,linewidth=0.5)
+    #ax.plot_surface(X,Y, Z,rstride=1, cstride=1, cmap= 'jet',alpha=.5,
+    #                linewidth=0.5)
+    ax.plot_surface(X,Y, Z,rstride=1, cstride=1, cmap= 'jet',alpha=.5,
+                    linewidth=0.5)
 
     # Create cubic bounding box to simulate equal aspect ratio
     max_range = np.array([X.max()-X.min(),
@@ -40,7 +77,7 @@ def plot_mag_on_sphere(T):
          0.5*(Z.max()+Z.min())
     # Comment or uncomment following both lines to test the fake bounding box:
     for xb, yb, zb in zip(Xb, Yb, Zb):
-       ax.plot([xb], [yb], [zb], 'w')
+        ax.plot([xb], [yb], [zb], 'w')
 
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
@@ -49,6 +86,7 @@ def plot_mag_on_sphere(T):
 
     plt.show()
 
+@matplotlibensure
 def pcolor_coefs(coefs):
 
     A = coefs._array_2d_repr()
@@ -71,6 +109,7 @@ def pcolor_coefs(coefs):
 
     plt.show()
 
+@matplotlibensure
 def plot_coefs(coefs):
 
     z = coefs._array_2d_repr()
