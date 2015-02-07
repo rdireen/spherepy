@@ -14,4 +14,4 @@ from .sbessel import *
 from .plot_sphere import *
 
 
-__all__ = []
+__all__ = ['pysphi']

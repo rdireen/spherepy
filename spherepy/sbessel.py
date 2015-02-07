@@ -172,7 +172,7 @@ def sbesselj_sum(z,N):
     sm = np.sum(np.sort(vvv*(b**2)))
     return np.abs((sm - 1.0) / sm) + np.spacing(1)
 
-def sbessel_test_coss_product(z,N):
+def sbessel_test_cross_product(z,N):
     """Uses the cross-product relationship to test the routines: 
 
         j[n+1]y[n] - j[n]y[n+1] = 1 / (z**2)

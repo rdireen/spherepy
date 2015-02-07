@@ -2,7 +2,6 @@
 
 import os
 import sys
-from glob import glob
 import json
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -19,7 +18,7 @@ __author__ = _info['author']
 __email__ = _info['email']
 
 try:
-    from setuptools import setup, find_packages
+    from setuptools import setup
 except ImportError:
     print("SpherePy requires setuptools in order to build. Install " + \
           "setuptools using your package manager (possibly " + \

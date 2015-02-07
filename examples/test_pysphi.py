@@ -15,13 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with SpherePy.  If not, see <http://www.gnu.org/licenses/>
 
-import pysphi
-import spherepy
-import sbessel
-import plot_sphere as ps
-import numpy as np
 
-from pylab import *
+import spherepy as sp
+import numpy as np
 
 T1 = False
 T2 = True
@@ -32,15 +28,15 @@ T5 = True
 if T1:
     nrows = 50
     ncols = 50
-    out = pysphi.sph_harmonic_tp(nrows,ncols,5,2)
+    out = sp.pysphi.sph_harmonic_tp(nrows,ncols,5,2)
     T = np.abs(out)
-    ps.plot_mag_on_sphere(T)
+    sp.plot_mag_on_sphere(T)
 
 if T2:
     nrows = 10
     Nmax = 2
-    Q = pysphi.smallest_prime_factor(nrows + Nmax )
-    sd = pysphi.s_data(nrows, Nmax, Q)
+    Q = sp.pysphi.smallest_prime_factor(nrows + Nmax )
+    sd = sp.pysphi.s_data(nrows, Nmax, Q)
 
 if T3:
 
@@ -49,10 +45,10 @@ if T3:
 
     nrows = 10
     Nmax = 3
-    Q = pysphi.smallest_prime_factor(nrows + Nmax - 1)
-    sd = pysphi.s_data(nrows, Nmax, Q)
+    Q = sp.pysphi.smallest_prime_factor(nrows + Nmax - 1)
+    sd = sp.pysphi.s_data(nrows, Nmax, Q)
 
-    b = pysphi.hkm_fc(fdata,Nmax,-1,sd)
+    b = sp.pysphi.hkm_fc(fdata,Nmax,-1,sd)
 
 if T4:
 
@@ -67,11 +63,11 @@ if T4:
 
     ar1 = np.array(a,dtype=np.complex128)
     ar2 = np.array(b,dtype=np.complex128)
-    d1 = spherepy.continue_sphere(ar1,1.0)
-    d2 = spherepy.continue_sphere(ar2,1.0)
+    d1 = sp.continue_sphere(ar1,1.0)
+    d2 = sp.continue_sphere(ar2,1.0)
 
-    ssphere1 = spherepy.ScalarPatternUniform(d1)
-    ssphere2 = spherepy.ScalarPatternUniform(ar2)
+    ssphere1 = sp.ScalarPatternUniform(d1)
+    ssphere2 = sp.ScalarPatternUniform(ar2)
 
     print(ssphere1.single_val)
     print(ssphere2.single_val)
@@ -79,7 +75,7 @@ if T4:
     print(ssphere2.is_symmetric)
 
 
-    vvv1 = pysphi.fc_to_sc(ssphere2._dsphere,2,2)
+    vvv1 = sp.pysphi.fc_to_sc(ssphere2._dsphere,2,2)
 
     #pysphi.fix_even_row_data_fc(d2)
 
@@ -90,37 +86,37 @@ if T4:
     #pysphi.sin_fc(fdata_extended)
 
     #this matches Matlab
-    scoef = spherepy.spht(ssphere2,2,2)
+    scoef = sp.spht(ssphere2,2,2)
 
     th = scoef._array_2d_repr()
 
     rs = scoef._reshape_n_vecs()
 
     #ps.pcolor_coefs(scoef)
-    ps.plot_coefs(scoef)
+    sp.plot_coefs(scoef)
 
     print scoef[:,2]
 
-    sp = spherepy.ispht(scoef,6,8)
+    sp = sp.ispht(scoef,6,8)
 
 if T5:
-    rr = spherepy.random_coefs(10,10) + 1j*spherepy.random_coefs(10,10)
+    rr = sp.random_coefs(10,10) + 1j*sp.random_coefs(10,10)
 
-    ss = 1j - 2 / (spherepy.zeros_coefs(5,4) + .001) + \
-            4* spherepy.random_coefs(5,4) / 6.0
-    ss += spherepy.ones_coefs(5,4,coef_type=spherepy.scalar)
+    ss = 1j - 2 / (sp.zeros_coefs(5,4) + .001) + \
+            4* sp.random_coefs(5,4) / 6.0
+    ss += sp.ones_coefs(5,4,coef_type=sp.scalar)
 
-    qq = 1 + 2*spherepy.ones_coefs(3,3) / 4*spherepy.ones_coefs(3,3) - 2
+    qq = 1 + 2*sp.ones_coefs(3,3) / 4*sp.ones_coefs(3,3) - 2
 
-    ds1 =1j + 4*spherepy.ones_patt_uniform(5,8)/3 - \
-        spherepy.ones_patt_uniform(5,8) -1 + \
-        10*spherepy.random_patt_uniform(5,8)
+    ds1 =1j + 4*sp.ones_patt_uniform(5,8)/3 - \
+        sp.ones_patt_uniform(5,8) -1 + \
+        10*sp.random_patt_uniform(5,8)
 
     print ds1.single_val
 
-    print spherepy.array(ds1)
+    print sp.array(ds1)
 
-    zc = spherepy.zeros_coefs(10,10)
+    zc = sp.zeros_coefs(10,10)
     zc[2,1] = 1.0
     zc[2,-2] = 3.0
     zc[0,0] = 1j*5.0

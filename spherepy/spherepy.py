@@ -20,6 +20,8 @@ import numbers
 import pysphi
 from functools import wraps
 
+#delete me
+
 
 """***************************************************************************
                             Objects
@@ -145,7 +147,6 @@ class ScalarCoefs:
                     if (len(val) != 2*n + 1):
                         raise ArithmeticError("dimension mismatch")
 
-                    mlst = []
                     if n <= self.mmax:
                         nn = n
                     else:
