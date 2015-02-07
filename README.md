@@ -8,10 +8,30 @@ It's capabilities include:
 	* objects for algebraically manipulating harmonic coefficients
 	* plotting capabilities using the matplotlib library
 	
+Install
+=======
+
+**Ubuntu:**
+Before installing SpherePy, which is dependent on NumPy, you must install 
+build-essential and python-dev
+
+    sudo apt-get install build-essential python-dev
+
+Then you can 
+
+    sudo pip install spherepy
+    
+**Windows:**
+Make sure you have Numpy on your machine, then
+
+    sudo pip install spherepy
+	
 Plotting
 ========
 
-If you would like to use the plotting routines within SpherePy, install matplotlib (example, pip install matplotlib).
+If you would like to use the plotting routines within SpherePy, install matplotlib:
+
+	sudo pip install matplotlib
 
 License
 =======
