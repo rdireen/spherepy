@@ -4,3 +4,4 @@
 build/
 dist/
 spherepy.egg-info/
+.eggs/
