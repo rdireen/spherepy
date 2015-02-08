@@ -21,18 +21,18 @@ import plot_sphere
 import profile
 
 
-c = sp.zeros_coefs(48,48)
-c[4,3] = 1.0
-c[3,0] = 1.0
+c = sp.zeros_coefs(48, 48)
+c[4, 3] = 1.0
+c[3, 0] = 1.0
 
-p = sp.ispht(c,150,150)
-#profile.run('p = sp.ispht(c,602,602)')
+p = sp.ispht(c, 150, 150)
+# profile.run('p = sp.ispht(c,602,602)')
 
-c2 = sp.spht(p,48,48)
+c2 = sp.spht(p, 48, 48)
 
-#profile.run('c2 = sp.spht(p,200,200)')
+# profile.run('c2 = sp.spht(p,200,200)')
 
-print(sp.L2_coef(c - c2)/sp.L2_coef(c))
+print(sp.L2_coef(c - c2) / sp.L2_coef(c))
 
 T = np.abs(p.array)
 

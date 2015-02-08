@@ -21,10 +21,10 @@ class TestSBessel(TestCase):
         
         res = True
         try:
-            for z in np.linspace(1.0, 10000.0,10):
-                rnd = np.random.normal(0,100)
+            for z in np.linspace(1.0, 10000.0, 10):
+                rnd = np.random.normal(0, 100)
                 ar = np.abs(rnd) + 1.1
-                s = sp.sbesselj_sum(ar,int(np.floor(z+400)))
+                s = sp.sbesselj_sum(ar, int(np.floor(z + 400)))
                 if s > 1e-13:
                     res = False
         except:
@@ -49,8 +49,8 @@ class TestSBessel(TestCase):
         """
         res = True
         try:
-            for z in np.linspace(100, 10000.0,10):
-                s = sp.sbessel_test_cross_product(z,int(np.floor(z+400)))
+            for z in np.linspace(100, 10000.0, 10):
+                s = sp.sbessel_test_cross_product(z, int(np.floor(z + 400)))
                 print s
                 if s > 1e-13:
                     res = False
@@ -72,14 +72,14 @@ class TestScalarSphericalTransform(TestCase):
         res = True
         
         try:
-            for n in xrange(0,11):
-                for m in xrange(-n,n+1):
-                    rnd = np.random.normal(0,10)
-                    c = sp.zeros_coefs(48,48)
-                    c[n,m] = rnd
-                    p = sp.ispht(c,100,100)
-                    c2 = sp.spht(p,48,48)
-                    s = sp.L2_coef(c - c2)/sp.L2_coef(c)
+            for n in xrange(0, 11):
+                for m in xrange(-n, n + 1):
+                    rnd = np.random.normal(0, 10)
+                    c = sp.zeros_coefs(48, 48)
+                    c[n, m] = rnd
+                    p = sp.ispht(c, 100, 100)
+                    c2 = sp.spht(p, 48, 48)
+                    s = sp.L2_coef(c - c2) / sp.L2_coef(c)
                     
                     if s > 1e-13:
                         res = False

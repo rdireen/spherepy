@@ -22,8 +22,8 @@ import plot_sphere
 import profile
 
 
-work = np.zeros(10,dtype=np.float64)
-pyi.ynunm_work(4,1,work)
+work = np.zeros(10, dtype=np.float64)
+pyi.ynunm_work(4, 1, work)
 
 print(work)
 

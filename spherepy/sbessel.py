@@ -25,7 +25,7 @@ Randy Direen
 """
 import numpy as np
 
-def sbessely(x,N):
+def sbessely(x, N):
     """Returns a vector of spherical bessel functions yn:
 
         x:   The argument.
@@ -33,17 +33,17 @@ def sbessely(x,N):
 
     """
 
-    out = np.zeros(N,dtype=np.float64)
+    out = np.zeros(N, dtype=np.float64)
 
-    out[0] = -np.cos(x)/x
-    out[1] = -np.cos(x)/(x**2) - np.sin(x)/x
+    out[0] = -np.cos(x) / x
+    out[1] = -np.cos(x) / (x ** 2) - np.sin(x) / x
 
-    for n in xrange(2,N):
-        out[n] = ((2.0*n - 1.0) / x)*out[n-1] - out[n-2]
+    for n in xrange(2, N):
+        out[n] = ((2.0 * n - 1.0) / x) * out[n - 1] - out[n - 2]
 
     return out
 
-def sbesselj(x,N):
+def sbesselj(x, N):
     """Returns a vector of spherical bessel functions jn:
 
         x:   The argument.
@@ -51,54 +51,54 @@ def sbesselj(x,N):
 
     """
 
-    nmax = N-1;
-    out = np.zeros(N,dtype=np.float64)
-    z = x**2
+    nmax = N - 1;
+    out = np.zeros(N, dtype=np.float64)
+    z = x ** 2
 
-    out[0] = np.sin(x)/x
-    j1 = np.sin(x)/z - np.cos(x)/x
+    out[0] = np.sin(x) / x
+    j1 = np.sin(x) / z - np.cos(x) / x
 
     u = 1
-    v = x/(2.0*nmax + 1.0)
+    v = x / (2.0 * nmax + 1.0)
     w = v
     n = nmax
 
-    while(np.abs(v/w) > 1e-20):
-        n = n+1
-        u = 1/(1 - z * u /(4.0 * n**2 - 1.0))
+    while(np.abs(v / w) > 1e-20):
+        n = n + 1
+        u = 1 / (1 - z * u / (4.0 * n ** 2 - 1.0))
         v *= u - 1
         w += v
 
     out[nmax] = w
 
-    for n in xrange(nmax-1,0,-1):
-        out[n] = 1.0 / ((2.0 * n + 1.0)/x - out[n+1])
+    for n in xrange(nmax - 1, 0, -1):
+        out[n] = 1.0 / ((2.0 * n + 1.0) / x - out[n + 1])
 
     if(np.abs(out[0]) >= np.abs(j1)):
         out[1] *= out[0]
     else:
         out[1] = j1
 
-    for n in xrange(1,nmax):
-        out[n+1] *= out[n]
+    for n in xrange(1, nmax):
+        out[n + 1] *= out[n]
 
     return out
 
-def sbesselh1(x,N):
+def sbesselh1(x, N):
     "Spherical Hankel of the first kind"
     
-    jn = sbesselj(x,N)
-    yn = sbessely(x,N)
+    jn = sbesselj(x, N)
+    yn = sbessely(x, N)
 
-    return jn + 1j*yn
+    return jn + 1j * yn
 
-def sbesselh2(x,N):
+def sbesselh2(x, N):
     "Spherical Hankel of the second kind"
 
-    jn = sbesselj(x,N)
-    yn = sbessely(x,N)
+    jn = sbesselj(x, N)
+    yn = sbessely(x, N)
 
-    return jn - 1j*yn
+    return jn - 1j * yn
 
 """***************************************************************************
 ******************************************************************************
@@ -108,7 +108,7 @@ def sbesselh2(x,N):
 ******************************************************************************
 ***************************************************************************"""
 
-def sbesselj_array(xvec,N):
+def sbesselj_array(xvec, N):
     """Outputs an array where each column is a vector of sbessel values. This
     is useful for plotting a set of Spherical Bessel Functions:
 
@@ -120,16 +120,16 @@ def sbesselj_array(xvec,N):
 
     first_time = True  
     for x in xvec:
-        a = sbesselj(x,N)
+        a = sbesselj(x, N)
         if first_time:
             out = np.array([a])
             first_time = False
         else:
-            out = np.concatenate([out,[a]], axis=0)
+            out = np.concatenate([out, [a]], axis=0)
             
     return out.T 
 
-def sbessely_array(xvec,N):
+def sbessely_array(xvec, N):
     """Outputs an array where each column is a vector of sbessel values. This
     is useful for plotting a set of Spherical Bessel Functions:
 
@@ -142,16 +142,16 @@ def sbessely_array(xvec,N):
 
     first_time = True  
     for x in xvec:
-        a = sbessely(x,N)
+        a = sbessely(x, N)
         if first_time:
             out = np.array([a])
             first_time = False
         else:
-            out = np.concatenate([out,[a]], axis=0)
+            out = np.concatenate([out, [a]], axis=0)
             
     return out.T 
 
-def sbesselj_sum(z,N):
+def sbesselj_sum(z, N):
     """Tests the Spherical Bessel function jn using the sum:
 
         Inf
@@ -167,12 +167,12 @@ def sbesselj_sum(z,N):
     The routine returns the relative error of the assumption.
     """
 
-    b = sbesselj(z,N)
-    vvv = 2.0*np.array(range(0,N),dtype=np.float64) + 1.0
-    sm = np.sum(np.sort(vvv*(b**2)))
+    b = sbesselj(z, N)
+    vvv = 2.0 * np.array(range(0, N), dtype=np.float64) + 1.0
+    sm = np.sum(np.sort(vvv * (b ** 2)))
     return np.abs((sm - 1.0) / sm) + np.spacing(1)
 
-def sbessel_test_cross_product(z,N):
+def sbessel_test_cross_product(z, N):
     """Uses the cross-product relationship to test the routines: 
 
         j[n+1]y[n] - j[n]y[n+1] = 1 / (z**2)
@@ -184,12 +184,12 @@ def sbessel_test_cross_product(z,N):
     The routine returns the maximum of the relative error.
     """
 
-    y1 = sbessely(z,N+1)
-    j1 = sbesselj(z,N+1)
+    y1 = sbessely(z, N + 1)
+    j1 = sbesselj(z, N + 1)
 
-    w = y1[:-1]*j1[1:] - j1[:-1]*y1[1:]
-    wp = 1.0 / ( (z*np.ones(N,dtype=np.float64)) ** 2)
-    return np.max(np.abs(w - wp)/wp)
+    w = y1[:-1] * j1[1:] - j1[:-1] * y1[1:]
+    wp = 1.0 / ((z * np.ones(N, dtype=np.float64)) ** 2)
+    return np.max(np.abs(w - wp) / wp)
 
 
 
