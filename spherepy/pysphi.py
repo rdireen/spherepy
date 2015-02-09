@@ -25,6 +25,7 @@ Randy Direen
 
 """
 import numpy as np
+import csphi
 
 def ynnm(n, m):
     """Initial value for recursion formula""" 
@@ -47,7 +48,7 @@ def ynnm(n, m):
                 out *= np.sqrt((n + k + 1.0) / (n - k))
     return out
 
-def ynunm(n, m, L):
+def ynunm_old(n, m, L):
     """Fourier coefficients for spherical harmonics"""
 
     out = np.zeros(L, dtype=np.float64)
@@ -71,6 +72,13 @@ def ynunm(n, m, L):
                 tmp4 = ((n - k) * (n + k + 1.0))
                 out[k] = ((tmp1 + tmp2) * out[k + 2] - tmp3 * out[k + 4]) / tmp4
     return out
+
+def ynunm(n,m,L):
+    
+    out = np.zeros(L, dtype=np.float64)
+    csphi.ynunm(n,m,out)
+    return out
+    
 
 def ynunm_work(n, m, work):
     """Fourier coefficients for spherical harmonics"""
@@ -172,22 +180,10 @@ def s_data(nrows_fdata, Nmax, Q):
 
     return s
 
-def mindex_fc(fdata, m):
-    """Properly index the m column Fourier coefficients"""
-
-    ind = 0
-    L = fdata.shape[0]
-    if m >= 0:
-        ind = m
-    else:
-        ind = L + m
-
-    return fdata[:, m]
-
 def hkm_fc(fdata, Nmax, m, s):
     """ Assume fdata has even rows"""
 
-    f = mindex_fc(fdata, m)
+    f = fdata[:, m]
     L1 = f.size
     MM = L1 / 2
     Q = s.size

@@ -6,7 +6,7 @@ import json
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-with open(os.path.join(here,'spherepy/pkg_info.json')) as fp:
+with open(os.path.join(here, 'spherepy/pkg_info.json')) as fp:
     _info = json.load(fp)
 
 def readme():
@@ -18,16 +18,37 @@ __author__ = _info['author']
 __email__ = _info['email']
 
 try:
-    from setuptools import setup
+    from setuptools import setup, Extension
 except ImportError:
     print("SpherePy requires setuptools in order to build. Install " + \
           "setuptools using your package manager (possibly " + \
-          "python-setuptools) or using pip (e.i., pip install "
+          "python-setuptools) or using pip (i.e., pip install "
           "setuptools")
+    sys.exit(1)
+ 
+try:
+        
+    import numpy
+    # Obtain the numpy include directory.  
+    # This logic works across numpy versions.
+    try:
+        numpy_include = numpy.get_include()
+    except AttributeError:
+        numpy_include = numpy.get_numpy_include()
+    
+except ImportError:
+    print("SpherePy requires NumPy for compiling c extensions. Install " + \
+          "NumPy using your packag manager (possibly, python-numpy) or " + \
+          "using pip (i.e., pip install numpy).")
     sys.exit(1)
 
 description = 'Numerical routines for working with spherical harmonic ' + \
               'coefficients' 
+              
+csphi_module = Extension('_csphi',
+                         sources=['src/csphi.c', 'src/csphi_wrap.c'],
+                         include_dirs=['src', numpy_include]
+                       )
 
 setup(name='spherepy',
       version=__version__,
@@ -42,15 +63,17 @@ setup(name='spherepy',
           'Programming Language :: Python :: 2.7',
           'Topic :: Scientific/Engineering :: Mathematics'
       ],
-      url='https://github.com/rdireen/spherepy', #url to github repo
-      download_url = 'https://github.com/rdireen/spherepy/tarball/0.1',
+      url='https://github.com/rdireen/spherepy',  # url to github repo
+      download_url='https://github.com/rdireen/spherepy/tarball/0.1',
       license='GPLv3',
       install_requires=['numpy', 'setuptools'],
       packages=['spherepy'],
-      package_dir={'spherepy':'spherepy','test':'spherepy/test'},
+      package_dir={'spherepy':'spherepy', 'test':'spherepy/test'},
       package_data={'spherepy':['pkg_info.json']},
-      include_package_data = True,
+      include_package_data=True,
       test_suite='nose.collector',
-      tests_require=['nose']   
+      tests_require=['nose'],
+      ext_modules = [csphi_module],
+      py_modules = ["csphi"]   
      )
 

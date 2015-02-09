@@ -18,4 +18,4 @@ except:
     pass
 
 
-__all__ = ['pysphi']
+__all__ = ['pysphi','csphi']
