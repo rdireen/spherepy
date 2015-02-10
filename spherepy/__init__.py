@@ -1,6 +1,7 @@
 
 import json
 from os.path import dirname
+import csphi
 
 
 with open(dirname(__file__) + '/pkg_info.json') as fp:
@@ -17,5 +18,3 @@ try:
 except:
     pass
 
-
-__all__ = ['pysphi','csphi']

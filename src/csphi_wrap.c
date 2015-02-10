@@ -2945,7 +2945,11 @@ static swig_module_info swig_module = {swig_types, 1, 0, 0, 0, 0};
 
 
 #define SWIG_FILE_WITH_INIT
+#include <complex.h>
 #include "csphi.h"
+
+
+#include <complex.h>
 
 
 #ifndef SWIG_FILE_WITH_INIT
@@ -3652,10 +3656,93 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_FindQ(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int arg1 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:FindQ",&obj0)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "FindQ" "', argument " "1"" of type '" "int""'");
+  } 
+  arg1 = (int)(val1);
+  result = (int)FindQ(arg1);
+  resultobj = SWIG_From_int((int)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SData(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  double complex *arg1 = (double complex *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  int arg4 ;
+  PyArrayObject *array1 = NULL ;
+  int is_new_object1 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:SData",&obj0,&obj1,&obj2)) SWIG_fail;
+  {
+    npy_intp size[1] = {
+      -1 
+    };
+    array1 = obj_to_array_contiguous_allow_conversion(obj0,
+      NPY_CDOUBLE,
+      &is_new_object1);
+    if (!array1 || !require_dimensions(array1, 1) ||
+      !require_size(array1, size, 1)) SWIG_fail;
+    arg1 = (double complex*) array_data(array1);
+    arg2 = (int) array_size(array1,0);
+  }
+  ecode3 = SWIG_AsVal_int(obj1, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "SData" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = (int)(val3);
+  ecode4 = SWIG_AsVal_int(obj2, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "SData" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = (int)(val4);
+  SData(arg1,arg2,arg3,arg4);
+  resultobj = SWIG_Py_Void();
+  {
+    if (is_new_object1 && array1)
+    {
+      Py_DECREF(array1); 
+    }
+  }
+  return resultobj;
+fail:
+  {
+    if (is_new_object1 && array1)
+    {
+      Py_DECREF(array1); 
+    }
+  }
+  return NULL;
+}
+
+
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"SWIG_PyInstanceMethod_New", (PyCFunction)SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { (char *)"ynnm", _wrap_ynnm, METH_VARARGS, NULL},
 	 { (char *)"ynunm", _wrap_ynunm, METH_VARARGS, NULL},
+	 { (char *)"FindQ", _wrap_FindQ, METH_VARARGS, NULL},
+	 { (char *)"SData", _wrap_SData, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 

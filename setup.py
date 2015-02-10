@@ -73,7 +73,6 @@ setup(name='spherepy',
       include_package_data=True,
       test_suite='nose.collector',
       tests_require=['nose'],
-      ext_modules = [csphi_module],
-      py_modules = ["csphi"]   
+      ext_modules = [csphi_module]  
      )
 

@@ -25,7 +25,6 @@ Randy Direen
 
 """
 import numpy as np
-import csphi
 
 def ynnm(n, m):
     """Initial value for recursion formula""" 
@@ -48,7 +47,7 @@ def ynnm(n, m):
                 out *= np.sqrt((n + k + 1.0) / (n - k))
     return out
 
-def ynunm_old(n, m, L):
+def ynunm(n, m, L):
     """Fourier coefficients for spherical harmonics"""
 
     out = np.zeros(L, dtype=np.float64)
@@ -71,14 +70,7 @@ def ynunm_old(n, m, L):
                 tmp3 = (n - k - 3.0) * (n + k + 4.0);
                 tmp4 = ((n - k) * (n + k + 1.0))
                 out[k] = ((tmp1 + tmp2) * out[k + 2] - tmp3 * out[k + 4]) / tmp4
-    return out
-
-def ynunm(n,m,L):
-    
-    out = np.zeros(L, dtype=np.float64)
-    csphi.ynunm(n,m,out)
-    return out
-    
+    return out    
 
 def ynunm_work(n, m, work):
     """Fourier coefficients for spherical harmonics"""
