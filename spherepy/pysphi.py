@@ -25,6 +25,8 @@ Randy Direen
 
 """
 import numpy as np
+import __init__
+import csphi
 
 def ynnm(n, m):
     """Initial value for recursion formula""" 
@@ -125,7 +127,7 @@ def sph_harmonic_tp(nrows, ncols, n, m):
     return out
 
 def smallest_prime_factor(Q):
-    """Find the smallest number, factorable by the small primes 2,3,4, and 7 
+    """Find the smallest number factorable by the small primes 2, 3, 4, and 7 
     that is larger than the argument Q"""
 
     A = Q;
@@ -207,7 +209,11 @@ def bnm_vec_fc(fdata, Nmax, m):
 
     for n in xrange(absm, Nmax + 1):
 
-        ynm = ynunm(n, m, n + 1)
+        if __init__.use_cext: 
+            ynm = np.zeros(n+1,dtype=np.float64)
+            csphi.ynunm(n,m,ynm)
+        else:   
+            ynm = ynunm(n, m, n + 1)
 
         out[n - absm] = 1j ** (-m) * h[0] * ynm[0]
 
@@ -340,7 +346,13 @@ def fcvec_m_sc(vec, m, nmax, nrows):
     K = nmax + 1 
 
     for n in xrange(np.abs(m), K):
-        ynm = ynunm(n, m, K)
+        
+        if __init__.use_cext: 
+            ynm = np.zeros(K,dtype=np.float64)
+            csphi.ynunm(n,m,ynm)
+        else:   
+            ynm = ynunm(n, m, K)
+
         F[0:nmax + 1] += vec[n - np.abs(m)] * ynm.T
 
     F[0:K] = F[0:K] * 1j ** m

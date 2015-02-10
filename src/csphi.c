@@ -157,27 +157,15 @@ void SData(SCOMPLEX* s,int Q,int Nrows, int NcoefMax)
 
 	memset(s,0,Q*sizeof(SCOMPLEX));
 
-	mm=floor((SFLOAT)Nrows/2.0);
+        //we assume Nrows is even
+	mm=(SFLOAT)Nrows/2.0;
 
-	if((Nrows % 2)==1 ) //data is odd in rows (theta)
-	{
-		for(k=mm;k<=mm+nn-1;k++)
-			if ((k % 2) == 1)
-				s[k-mm] = -I/((SCOMPLEX)k);
+	for(k=mm;k<=mm+nn - 1;k++)
+		if ((k % 2) == 1)
+			s[k-mm] = -I/((SCOMPLEX)k);
+	for(k=-mm;k<mm;k++)
+		if ((abs(k) % 2) == 1)
+			s[Q+k-mm] = -I/((SCOMPLEX)k);
 
-		for(k=-mm;k<mm;k++)
-			if ((abs(k) %2) == 1)
-				s[Q+k-mm] = -I/((SCOMPLEX)k);
-
-	}
-	else //data is even in rows
-	{
-		for(k=mm;k<=mm+nn-1;k++)
-			if ((k % 2) == 1)
-				s[k-mm] = -I/((SCOMPLEX)k);
-		for(k=-mm+1;k<mm;k++)
-			if ((abs(k) % 2) == 1)
-				s[Q+k-mm] = -I/((SCOMPLEX)k);
-	}
 
 }
