@@ -18,8 +18,8 @@
 import spherepy as sp
 import profile
 
-Nmax = 200
-Nrows = 402
+Nmax = 400
+Nrows = 1000
 
 c = sp.random_coefs(Nmax, Nmax)
 
