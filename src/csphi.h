@@ -25,6 +25,10 @@
 
 #include "kiss_fft.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define SFLOAT double
 #define SINT int
 
@@ -32,6 +36,7 @@ typedef struct {
     SFLOAT r;
     SFLOAT i;
 } SCOMPLEX;
+
 
 #define SUCCESS    0
 #define OUTBOUNDS  1
@@ -69,5 +74,9 @@ void bnm_fc(SCOMPLEX * fdata,int Nrow, int Ncol,
 void fc_to_sc(SCOMPLEX* fdata, int Nrow, int Ncol,
               SCOMPLEX* sc, int L,
               int Nmax, int Mmax);
+
+#ifdef __cplusplus
+} 
+#endif
 
 #endif //__CSPHI__
