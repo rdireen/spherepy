@@ -9,7 +9,7 @@
 
 
 from sys import version_info
-if version_info >= (2,6,0):
+if version_info >= (2, 6, 0):
     def swig_import_helper():
         from os.path import dirname
         import imp
@@ -33,26 +33,26 @@ del version_info
 try:
     _swig_property = property
 except NameError:
-    pass # Python < 2.2 doesn't have 'property'.
-def _swig_setattr_nondynamic(self,class_type,name,value,static=1):
+    pass  # Python < 2.2 doesn't have 'property'.
+def _swig_setattr_nondynamic(self, class_type, name, value, static=1):
     if (name == "thisown"): return self.this.own(value)
     if (name == "this"):
         if type(value).__name__ == 'SwigPyObject':
             self.__dict__[name] = value
             return
-    method = class_type.__swig_setmethods__.get(name,None)
-    if method: return method(self,value)
+    method = class_type.__swig_setmethods__.get(name, None)
+    if method: return method(self, value)
     if (not static):
         self.__dict__[name] = value
     else:
         raise AttributeError("You cannot add attributes to %s" % self)
 
-def _swig_setattr(self,class_type,name,value):
-    return _swig_setattr_nondynamic(self,class_type,name,value,0)
+def _swig_setattr(self, class_type, name, value):
+    return _swig_setattr_nondynamic(self, class_type, name, value, 0)
 
-def _swig_getattr(self,class_type,name):
+def _swig_getattr(self, class_type, name):
     if (name == "thisown"): return self.this.own()
-    method = class_type.__swig_getmethods__.get(name,None)
+    method = class_type.__swig_getmethods__.get(name, None)
     if method: return method(self)
     raise AttributeError(name)
 
@@ -95,20 +95,32 @@ OUTBOUNDS = _csphi.OUTBOUNDS
 PI = _csphi.PI
 
 def ynnm(*args):
-  return _csphi.ynnm(*args)
+    return _csphi.ynnm(*args)
 ynnm = _csphi.ynnm
 
 def ynunm(*args):
-  return _csphi.ynunm(*args)
+    return _csphi.ynunm(*args)
 ynunm = _csphi.ynunm
 
 def FindQ(*args):
-  return _csphi.FindQ(*args)
+    return _csphi.FindQ(*args)
 FindQ = _csphi.FindQ
 
 def SData(*args):
-  return _csphi.SData(*args)
+    return _csphi.SData(*args)
 SData = _csphi.SData
+
+def hkm_fc(*args):
+    return _csphi.hkm_fc(*args)
+hkm_fc = _csphi.hkm_fc
+
+def bnm_fc(*args):
+    return _csphi.bnm_fc(*args)
+bnm_fc = _csphi.bnm_fc
+
+def fc_to_sc(*args):
+    return _csphi.fc_to_sc(*args)
+fc_to_sc = _csphi.fc_to_sc
 # This file is compatible with both classic and new-style classes.
 
 

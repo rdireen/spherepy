@@ -36,13 +36,15 @@
 #---------------------------------------------------------------------Built-ins
 from functools import wraps
 import numbers
+import __init__
 
 #---------------------------------------------------------------------3rd Party
 import numpy as np
 
 
 #------------------------------------------------------------------------Custom
-import pysphi
+import pysphi  # python versions of the low level routines
+import csphi  # c extensions of the low level routines
 
 
 
@@ -127,7 +129,7 @@ class ScalarCoefs(object):
 
     def __str__(self):
         rs = self._reshape_m_vecs()
-        st = ["scalar_coef(nmax = {0}, mmax = {1}):".format(self.nmax, 
+        st = ["scalar_coef(nmax = {0}, mmax = {1}):".format(self.nmax,
                                                           self.mmax)]
         for n, x in enumerate(rs):
             st.append("n = {0} :: {1}".format(n, x))
@@ -632,13 +634,13 @@ def spht(ssphere, nmax, mmax):
     coefficients of the ssphere object"""
 
     if mmax > nmax:
-        raise Exception("Mmax must be less than or equal to Nmax")
+        raise SpherePyError("Mmax must be less than or equal to Nmax")
 
     nrows = ssphere._dsphere.shape[0]
     ncols = ssphere._dsphere.shape[1]
 
     if np.mod(nrows, 2) == 1 or np.mod(ncols, 2) == 1:
-        raise Exception("number of rows and columns in continued sphere" + 
+        raise SpherePyError("number of rows and columns in continued sphere" + 
                         " object must be even")
 
     fdata = np.fft.fft2(ssphere._dsphere) / (nrows * ncols)
@@ -649,20 +651,25 @@ def spht(ssphere, nmax, mmax):
     pysphi.pad_rows_fdata(fdata, fdata_extended)
 
     pysphi.sin_fc(fdata_extended)
-
-    # work = np.zeros(nmax + 1, dtype = np.float64) 
-                                  
-    c = pysphi.fc_to_sc(fdata_extended, nmax, mmax)
-
-    return ScalarCoefs(c, nmax, mmax)
+    
+    N = nmax + 1;
+    NC = N + mmax * (2 * N - mmax - 1);
+    sc = np.zeros(NC, dtype=np.complex128)
+    # check if we are using c extended versions of the code or not
+    if __init__.use_cext: 
+        csphi.fc_to_sc(fdata_extended, sc, nmax, mmax)
+    else:   
+        sc = pysphi.fc_to_sc(fdata_extended, nmax, mmax)
+                                
+    return ScalarCoefs(sc, nmax, mmax)
 
 
 def ispht(scoefs, nrows, ncols):
 
     if np.mod(ncols, 2) == 1:
-        raise Exception("For consistency purposes, make sure Ncols is even.")
+        raise SpherePyError("For consistency purposes, make sure Ncols " + 
+                            "is even.")
 
-    # work = np.zeros(nrows + 1, dtype=np.float64)
     
     fdata = pysphi.sc_to_fc(scoefs._vec,
                             scoefs._nmax,

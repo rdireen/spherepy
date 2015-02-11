@@ -23,6 +23,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "kiss_fft.h"
+
 #define SFLOAT double
 #define SINT int
 
@@ -39,8 +41,33 @@ typedef struct {
 
 
 SFLOAT ynnm(int n,int m);
+
 void ynunm(int en,int em,SFLOAT* y,int len);
+
 int FindQ(int S);
+
 void SData(SCOMPLEX* s,int Q,int Nrows, int NcoefMax);
+
+void hkm_fc(SCOMPLEX* gcoef,int Nrow,int Ncol, 
+            int n, int m, 
+            SCOMPLEX* hkm, int len,
+            SCOMPLEX* ss, int Q,
+            SCOMPLEX* ff, int Q2,
+            kiss_fft_cfg kiss_cfg_fw,
+            kiss_fft_cfg kiss_cfg_bw);
+
+void bnm_fc(SCOMPLEX * fdata,int Nrow, int Ncol, 
+            int Nmax, int m,
+            SCOMPLEX* vec, int L,
+            SCOMPLEX* ss,int Q,
+            SCOMPLEX* ff, int Q2,
+            SCOMPLEX* hkm, int Lhkm,
+            SFLOAT* y, int Ly,
+            kiss_fft_cfg kiss_cfg_fw,
+            kiss_fft_cfg kiss_cfg_bw);
+
+void fc_to_sc(SCOMPLEX* fdata, int Nrow, int Ncol,
+              SCOMPLEX* sc, int L,
+              int Nmax, int Mmax);
 
 #endif //__CSPHI__

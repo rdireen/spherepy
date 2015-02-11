@@ -44,9 +44,10 @@ except ImportError:
 
 description = 'Numerical routines for working with spherical harmonic ' + \
               'coefficients' 
-              
+ 
+srcs = ['src/csphi.c', 'src/csphi_wrap.c','src/kiss_fft.c']            
 csphi_module = Extension('_csphi',
-                         sources=['src/csphi.c', 'src/csphi_wrap.c'],
+                         sources=srcs,
                          include_dirs=['src', numpy_include]
                        )
 

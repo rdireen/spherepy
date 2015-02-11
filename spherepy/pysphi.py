@@ -73,31 +73,6 @@ def ynunm(n, m, L):
                 tmp4 = ((n - k) * (n + k + 1.0))
                 out[k] = ((tmp1 + tmp2) * out[k + 2] - tmp3 * out[k + 4]) / tmp4
     return out    
-
-def ynunm_work(n, m, work):
-    """Fourier coefficients for spherical harmonics"""
-
-    work[:] = 0
-    tmp1 = 0 
-    tmp2 = 0
-    tmp3 = 0
-    tmp4 = 0       
-    if(np.abs(m) <= n):
-        work[n] = ynnm(n, m)
-        k = n - 2
-        if(k >= 0):
-            tmp1 = (n - k - 1.0) * (n + k + 2.0)
-            tmp2 = (n - k - 2.0) * (n + k + 3.0) - 4.0 * m ** 2
-            tmp4 = ((n - k) * (n + k + 1.0))
-            work[k] = (tmp1 + tmp2) * work[k + 2] / tmp4
-
-            for k in xrange(n - 4, -1, -2):
-                tmp1 = (n - k - 1.0) * (n + k + 2.0)
-                tmp2 = (n - k - 2.0) * (n + k + 3.0) - 4.0 * m ** 2
-                tmp3 = (n - k - 3.0) * (n + k + 4.0);
-                tmp4 = ((n - k) * (n + k + 1.0))
-                work[k] = ((tmp1 + tmp2) * work[k + 2] - tmp3 * work[k + 4]) / tmp4
-    return work
     
 def sph_harmonic_tp(nrows, ncols, n, m):
     """Produces Ynm(theta,phi)
@@ -210,8 +185,8 @@ def bnm_vec_fc(fdata, Nmax, m):
     for n in xrange(absm, Nmax + 1):
 
         if __init__.use_cext: 
-            ynm = np.zeros(n+1,dtype=np.float64)
-            csphi.ynunm(n,m,ynm)
+            ynm = np.zeros(n + 1, dtype=np.float64)
+            csphi.ynunm(n, m, ynm)
         else:   
             ynm = ynunm(n, m, n + 1)
 
@@ -219,29 +194,6 @@ def bnm_vec_fc(fdata, Nmax, m):
 
         if n != 0:
             out[n - absm] += 1j ** (-m) * 2 * np.sum(h[1:n + 1] * ynm[1:n + 1])
- 
-    return out
-
-
-def bnm_vec_fc_work(fdata, Nmax, m, work):
-
-    nrows = fdata.shape[0]
-    Q = smallest_prime_factor(nrows + Nmax)
-    s = s_data(nrows, Nmax, Q)
-    h = hkm_fc(fdata, Nmax, m, s)
-
-    absm = np.abs(m)
-
-    out = np.zeros(Nmax - absm + 1, dtype=np.complex128)
-
-    for n in xrange(absm, Nmax + 1):
-
-        ynunm_work(n, m, work)
-
-        out[n - absm] = 1j ** (-m) * h[0] * work[0]
-
-        if n != 0:
-            out[n - absm] += 1j ** (-m) * 2 * np.sum(h[1:n + 1] * work[1:n + 1])
  
     return out
 
@@ -257,17 +209,6 @@ def fc_to_sc(gcoef, Nmax, Mmax):
 
     return c
 
-def fc_to_sc_work(gcoef, Nmax, Mmax, work):
-    
-    c = bnm_vec_fc_work(gcoef, Nmax, 0, work)
-    
-    for m in xrange(1, Mmax + 1):
-        a = bnm_vec_fc_work(gcoef, Nmax, -m, work)  
-        c = np.concatenate([c, a]) 
-        a = bnm_vec_fc_work(gcoef, Nmax, m, work)  
-        c = np.concatenate([c, a])
-
-    return c
 
 def fix_even_row_data_fc(fdata):
     """When the number of rows in fdata is even, there is a subtlety that must
@@ -348,8 +289,8 @@ def fcvec_m_sc(vec, m, nmax, nrows):
     for n in xrange(np.abs(m), K):
         
         if __init__.use_cext: 
-            ynm = np.zeros(K,dtype=np.float64)
-            csphi.ynunm(n,m,ynm)
+            ynm = np.zeros(K, dtype=np.float64)
+            csphi.ynunm(n, m, ynm)
         else:   
             ynm = ynunm(n, m, K)
 
@@ -397,55 +338,7 @@ def sc_to_fc(spvec, nmax, mmax, nrows, ncols):
     return fdata   
 
 
-def fcvec_m_sc_work(vec, m, nmax, nrows, work):
-    
-    F = np.zeros(nrows, dtype=np.complex128)
-    K = nmax + 1 
 
-    for n in xrange(np.abs(m), K):
-        ynunm_work(n, m, work)
-        F[0:nmax + 1] += vec[n - np.abs(m)] * work[0:nmax + 1].T
-
-    F[0:K] = F[0:K] * 1j ** m
-
-    mm = (-1) ** m
-    if np.mod(nrows, 2) == 0:
-        H = nrows / 2 - 1
-    else:
-        H = (nrows - 1) / 2
-
-    for k in xrange(0, H):
-        F[-(k + 1)] = mm * F[k + 1]
-
-    return F
-
-def sc_to_fc_work(spvec, nmax, mmax, nrows, ncols, work):
-    """assume Ncols is even"""
-
-    if np.mod(ncols, 2) == 1:
-        raise Exception("ncols is required to be even")
-
-    fdata = np.zeros([nrows, ncols], dtype=np.complex128)
-
-    for k in xrange(0, ncols / 2):
-        if k < mmax:
-            kk = k
-            ind = mindx(kk, nmax, mmax)
-            vec = spvec[ind:ind + nmax - np.abs(kk) + 1]
-            fdata[:, kk] = fcvec_m_sc_work(vec, kk, nmax, nrows, work)
-
-            kk = -(k + 1)
-            ind = mindx(kk, nmax, mmax)
-            vec = spvec[ind:ind + nmax - np.abs(kk) + 1]
-            fdata[:, kk] = fcvec_m_sc_work(vec, kk, nmax, nrows, work)
-
-        if k == mmax:
-            kk = k
-            ind = mindx(kk, nmax, mmax)
-            vec = spvec[ind:ind + nmax - np.abs(kk) + 1]
-            fdata[:, kk] = fcvec_m_sc_work(vec, kk, nmax, nrows, work)
-
-    return fdata   
 
 
    

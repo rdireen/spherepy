@@ -13,9 +13,13 @@ import_array();
 
 %numpy_typemaps(SCOMPLEX, NPY_CDOUBLE, int)
 
-%apply (double* IN_ARRAY1, int DIM1) {(double* y, int len)};
+%apply (double* INPLACE_ARRAY1, int DIM1) {(double* y, int len)};
 
-%apply (SCOMPLEX* IN_ARRAY1, int DIM1) {(SCOMPLEX* s,int Q)};
+%apply (SCOMPLEX* INPLACE_ARRAY1, int DIM1) {(SCOMPLEX* s, int Q)};
+
+%apply (SCOMPLEX* IN_ARRAY2, int DIM1, int DIM2) {(SCOMPLEX* fdata, int Nrow, int Ncol)};
+
+%apply (SCOMPLEX* INPLACE_ARRAY1, int DIM1) {(SCOMPLEX* sc, int L)};
 
 %include "csphi.h"
  
