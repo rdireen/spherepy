@@ -19,7 +19,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include <complex.h>
 
 #include "csphi.h"
 
@@ -162,10 +161,10 @@ void SData(SCOMPLEX* s,int Q,int Nrows, int NcoefMax)
 
 	for(k=mm;k<=mm+nn - 1;k++)
 		if ((k % 2) == 1)
-			s[k-mm] = -I/((SCOMPLEX)k);
+			s[k-mm].i = -1/((SFLOAT)k);
 	for(k=-mm;k<mm;k++)
 		if ((abs(k) % 2) == 1)
-			s[Q+k-mm] = -I/((SCOMPLEX)k);
+			s[Q+k-mm].i = -1/((SFLOAT)k);
 
 
 }

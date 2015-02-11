@@ -21,17 +21,22 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <complex.h>
 #include <string.h>
 
 #define SFLOAT double
-#define SCOMPLEX double complex
 #define SINT int
+
+typedef struct {
+    SFLOAT r;
+    SFLOAT i;
+} SCOMPLEX;
 
 #define SUCCESS    0
 #define OUTBOUNDS  1
 
 #define PI 3.14159265358979323846
+
+
 
 SFLOAT ynnm(int n,int m);
 void ynunm(int en,int em,SFLOAT* y,int len);

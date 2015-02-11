@@ -9,7 +9,7 @@
 
 
 from sys import version_info
-if version_info >= (2, 6, 0):
+if version_info >= (2,6,0):
     def swig_import_helper():
         from os.path import dirname
         import imp
@@ -33,26 +33,26 @@ del version_info
 try:
     _swig_property = property
 except NameError:
-    pass  # Python < 2.2 doesn't have 'property'.
-def _swig_setattr_nondynamic(self, class_type, name, value, static=1):
+    pass # Python < 2.2 doesn't have 'property'.
+def _swig_setattr_nondynamic(self,class_type,name,value,static=1):
     if (name == "thisown"): return self.this.own(value)
     if (name == "this"):
         if type(value).__name__ == 'SwigPyObject':
             self.__dict__[name] = value
             return
-    method = class_type.__swig_setmethods__.get(name, None)
-    if method: return method(self, value)
+    method = class_type.__swig_setmethods__.get(name,None)
+    if method: return method(self,value)
     if (not static):
         self.__dict__[name] = value
     else:
         raise AttributeError("You cannot add attributes to %s" % self)
 
-def _swig_setattr(self, class_type, name, value):
-    return _swig_setattr_nondynamic(self, class_type, name, value, 0)
+def _swig_setattr(self,class_type,name,value):
+    return _swig_setattr_nondynamic(self,class_type,name,value,0)
 
-def _swig_getattr(self, class_type, name):
+def _swig_getattr(self,class_type,name):
     if (name == "thisown"): return self.this.own()
-    method = class_type.__swig_getmethods__.get(name, None)
+    method = class_type.__swig_getmethods__.get(name,None)
     if method: return method(self)
     raise AttributeError(name)
 
@@ -69,24 +69,45 @@ except AttributeError:
     _newclass = 0
 
 
+class SCOMPLEX(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, SCOMPLEX, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, SCOMPLEX, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["r"] = _csphi.SCOMPLEX_r_set
+    __swig_getmethods__["r"] = _csphi.SCOMPLEX_r_get
+    if _newclass:r = _swig_property(_csphi.SCOMPLEX_r_get, _csphi.SCOMPLEX_r_set)
+    __swig_setmethods__["i"] = _csphi.SCOMPLEX_i_set
+    __swig_getmethods__["i"] = _csphi.SCOMPLEX_i_get
+    if _newclass:i = _swig_property(_csphi.SCOMPLEX_i_get, _csphi.SCOMPLEX_i_set)
+    def __init__(self): 
+        this = _csphi.new_SCOMPLEX()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _csphi.delete_SCOMPLEX
+    __del__ = lambda self : None;
+SCOMPLEX_swigregister = _csphi.SCOMPLEX_swigregister
+SCOMPLEX_swigregister(SCOMPLEX)
+
 SUCCESS = _csphi.SUCCESS
 OUTBOUNDS = _csphi.OUTBOUNDS
 PI = _csphi.PI
 
 def ynnm(*args):
-    return _csphi.ynnm(*args)
+  return _csphi.ynnm(*args)
 ynnm = _csphi.ynnm
 
 def ynunm(*args):
-    return _csphi.ynunm(*args)
+  return _csphi.ynunm(*args)
 ynunm = _csphi.ynunm
 
 def FindQ(*args):
-    return _csphi.FindQ(*args)
+  return _csphi.FindQ(*args)
 FindQ = _csphi.FindQ
 
 def SData(*args):
-    return _csphi.SData(*args)
+  return _csphi.SData(*args)
 SData = _csphi.SData
 # This file is compatible with both classic and new-style classes.
 

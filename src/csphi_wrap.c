@@ -2910,9 +2910,10 @@ SWIG_Python_NonDynamicSetAttr(PyObject *obj, PyObject *name, PyObject *value) {
 
 /* -------- TYPES TABLE (BEGIN) -------- */
 
-#define SWIGTYPE_p_char swig_types[0]
-static swig_type_info *swig_types[2];
-static swig_module_info swig_module = {swig_types, 1, 0, 0, 0, 0};
+#define SWIGTYPE_p_SCOMPLEX swig_types[0]
+#define SWIGTYPE_p_char swig_types[1]
+static swig_type_info *swig_types[3];
+static swig_module_info swig_module = {swig_types, 2, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -2945,11 +2946,7 @@ static swig_module_info swig_module = {swig_types, 1, 0, 0, 0, 0};
 
 
 #define SWIG_FILE_WITH_INIT
-#include <complex.h>
 #include "csphi.h"
-
-
-#include <complex.h>
 
 
 #ifndef SWIG_FILE_WITH_INIT
@@ -2958,26 +2955,6 @@ static swig_module_info swig_module = {swig_types, 1, 0, 0, 0, 0};
 #include "stdio.h"
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <numpy/arrayobject.h>
-
-
-SWIGINTERNINLINE PyObject*
-  SWIG_From_int  (int value)
-{
-  return PyInt_FromLong((long) value);
-}
-
-
-  #define SWIG_From_double   PyFloat_FromDouble 
-
-
-#include <limits.h>
-#if !defined(SWIG_NO_LLONG_MAX)
-# if !defined(LLONG_MAX) && defined(__GNUC__) && defined (__LONG_LONG_MAX__)
-#   define LLONG_MAX __LONG_LONG_MAX__
-#   define LLONG_MIN (-LLONG_MAX - 1LL)
-#   define ULLONG_MAX (LLONG_MAX * 2ULL + 1ULL)
-# endif
-#endif
 
 
 SWIGINTERN int
@@ -3022,6 +2999,26 @@ SWIG_AsVal_double (PyObject *obj, double *val)
 #endif
   return res;
 }
+
+
+  #define SWIG_From_double   PyFloat_FromDouble 
+
+
+SWIGINTERNINLINE PyObject*
+  SWIG_From_int  (int value)
+{
+  return PyInt_FromLong((long) value);
+}
+
+
+#include <limits.h>
+#if !defined(SWIG_NO_LLONG_MAX)
+# if !defined(LLONG_MAX) && defined(__GNUC__) && defined (__LONG_LONG_MAX__)
+#   define LLONG_MAX __LONG_LONG_MAX__
+#   define LLONG_MIN (-LLONG_MAX - 1LL)
+#   define ULLONG_MAX (LLONG_MAX * 2ULL + 1ULL)
+# endif
+#endif
 
 
 #include <float.h>
@@ -3566,6 +3563,151 @@ SWIG_AsVal_int (PyObject * obj, int *val)
 #ifdef __cplusplus
 extern "C" {
 #endif
+SWIGINTERN PyObject *_wrap_SCOMPLEX_r_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  SCOMPLEX *arg1 = (SCOMPLEX *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:SCOMPLEX_r_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_SCOMPLEX, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SCOMPLEX_r_set" "', argument " "1"" of type '" "SCOMPLEX *""'"); 
+  }
+  arg1 = (SCOMPLEX *)(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SCOMPLEX_r_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = (double)(val2);
+  if (arg1) (arg1)->r = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SCOMPLEX_r_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  SCOMPLEX *arg1 = (SCOMPLEX *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SCOMPLEX_r_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_SCOMPLEX, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SCOMPLEX_r_get" "', argument " "1"" of type '" "SCOMPLEX *""'"); 
+  }
+  arg1 = (SCOMPLEX *)(argp1);
+  result = (double) ((arg1)->r);
+  resultobj = SWIG_From_double((double)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SCOMPLEX_i_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  SCOMPLEX *arg1 = (SCOMPLEX *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:SCOMPLEX_i_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_SCOMPLEX, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SCOMPLEX_i_set" "', argument " "1"" of type '" "SCOMPLEX *""'"); 
+  }
+  arg1 = (SCOMPLEX *)(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SCOMPLEX_i_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = (double)(val2);
+  if (arg1) (arg1)->i = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SCOMPLEX_i_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  SCOMPLEX *arg1 = (SCOMPLEX *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SCOMPLEX_i_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_SCOMPLEX, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SCOMPLEX_i_get" "', argument " "1"" of type '" "SCOMPLEX *""'"); 
+  }
+  arg1 = (SCOMPLEX *)(argp1);
+  result = (double) ((arg1)->i);
+  resultobj = SWIG_From_double((double)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_SCOMPLEX(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  SCOMPLEX *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_SCOMPLEX")) SWIG_fail;
+  result = (SCOMPLEX *)calloc(1, sizeof(SCOMPLEX));
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_SCOMPLEX, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_SCOMPLEX(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  SCOMPLEX *arg1 = (SCOMPLEX *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_SCOMPLEX",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_SCOMPLEX, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_SCOMPLEX" "', argument " "1"" of type '" "SCOMPLEX *""'"); 
+  }
+  arg1 = (SCOMPLEX *)(argp1);
+  free((char *) arg1);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *SCOMPLEX_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_SCOMPLEX, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
 SWIGINTERN PyObject *_wrap_ynnm(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int arg1 ;
@@ -3680,7 +3822,7 @@ fail:
 
 SWIGINTERN PyObject *_wrap_SData(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  double complex *arg1 = (double complex *) 0 ;
+  SCOMPLEX *arg1 = (SCOMPLEX *) 0 ;
   int arg2 ;
   int arg3 ;
   int arg4 ;
@@ -3704,7 +3846,7 @@ SWIGINTERN PyObject *_wrap_SData(PyObject *SWIGUNUSEDPARM(self), PyObject *args)
       &is_new_object1);
     if (!array1 || !require_dimensions(array1, 1) ||
       !require_size(array1, size, 1)) SWIG_fail;
-    arg1 = (double complex*) array_data(array1);
+    arg1 = (SCOMPLEX*) array_data(array1);
     arg2 = (int) array_size(array1,0);
   }
   ecode3 = SWIG_AsVal_int(obj1, &val3);
@@ -3739,6 +3881,13 @@ fail:
 
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"SWIG_PyInstanceMethod_New", (PyCFunction)SWIG_PyInstanceMethod_New, METH_O, NULL},
+	 { (char *)"SCOMPLEX_r_set", _wrap_SCOMPLEX_r_set, METH_VARARGS, NULL},
+	 { (char *)"SCOMPLEX_r_get", _wrap_SCOMPLEX_r_get, METH_VARARGS, NULL},
+	 { (char *)"SCOMPLEX_i_set", _wrap_SCOMPLEX_i_set, METH_VARARGS, NULL},
+	 { (char *)"SCOMPLEX_i_get", _wrap_SCOMPLEX_i_get, METH_VARARGS, NULL},
+	 { (char *)"new_SCOMPLEX", _wrap_new_SCOMPLEX, METH_VARARGS, NULL},
+	 { (char *)"delete_SCOMPLEX", _wrap_delete_SCOMPLEX, METH_VARARGS, NULL},
+	 { (char *)"SCOMPLEX_swigregister", SCOMPLEX_swigregister, METH_VARARGS, NULL},
 	 { (char *)"ynnm", _wrap_ynnm, METH_VARARGS, NULL},
 	 { (char *)"ynunm", _wrap_ynunm, METH_VARARGS, NULL},
 	 { (char *)"FindQ", _wrap_FindQ, METH_VARARGS, NULL},
@@ -3749,15 +3898,19 @@ static PyMethodDef SwigMethods[] = {
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
+static swig_type_info _swigt__p_SCOMPLEX = {"_p_SCOMPLEX", "SCOMPLEX *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
+  &_swigt__p_SCOMPLEX,
   &_swigt__p_char,
 };
 
+static swig_cast_info _swigc__p_SCOMPLEX[] = {  {&_swigt__p_SCOMPLEX, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
+  _swigc__p_SCOMPLEX,
   _swigc__p_char,
 };
 
