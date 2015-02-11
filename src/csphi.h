@@ -75,6 +75,16 @@ void fc_to_sc(SCOMPLEX* fdata, int Nrow, int Ncol,
               SCOMPLEX* sc, int L,
               int Nmax, int Mmax);
 
+void fcvec_m_sc(SCOMPLEX* vec,
+                int m,int Nmax,
+                SCOMPLEX* fdata,int Nrow,int Ncol,
+                int M, 
+                SFLOAT * y, int len);
+
+void sc_to_fc(SCOMPLEX* fdata,int Nrow,int Ncol,
+              SCOMPLEX* sc, int L,  
+              int Nmax, int Mmax);
+
 #ifdef __cplusplus
 } 
 #endif

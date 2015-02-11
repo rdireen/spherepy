@@ -528,7 +528,8 @@ def random_coefs(nmax, mmax, mu=0.0, sigma=1.0, coef_type=scalar):
 
     if(coef_type == scalar):
         L = (nmax + 1) + mmax * (2 * nmax - mmax + 1)
-        vec = np.random.normal(mu, sigma, L)
+        vec = np.random.normal(mu, sigma, L) + \
+              1j * np.random.normal(mu, sigma, L)
         return  ScalarCoefs(vec, nmax, mmax)
     elif(coef_type == vector):
         raise NotImplementedError()
@@ -670,11 +671,16 @@ def ispht(scoefs, nrows, ncols):
         raise SpherePyError("For consistency purposes, make sure Ncols " + 
                             "is even.")
 
-    
-    fdata = pysphi.sc_to_fc(scoefs._vec,
+    if __init__.use_cext: 
+        fdata = np.zeros([nrows, ncols], dtype=np.complex128)
+        csphi.fc_to_sc(fdata, scoefs._vec, scoefs._nmax, scoefs._mmax)
+    else:   
+        fdata = pysphi.sc_to_fc(scoefs._vec,
                             scoefs._nmax,
                             scoefs._mmax,
                             nrows, ncols)
+    
+    
 
     ds = np.fft.ifft2(fdata) * nrows * ncols
 

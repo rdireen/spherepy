@@ -368,7 +368,7 @@ void fc_to_sc(SCOMPLEX* fdata, int Nrow, int Ncol,
 			ff, Q, 
 			hkm, Nmax+1, 
 			y,Nmax+1,
-			kiss_cfg_fw,
+			kiss_cfg_fw,                       
 			kiss_cfg_bw);
 
 		pt = sc + inds[2*m];
@@ -391,5 +391,146 @@ void fc_to_sc(SCOMPLEX* fdata, int Nrow, int Ncol,
 	free(y);
 	free(ff);
 	free(inds);
+}
+
+/** 
+ * @brief Fills one of the columns of the Fourier coefficient array using the spherical harmonic coefficients
+ * 
+ * @param vec Array of spherical harmonic coefficients
+ * @param m The m index
+ * @param Nmax Largest spherical harmonic coefficient
+ * @param fdata Fourier coefficients
+ * @param Nrow Number of rows in the Fourier coefficients array
+ * @param Ncol Number of columns in the Fourier coefficients array
+ * @param M m index into the Fourier coefficients array
+ * @param y output of ynunm
+ * @param len length of y
+ */
+void fcvec_m_sc(SCOMPLEX * vec,
+                int m,int Nmax,
+                SCOMPLEX * fdata,int Nrow,int Ncol,
+                int M,
+                SFLOAT * y, int len)
+{
+	int n,k,mm,H;
+	int K = Nmax + 1;
+	int absm = abs(m);
+	SCOMPLEX * pfdata;
+        SCOMPLEX tmp;
+        SFLOAT tmpr;
+
+	for(n=absm;n<=Nmax;n++)
+	{
+		ynunm(n,m,y,len);
+                
+		//TODO: this loop can be made faster
+		for(k=0;k<K;k++)
+		{
+			pfdata = fdata + k*Ncol + M;
+                        tmp = *pfdata;
+			tmp.r += vec[n-absm].r*y[k];
+                        tmp.i += vec[n-absm].i*y[k];
+                        *pfdata = tmp;
+		}
+	}
+
+	for(k=0;k<K;k++)
+	{
+		pfdata = fdata + k*Ncol + M;
+                tmp = *pfdata;
+
+                //In the following: tmp = i**(m) * tmp 
+		if(abs(m) % 2 == 1)
+		{
+			tmpr = tmp.r;
+			tmp.r = -pow(-1.0, (m-1)/2) * tmp.i;
+			tmp.i = pow(-1.0, (m-1)/2) * tmpr;
+		}
+		else
+		{
+			tmp.r = pow(-1.0, m/2) * tmp.r;
+			tmp.i = pow(-1.0, m/2) * tmp.i;
+		}
+
+                *pfdata = tmp;
+	}
+
+
+	//apply symmetry
+	mm = pow(-1,m);
+
+	if((Nrow % 2) == 0)
+		H = Nrow/2-1;
+	else
+	        H = (Nrow-1)/2;
+
+	for(k=0;k<H;k++)
+	{
+		fdata[Ncol*(Nrow-1 - k) + M].r = mm*fdata[Ncol*(k+1)+M].r; 
+                fdata[Ncol*(Nrow-1 - k) + M].i = mm*fdata[Ncol*(k+1)+M].i; 
+	}
+}
+
+/** 
+ * @brief Spherical harmonic coefficients to Fourier coefficients
+ * 
+ * @param sp The pointer to the sphcoef structure
+ * @param fdata The array containing the resulting Fourier coefficients
+ * @param Nrow Number of rows in fdata
+ * @param Ncol Number of columns in fdata
+ */
+void sc_to_fc(SCOMPLEX* fdata,int Nrow,int Ncol,
+              SCOMPLEX* sc, int L,  
+              int Nmax, int Mmax)
+{
+	int k, m;
+        int* inds;
+	SFLOAT* y;
+        int N = Nmax + 1;
+	int QQ = Nmax;
+
+        y = (SFLOAT*)malloc((Nmax+1)*sizeof(SFLOAT));
+        inds = (int*)malloc((2*Mmax+1)*sizeof(int));
+	memset(inds,0,(2*Mmax+1)*sizeof(int));
+
+        //setup indices that index into sc
+	inds[0] = 0;
+	for(m=1; m<=Mmax; m++)
+	{
+		inds[2*m-1] = N;
+		N = N + QQ;
+		inds[2*m] = N;
+		N = N + QQ;
+		QQ--;
+	}
+
+
+	for(k=0;k<=floor(Ncol/2);k++)
+	{
+		if(k < Mmax)
+		{
+			fcvec_m_sc(sc + inds[2*k],
+                                   k,Nmax, 
+                                   fdata, Nrow, Ncol,
+                                   k,
+                                   y, Nmax+1);
+			fcvec_m_sc(sc + inds[2*(k+1)-1],
+                                   -(k+1),Nmax, 
+                                   fdata, Nrow, Ncol,
+                                   Ncol-1 - k,
+                                   y, Nmax+1);
+		}
+		else if(k == Mmax)
+		{
+			fcvec_m_sc(sc + inds[2*k],
+                                   k,Nmax, 
+                                   fdata, Nrow, Ncol,
+                                   k, 
+                                   y, Nmax+1);
+		}
+	}
+	
+	free(y);
+        free(inds);
 }
 

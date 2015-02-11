@@ -19,7 +19,7 @@ import spherepy as sp
 import profile
 
 Nmax = 400
-Nrows = 1000
+Nrows = 2000
 
 c = sp.random_coefs(Nmax, Nmax)
 
@@ -27,7 +27,7 @@ p = sp.ispht(c, Nrows, Nrows)
 # profile.run('p = sp.ispht(c,602,602)')
 
 #c2 = sp.spht(p, Nmax, Nmax)
-
+c2 = None
 p = profile.run('c2 = sp.spht(p,Nmax,Nmax)',sort=1)
 
 print(sp.L2_coef(c - c2) / sp.L2_coef(c))
