@@ -28,7 +28,7 @@ class TestSphi(TestCase):
     the python code."""
     
     def test_ynnm(self):
-        """ynnm                
+        """::Compare ynnm within pysphi and csphi               
         """
         res = True
         for n in xrange(0, Nmodes + 1):
@@ -41,7 +41,7 @@ class TestSphi(TestCase):
         self.assertTrue(res)
         
     def test_ynunm(self):
-        """ynunm"""
+        """::Compare ynunm within pysphi and csphi"""
         
         res = True
         for n in xrange(0, Nmodes + 1):
@@ -57,7 +57,7 @@ class TestSphi(TestCase):
         self.assertTrue(res)
         
     def test_s_data(self):
-        """s_data"""
+        """::Compare s_data within pysphi and csphi"""
         
         res = True
         for Nmax in xrange(10, 50):
