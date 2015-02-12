@@ -571,7 +571,8 @@ def random_patt_uniform(nrows, ncols, patt_type=scalar):
         raise SpherePyError("ncols must be even")
 
     if(patt_type == scalar):
-        vec = np.random.normal(0.0, 1.0, nrows * ncols)
+        vec = np.random.normal(0.0, 1.0, nrows * ncols) + \
+              1j*np.random.normal(0.0, 1.0, nrows * ncols)
         return ScalarPatternUniform(vec.reshape((nrows, ncols)),
                                     doublesphere=False)
 
@@ -599,6 +600,15 @@ def array(patt):
         return patt.array
     else:
         raise SpherePyError("unrecognized type")
+    
+def abs(patt):
+    if isinstance(patt, ScalarPatternUniform):
+        return np.abs(patt.array)
+    elif isinstance(patt, VectorPatternUniform):
+        raise NotImplementedError()
+    else:
+        raise SpherePyError("unrecognized type")
+    
 
 
 def continue_sphere(cdata, sym):

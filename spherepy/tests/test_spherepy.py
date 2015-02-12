@@ -65,8 +65,6 @@ class TestScalarSphericalTransform(TestCase):
     """Testing the scalar spherical harmonic transforms"""
     def test_with_individual_coefficients_set(self):
         """::Testing spht and ispht with single coefficients, first 10 modes.
-        Since these routines haven't been optimized yet, this will take about
-        a minute.
         """
         
         res = True
@@ -75,10 +73,10 @@ class TestScalarSphericalTransform(TestCase):
             for n in xrange(0, 11):
                 for m in xrange(-n, n + 1):
                     rnd = np.random.normal(0, 10)
-                    c = sp.zeros_coefs(48, 48)
+                    c = sp.zeros_coefs(100, 100)
                     c[n, m] = rnd
-                    p = sp.ispht(c, 100, 100)
-                    c2 = sp.spht(p, 48, 48)
+                    p = sp.ispht(c, 220, 220)
+                    c2 = sp.spht(p, 100, 100)
                     s = sp.L2_coef(c - c2) / sp.L2_coef(c)
                     
                     if s > 1e-13:

@@ -20,7 +20,7 @@ from unittest import TestCase
 import spherepy as sp
 import numpy as np
 
-Nmodes = 300
+Nmodes = 100
 
 class TestSphi(TestCase):
     """Tests for the low level numeric functions. This isn't a good test to 
@@ -71,6 +71,38 @@ class TestSphi(TestCase):
                 if (np.sqrt(diff / sm) > 1e-13):
                     res = False
                 
+        
+        self.assertTrue(res)
+        
+    def test_spht(self):
+        """spht"""
+        
+        Nrows = 303
+        Ncols = 310
+        
+        
+        
+        
+        self.assertTrue(True)
+        
+    def test_ispht(self):
+        """ispht""" 
+        
+        Nmax = 100
+        Nrows = 2000
+        res = True
+        
+        for MM in xrange(1,5):
+            Mmax = Nmax - MM
+            c = sp.random_coefs(Nmax, Mmax)
+            
+            ppy = sp.ispht_slow(c, Nrows, Nrows)
+            pc = sp.ispht_slow(c, Nrows, Nrows)
+            
+            rerr = np.sum(sp.abs(ppy - pc))/np.sum(sp.abs(ppy))
+            
+            if (rerr > 1e-13):
+                res = False
         
         self.assertTrue(res)
         
