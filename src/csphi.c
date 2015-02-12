@@ -82,7 +82,7 @@ double ynnm(int n, int m)
 * 
 * @param en Index n
 * @param em Index m
-* @param y[] Array of Fourier coefficients for Ynm
+* @param y  Array of Fourier coefficients for Ynm
 * @param len Length of array y
 * 
 * @see ynnm()
@@ -111,7 +111,7 @@ void ynunm(int en,int em,SFLOAT* y,int len)
 * 
 * @param S The output will be a number greater than or equal to this
 * 
-* @return A number greater than S, that can be factored by 2,3,5,7
+* @return A number greater than S, that can be factored by 2,3,5
 */
 int FindQ(int S)
 {
@@ -177,7 +177,11 @@ void SData(SCOMPLEX* s,int Q,int Nrows, int Nmax)
 * @param m     bnm m index
 * @param hkm   Output 
 * @param len   Length of output, must be greater than n and less than or equal to Q (set to n+1)
+* @param ss    Fourier transformed version of the data provided by SData
 * @param Q     A number larger than Nrow+n, make factorable into small primes for speed
+* @param Q2    Same as Q (used this so the swig interface creator wouldn't get confused)
+* @param kiss_cfg_fw    Config info for a forwards FFT
+* @param kiss_cfg_bw    Config info for a backwards FFT
 */
 void hkm_fc(SCOMPLEX* gcoef,int Nrow,int Ncol, 
 			int n, int m, 
@@ -236,8 +240,16 @@ void hkm_fc(SCOMPLEX* gcoef,int Nrow,int Ncol,
 * @param Nmax Maximum number of spherical coefficients desired
 * @param m  The m index into the spherical coefficients
 * @param vec The output vector of length Nmax-abs(m)+1
-* @param s The s data given by SData
-* @param Q The length of s
+* @param ss Fourier transform of the data returned from SData
+* @param Q The length of ss
+* @param ff Some work space that is as long as ss
+* @param Q2 Same as Q, I included it so swig could easily be used
+* @param hkm See hkm_fc
+* @param Lhkm Length of hkm
+* @param y See ynunm
+* @param Ly Length of y
+* @param kiss_cfg_fw Config info for a forwards FFT
+* @param kiss_cfg_bw Config info for a backwards FFT
 */
 void bnm_fc(SCOMPLEX * fdata,int Nrow, int Ncol, 
 			int Nmax, int m,
@@ -298,12 +310,14 @@ void bnm_fc(SCOMPLEX * fdata,int Nrow, int Ncol,
 * @param Nrow Number of rows in fdata
 * @param Ncol Number of columns in fdata
 * @param sc Array of coefficients
+* @param L Length of sc
+* @param Nmax Maximum number of n modes desired
+* @param Mmax Maximum number of abs(m) modes desired
 */
 void fc_to_sc(SCOMPLEX* fdata, int Nrow, int Ncol,
 			  SCOMPLEX* sc, int L,
 			  int Nmax, int Mmax)
 {
-
 	int m, Q;	
 	SCOMPLEX* pt;
 	int* inds;
@@ -410,7 +424,7 @@ void fcvec_m_sc(SCOMPLEX * vec,
                 int m,int Nmax,
                 SCOMPLEX * fdata,int Nrow,int Ncol,
                 int M,
-                SFLOAT * y, int len)
+                SFLOAT* y, int len)
 {
 	int n,k,mm,H;
 	int K = Nmax + 1;
@@ -474,10 +488,13 @@ void fcvec_m_sc(SCOMPLEX * vec,
 /** 
  * @brief Spherical harmonic coefficients to Fourier coefficients
  * 
- * @param sp The pointer to the sphcoef structure
- * @param fdata The array containing the resulting Fourier coefficients
+ * @param fdata Fourier coefficients
  * @param Nrow Number of rows in fdata
  * @param Ncol Number of columns in fdata
+ * @param sc Array of coefficients
+ * @param L Length of sc
+ * @param Nmax Maximum number of n modes in sc
+ * @param Mmax Maximum number of abs(m) modes in sc
  */
 void sc_to_fc(SCOMPLEX* fdata,int Nrow,int Ncol,
               SCOMPLEX* sc, int L,  

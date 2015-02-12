@@ -20,7 +20,7 @@ from unittest import TestCase
 import spherepy as sp
 import numpy as np
 
-Nmodes = 100
+Nmodes = 300
 
 class TestSphi(TestCase):
     """Tests for the low level numeric functions. This isn't a good test to 

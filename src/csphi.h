@@ -16,6 +16,20 @@
 * along with SpherePy.  If not, see <http://www.gnu.org/licenses/>
 */
 
+/*****************************************************************************
+
+
+                         csphi: Low Level Routines 
+
+Randy Direen
+2/11/2015
+
+These routines are used in the process of calculating the scalar 
+spherical harmonic coefficients from spherical pattern information.
+For python versions, see pysphi.py.
+
+*****************************************************************************/
+
 #ifndef __CSPHI__
 #define __CSPHI__
 
@@ -37,13 +51,10 @@ typedef struct {
     SFLOAT i;
 } SCOMPLEX;
 
-
 #define SUCCESS    0
 #define OUTBOUNDS  1
 
 #define PI 3.14159265358979323846
-
-
 
 SFLOAT ynnm(int n,int m);
 

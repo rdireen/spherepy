@@ -16,17 +16,19 @@
 # along with SpherePy.  If not, see <http://www.gnu.org/licenses/>
 
 
-"""
-             pyphi: Low Level Routines 
+"""***************************************************************************
+
+                   pysphi: Low Level Routines 
 
 Randy Direen
-1/28/2015
+2/11/2015
 
+These routines are used in the process of calculating the scalar 
+spherical harmonic coefficients from spherical pattern information.
+For c versions, see csphi.c in src folder.
 
-"""
+***************************************************************************"""
 import numpy as np
-import __init__
-import csphi
 
 def ynnm(n, m):
     """Initial value for recursion formula""" 
@@ -184,11 +186,7 @@ def bnm_vec_fc(fdata, Nmax, m):
 
     for n in xrange(absm, Nmax + 1):
 
-        if __init__.use_cext: 
-            ynm = np.zeros(n + 1, dtype=np.float64)
-            csphi.ynunm(n, m, ynm)
-        else:   
-            ynm = ynunm(n, m, n + 1)
+        ynm = ynunm(n, m, n + 1)
 
         out[n - absm] = 1j ** (-m) * h[0] * ynm[0]
 
@@ -288,11 +286,7 @@ def fcvec_m_sc(vec, m, nmax, nrows):
 
     for n in xrange(np.abs(m), K):
         
-        if __init__.use_cext: 
-            ynm = np.zeros(K, dtype=np.float64)
-            csphi.ynunm(n, m, ynm)
-        else:   
-            ynm = ynunm(n, m, K)
+        ynm = ynunm(n, m, K)
 
         F[0:nmax + 1] += vec[n - np.abs(m)] * ynm.T
 

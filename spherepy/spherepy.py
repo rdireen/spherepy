@@ -664,6 +664,34 @@ def spht(ssphere, nmax, mmax):
                                 
     return ScalarCoefs(sc, nmax, mmax)
 
+def spht_slow(ssphere, nmax, mmax):
+    """Returns a ScalarCoefs object containing the spherical harmonic 
+    coefficients of the ssphere object"""
+
+    if mmax > nmax:
+        raise SpherePyError("Mmax must be less than or equal to Nmax")
+
+    nrows = ssphere._dsphere.shape[0]
+    ncols = ssphere._dsphere.shape[1]
+
+    if np.mod(nrows, 2) == 1 or np.mod(ncols, 2) == 1:
+        raise SpherePyError("number of rows and columns in continued sphere" + 
+                        " object must be even")
+
+    fdata = np.fft.fft2(ssphere._dsphere) / (nrows * ncols)
+    pysphi.fix_even_row_data_fc(fdata)
+    
+    fdata_extended = np.zeros([nrows + 2, ncols], dtype=np.complex128)
+
+    pysphi.pad_rows_fdata(fdata, fdata_extended)
+
+    pysphi.sin_fc(fdata_extended)
+    
+    # check if we are using c extended versions of the code or not
+    sc = pysphi.fc_to_sc(fdata_extended, nmax, mmax)
+                                
+    return ScalarCoefs(sc, nmax, mmax)
+
 
 def ispht(scoefs, nrows, ncols):
 
@@ -673,7 +701,7 @@ def ispht(scoefs, nrows, ncols):
 
     if __init__.use_cext: 
         fdata = np.zeros([nrows, ncols], dtype=np.complex128)
-        csphi.fc_to_sc(fdata, scoefs._vec, scoefs._nmax, scoefs._mmax)
+        csphi.sc_to_fc(fdata, scoefs._vec, scoefs._nmax, scoefs._mmax)
     else:   
         fdata = pysphi.sc_to_fc(scoefs._vec,
                             scoefs._nmax,
@@ -682,6 +710,21 @@ def ispht(scoefs, nrows, ncols):
     
     
 
+    ds = np.fft.ifft2(fdata) * nrows * ncols
+
+    return ScalarPatternUniform(ds, doublesphere=True)
+
+def ispht_slow(scoefs, nrows, ncols):
+
+    if np.mod(ncols, 2) == 1:
+        raise SpherePyError("For consistency purposes, make sure Ncols " + 
+                            "is even.")
+
+    fdata = pysphi.sc_to_fc(scoefs._vec,
+                            scoefs._nmax,
+                            scoefs._mmax,
+                            nrows, ncols)
+    
     ds = np.fft.ifft2(fdata) * nrows * ncols
 
     return ScalarPatternUniform(ds, doublesphere=True)

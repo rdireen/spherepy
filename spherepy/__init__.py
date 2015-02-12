@@ -14,7 +14,7 @@ from .spherepy import *
 from .sbessel import *
 
 #Set to true if you want to use the c extensions
-use_cext = True
+use_cext = True    
 
 try:
     from .plot_sphere import *
