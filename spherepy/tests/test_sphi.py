@@ -75,34 +75,45 @@ class TestSphi(TestCase):
         self.assertTrue(res)
         
     def test_spht(self):
-        """spht"""
+        """::Compare spht within pysphi and csphi"""
         
         Nrows = 303
         Ncols = 310
+        res = True
         
+        for MM in xrange(2, 16, 2):
+            NNcols = Ncols - MM
+            p = sp.random_patt_uniform(Nrows, NNcols)
+            
+            spy = sp.spht(p, 100, 85)
+            sc = sp.spht(p, 100, 85)
+            
+            rerr = sp.compare_relative(spy, sc)
+            print rerr
+            if (rerr > 1e-13):
+                res = False
         
-        
-        
-        self.assertTrue(True)
+        self.assertTrue(res)
         
     def test_ispht(self):
-        """ispht""" 
+        """::Compare ispht within pysphi and csphi""" 
         
         Nmax = 100
         Nrows = 2000
         res = True
         
-        for MM in xrange(1,5):
+        for MM in xrange(1, 5):
             Mmax = Nmax - MM
             c = sp.random_coefs(Nmax, Mmax)
             
             ppy = sp.ispht_slow(c, Nrows, Nrows)
             pc = sp.ispht_slow(c, Nrows, Nrows)
             
-            rerr = np.sum(sp.abs(ppy - pc))/np.sum(sp.abs(ppy))
+            rerr = np.sum(sp.abs(ppy - pc)) / np.sum(sp.abs(ppy))
             
             if (rerr > 1e-13):
                 res = False
+                
         
         self.assertTrue(res)
         

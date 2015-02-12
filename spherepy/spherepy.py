@@ -41,12 +41,9 @@ import __init__
 #---------------------------------------------------------------------3rd Party
 import numpy as np
 
-
 #------------------------------------------------------------------------Custom
 import pysphi  # python versions of the low level routines
 import csphi  # c extensions of the low level routines
-
-
 
 #==============================================================================
 # Global Declarations
@@ -601,16 +598,21 @@ def array(patt):
     else:
         raise SpherePyError("unrecognized type")
     
-def abs(patt):
-    if isinstance(patt, ScalarPatternUniform):
-        return np.abs(patt.array)
-    elif isinstance(patt, VectorPatternUniform):
+def abs(sobj):
+    if isinstance(sobj, ScalarPatternUniform):
+        return np.abs(sobj.array)
+    elif isinstance(sobj, ScalarCoefs):
+        return ScalarCoefs(np.abs(sobj._vec),sobj.nmax,sobj.mmax)
+    elif isinstance(sobj, VectorPatternUniform):
         raise NotImplementedError()
     else:
         raise SpherePyError("unrecognized type")
     
-
-
+def compare_relative(sc1,sc2):  
+    num = np.sum(np.abs(sc1._vec - sc2._vec))
+    den = np.sum(np.abs(sc1._vec))
+    return num/den
+    
 def continue_sphere(cdata, sym):
     
     nrows = cdata.shape[0]
@@ -702,7 +704,6 @@ def spht_slow(ssphere, nmax, mmax):
                                 
     return ScalarCoefs(sc, nmax, mmax)
 
-
 def ispht(scoefs, nrows, ncols):
 
     if np.mod(ncols, 2) == 1:
@@ -718,8 +719,6 @@ def ispht(scoefs, nrows, ncols):
                             scoefs._mmax,
                             nrows, ncols)
     
-    
-
     ds = np.fft.ifft2(fdata) * nrows * ncols
 
     return ScalarPatternUniform(ds, doublesphere=True)
