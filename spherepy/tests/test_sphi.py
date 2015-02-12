@@ -20,7 +20,7 @@ from unittest import TestCase
 import spherepy as sp
 import numpy as np
 
-Nmodes = 300
+Nmodes = 100
 
 class TestSphi(TestCase):
     """Tests for the low level numeric functions. This isn't a good test to 
@@ -28,7 +28,7 @@ class TestSphi(TestCase):
     the python code."""
     
     def test_ynnm(self):
-        """ynnm                
+        """::Compare ynnm within pysphi and csphi               
         """
         res = True
         for n in xrange(0, Nmodes + 1):
@@ -41,7 +41,7 @@ class TestSphi(TestCase):
         self.assertTrue(res)
         
     def test_ynunm(self):
-        """ynunm"""
+        """::Compare ynunm within pysphi and csphi"""
         
         res = True
         for n in xrange(0, Nmodes + 1):
@@ -57,7 +57,7 @@ class TestSphi(TestCase):
         self.assertTrue(res)
         
     def test_s_data(self):
-        """s_data"""
+        """::Compare s_data within pysphi and csphi"""
         
         res = True
         for Nmax in xrange(10, 50):

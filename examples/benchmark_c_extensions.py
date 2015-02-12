@@ -4,7 +4,7 @@ import spherepy as sp
 import profile
 import time
 
-Nmax = 400
+Nmax = 200
 Mmax = Nmax
 Nrows = 2000
 c = sp.random_coefs(Nmax, Nmax)
