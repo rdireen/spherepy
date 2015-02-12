@@ -44,6 +44,7 @@ import numpy as np
 #------------------------------------------------------------------------Custom
 import pysphi  # python versions of the low level routines
 import csphi  # c extensions of the low level routines
+import ops
 
 #==============================================================================
 # Global Declarations
@@ -657,13 +658,13 @@ def spht(ssphere, nmax, mmax):
                         " object must be even")
 
     fdata = np.fft.fft2(ssphere._dsphere) / (nrows * ncols)
-    pysphi.fix_even_row_data_fc(fdata)
+    ops.fix_even_row_data_fc(fdata)
     
     fdata_extended = np.zeros([nrows + 2, ncols], dtype=np.complex128)
 
-    pysphi.pad_rows_fdata(fdata, fdata_extended)
+    ops.pad_rows_fdata(fdata, fdata_extended)
 
-    pysphi.sin_fc(fdata_extended)
+    ops.sin_fc(fdata_extended)
     
     N = nmax + 1;
     NC = N + mmax * (2 * N - mmax - 1);
@@ -691,13 +692,13 @@ def spht_slow(ssphere, nmax, mmax):
                         " object must be even")
 
     fdata = np.fft.fft2(ssphere._dsphere) / (nrows * ncols)
-    pysphi.fix_even_row_data_fc(fdata)
+    ops.fix_even_row_data_fc(fdata)
     
     fdata_extended = np.zeros([nrows + 2, ncols], dtype=np.complex128)
 
-    pysphi.pad_rows_fdata(fdata, fdata_extended)
+    ops.pad_rows_fdata(fdata, fdata_extended)
 
-    pysphi.sin_fc(fdata_extended)
+    ops.sin_fc(fdata_extended)
     
     # check if we are using c extended versions of the code or not
     sc = pysphi.fc_to_sc(fdata_extended, nmax, mmax)
@@ -741,6 +742,33 @@ def ispht_slow(scoefs, nrows, ncols):
 def L2_coef(scoef):
 
     return np.sqrt(np.sum(np.abs(scoef._vec) ** 2))
+
+def sph_harmonic_tp(nrows, ncols, n, m):
+    """Produces Ynm(theta,phi)
+
+        theta runs from 0 to pi and has 'nrows' points.
+
+        phi runs from 0 to 2*pi - 2*pi/ncols and has 'ncols' points.
+    
+    """
+    nuvec = pysphi.ynunm(n, m, n + 1)
+    num = nuvec[1:] * (-1) ** m
+    num = num[::-1]
+    yvec = np.concatenate([num, nuvec])
+    
+    theta = np.linspace(0.0, np.pi, nrows)
+    phi = np.linspace(0.0, 2.0 * np.pi - 2.0 * np.pi / ncols)
+    nu = np.array(range(-n, n + 1), dtype=np.complex128)
+    
+    out = np.zeros([nrows, ncols], dtype=np.complex128)
+
+    for nn in xrange(0, nrows):
+        exp_vec = np.exp(1j * nu * theta[nn])
+        for mm in xrange(0, ncols):          
+            vl = np.sum(yvec * exp_vec)
+            out[nn, mm] = 1j ** m * np.exp(1j * m * phi[mm]) * vl
+
+    return out
 
 
 

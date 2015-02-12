@@ -28,7 +28,13 @@ spherical harmonic coefficients from spherical pattern information.
 For c versions, see csphi.c in src folder.
 
 ***************************************************************************"""
+
+#---------------------------------------------------------------------3rd Party
 import numpy as np
+
+#==============================================================================
+# Low Level Functions
+#==============================================================================
 
 def ynnm(n, m):
     """Initial value for recursion formula""" 
@@ -76,32 +82,6 @@ def ynunm(n, m, L):
                 out[k] = ((tmp1 + tmp2) * out[k + 2] - tmp3 * out[k + 4]) / tmp4
     return out    
     
-def sph_harmonic_tp(nrows, ncols, n, m):
-    """Produces Ynm(theta,phi)
-
-        theta runs from 0 to pi and has 'nrows' points.
-
-        phi runs from 0 to 2*pi - 2*pi/ncols and has 'ncols' points.
-    
-    """
-    nuvec = ynunm(n, m, n + 1)
-    num = nuvec[1:] * (-1) ** m
-    num = num[::-1]
-    yvec = np.concatenate([num, nuvec])
-    
-    theta = np.linspace(0.0, np.pi, nrows)
-    phi = np.linspace(0.0, 2.0 * np.pi - 2.0 * np.pi / ncols)
-    nu = np.array(range(-n, n + 1), dtype=np.complex128)
-    
-    out = np.zeros([nrows, ncols], dtype=np.complex128)
-
-    for nn in xrange(0, nrows):
-        exp_vec = np.exp(1j * nu * theta[nn])
-        for mm in xrange(0, ncols):          
-            vl = np.sum(yvec * exp_vec)
-            out[nn, mm] = 1j ** m * np.exp(1j * m * phi[mm]) * vl
-
-    return out
 
 def smallest_prime_factor(Q):
     """Find the smallest number factorable by the small primes 2, 3, 4, and 7 
@@ -206,56 +186,6 @@ def fc_to_sc(gcoef, Nmax, Mmax):
         c = np.concatenate([c, a])
 
     return c
-
-
-def fix_even_row_data_fc(fdata):
-    """When the number of rows in fdata is even, there is a subtlety that must
-    be taken care of if fdata is to satisfy the symmetry required for further
-    processing. For an array length of 6,the data is align as [0 1 2 -3 -2 -1] 
-    this routine simply sets the row corresponding to the -3 index equal to 
-    zero. It is an unfortunate subtlety, but not taking care of this has
-    resulted in answers that are not double precision. This operation should
-    be applied before any other operators are applied to fdata."""
-
-    L = fdata.shape[0]
-    if np.mod(L, 2) == 0:
-        fdata[L / 2, :] = 0
-
-def pad_rows_fdata(fdata, fdata_extended):
-    
-    Le = fdata_extended.shape[0]
-    L = fdata.shape[0]
-
-    if Le < L:
-        raise Exception("Make sure fdata_extended has equal or more rows" + 
-                       " than fdata")
-
-    M = int(np.floor(L / 2))
-
-    fdata_extended[:, :] = 0
-    fdata_extended[0:M, :] = fdata[0:M, :]
-    fdata_extended[-1:-M:-1, :] = fdata[-1:-M:-1, :]
-
-def sin_fc(fdata):
-    """Apply sin in the Fourier domain"""
-
-    nrows = fdata.shape[0]
-    ncols = fdata.shape[1]
-
-    M = nrows / 2
-    fdata[M - 1, :] = 0
-    fdata[M + 1, :] = 0
-    
-    work1 = np.zeros([nrows, ncols], dtype=np.complex128)
-    work2 = np.zeros([nrows, ncols], dtype=np.complex128)
-
-    work1[0, :] = fdata[-1, :]
-    work1[1:, :] = fdata[0:-1, :]
-
-    work2[0:-1] = fdata[1:, :]
-    work2[-1, :] = fdata[0, :]
-
-    fdata[:, :] = 1.0 / (2 * 1j) * (work1 - work2)
 
 def mindx(m, nmax, mmax):
     """index to the first n value for a give m within the spherical 

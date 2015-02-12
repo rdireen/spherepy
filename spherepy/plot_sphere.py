@@ -15,9 +15,28 @@
 # You should have received a copy of the GNU General Public License
 # along with SpherePy.  If not, see <http://www.gnu.org/licenses/>
 
+"""***************************************************************************
+
+               plot_sphere: Plotting Routines for SpherePy 
+
+Randy Direen
+2/11/2015
+
+These routines are used for plotting results calculated with SpherePy. To use
+them, matplotlib must be installed.
+
+***************************************************************************"""
+
+#---------------------------------------------------------------------Built-ins
 import numpy as np
-import spherepy as sp
 from functools import wraps
+
+#------------------------------------------------------------------------Custom
+import spherepy as sp
+
+#==============================================================================
+# Matplotlib Cecking Decorator 
+#==============================================================================
 
 MPLINSTALLED = True
 try:
@@ -26,9 +45,13 @@ try:
 except:
     MPLINSTALLED = False
 
-msg = """Plotting requires matplotlib. You can install matplotlib by typing 'pip install matplotlib' at the command line. If that doesn't work, google it."""
+msg = "Plotting requires matplotlib. You can install matplotlib by typing " +\
+      "'pip install matplotlib' at the command line. If that doesn't work," +\
+      " google it."
 
-def matplotlibensure(func):  
+def matplotlibensure(func):
+    """If matplotlib isn't installed, this decorator alerts the user and 
+    suggests how one might obtain the package."""  
     @wraps(func)
     def wrap(*args):
         if MPLINSTALLED == False:
@@ -37,6 +60,10 @@ def matplotlibensure(func):
         return func(*args)   
         
     return wrap
+
+#==============================================================================
+# Plotting Routines
+#==============================================================================
     
 @matplotlibensure
 def simple_plot(n, m):

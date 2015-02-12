@@ -45,7 +45,7 @@ except ImportError:
 description = 'Numerical routines for working with spherical harmonic ' + \
               'coefficients' 
  
-srcs = ['src/csphi.c', 'src/csphi_wrap.c','src/kiss_fft.c']            
+srcs = ['src/csphi.c', 'src/csphi_wrap.c', 'src/kiss_fft.c']            
 csphi_module = Extension('_csphi',
                          sources=srcs,
                          include_dirs=['src', numpy_include]
@@ -74,6 +74,6 @@ setup(name='spherepy',
       include_package_data=True,
       test_suite='nose.collector',
       tests_require=['nose'],
-      ext_modules = [csphi_module]  
+      ext_modules=[csphi_module]  
      )
 
