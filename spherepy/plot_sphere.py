@@ -35,7 +35,7 @@ from functools import wraps
 import spherepy as sp
 
 #==============================================================================
-# Matplotlib Cecking Decorator 
+# Matplotlib Checking Decorator 
 #==============================================================================
 
 MPLINSTALLED = True

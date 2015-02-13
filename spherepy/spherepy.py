@@ -478,7 +478,157 @@ class ScalarPatternNonUniform:
     pass
 
 class VectorPatternUniform:
-    pass
+    
+    def __init__(self, tcdata, pcdata, doublesphere=False):
+        
+        if(tcdata.shape != pcdata.shape):
+            raise SpherePyError("Shape of tcdata and pcdata must be the " + \
+                                 "the same")
+
+        if(doublesphere == False):
+            self._tdsphere = continue_sphere(tcdata, -1)
+            self._pdsphere = continue_sphere(pcdata, -1)
+        else:
+            self._tdsphere = tcdata
+            self._pdsphere = pcdata
+
+    def __repr__(self):
+
+        return self.array.__repr__()
+
+    @property
+    def nrows(self):
+        return self._tdsphere.shape[0] / 2 + 1 
+
+    @property
+    def ncols(self):
+        return self._tdsphere.shape[1]
+
+    @property
+    def shape(self):
+        return (self.nrows, self.ncols)
+
+    @property
+    def doublesphere(self):
+        return (self._tdsphere, self._pdsphere)
+
+    @property
+    def array(self):
+        return (self._tdsphere[0:self.nrows, :], 
+                self._tdsphere[0:self.nrows, :])
+
+    @property
+    def is_symmetric(self):
+        """return true if the data is symmetric"""
+        if (self.single_val[0] < 1e-13) and (self.single_val[1] < 1e-13):
+            return True 
+        else:
+            return False
+
+    @property
+    def single_val(self):
+        """return relative error of worst point that might make the data none
+        symmetric.
+        """
+        
+        sv_t = self._sv(self._tdsphere)
+        sv_p = self._sv(self._tdsphere)
+        
+        return (sv_t, sv_p)
+        
+    
+    def _sv(self,dat):
+        
+        nrows = dat.shape[0]
+        ncols = dat.shape[1]
+
+        sv = 0.0
+        for n in xrange(0, nrows):
+            for m in xrange(0, ncols):
+                s = dat[np.mod(nrows - n, nrows),
+                              np.mod(int(np.floor(ncols / 2)) + m, ncols)]
+                t = dat[n, m]
+
+                if s != 0:
+                    sabs = np.abs((s - t) / s)
+                    if sabs >= sv:
+                        sv = sabs
+                elif t != 0:
+                    sabs = 1.0
+                    if sabs >= sv:
+                        sv = sabs
+
+        return sv
+        
+    def _scalar_pattern_uniform_op_left(func):
+        """decorator for operator overloading when ScalarPatternUniform is on 
+        the left"""
+        @wraps(func)
+        def verif(self, patt):
+            if isinstance(patt, ScalarPatternUniform):
+                if len(self._dsphere.shape) == len(patt._dsphere.shape):
+                    return ScalarPatternUniform(func(self, self._dsphere,
+                                                     patt._dsphere),
+                                                doublesphere=True)
+                else:
+                    raise SpherePyError("ScalarPatternUniform could not be" + 
+                                        " combined with sizes (%d,%d) and "
+                                        + "(%d,%d)" % \
+                                            (self.nrows, self.ncols,
+                                            patt.nrows, patt.ncols))
+        
+            elif isinstance(patt, numbers.Number):
+                return ScalarPatternUniform(func(self, self._dsphere, patt),
+                                            doublesphere=True)
+            else:
+                raise SpherePyError("cannot combine type with" + 
+                                   " ScalarPatternUniform")
+        return verif
+
+    def _scalar_pattern_uniform_op_right(func):
+        """decorator for operator overloading when ScalarPatternUniform is on
+        the right"""
+        @wraps(func)
+        def verif(self, patt):
+            if isinstance(patt, numbers.Number):
+                return ScalarPatternUniform(func(self, self._dsphere, patt),
+                                   doublesphere=True)
+            else:
+                raise SpherePyError("cannot add type to ScalarPatternUniform")
+        return verif
+
+    @_scalar_pattern_uniform_op_left
+    def __add__(self, a, b):
+        return a + b
+
+    @_scalar_pattern_uniform_op_right
+    def __radd__(self, a, b):
+        return  b + a
+
+    @_scalar_pattern_uniform_op_left
+    def __sub__(self, a, b):
+        return a - b
+
+    @_scalar_pattern_uniform_op_right
+    def __rsub__(self, a, b):
+        return b - a
+
+    @_scalar_pattern_uniform_op_left
+    def __mul__(self, a, b):
+        return a * b
+
+    @_scalar_pattern_uniform_op_right
+    def __rmul__(self, a, b):
+        return b * a
+
+    @_scalar_pattern_uniform_op_left
+    def __div__(self, a, b):
+        return a / b
+
+    @_scalar_pattern_uniform_op_right
+    def __rdiv__(self, a, b):
+        return b / a  
+
 
 class VectorPatternNonUniform:
     pass
@@ -645,7 +795,7 @@ def double_sphere(cdata, sym):
 
 def spht(ssphere, nmax, mmax):
     """Returns a ScalarCoefs object containing the spherical harmonic 
-    coefficients of the ssphere object"""
+    coefficients of the ScalarPatternUniform object"""
 
     if mmax > nmax:
         raise SpherePyError("Mmax must be less than or equal to Nmax")
@@ -676,6 +826,22 @@ def spht(ssphere, nmax, mmax):
         sc = pysphi.fc_to_sc(fdata_extended, nmax, mmax)
                                 
     return ScalarCoefs(sc, nmax, mmax)
+
+def vspht(vsphere, nmax, mmax):
+    """Returns a VectorCoefs object containt the vector spherical harmonic
+    coefficients of the VectorPatternUniform object"""
+    
+    if mmax > nmax:
+        raise SpherePyError("Mmax must be less than or equal to Nmax")
+
+    nrows = vsphere._dsphere.shape[0]
+    ncols = vsphere._dsphere.shape[1]
+
+    if np.mod(nrows, 2) == 1 or np.mod(ncols, 2) == 1:
+        raise SpherePyError("number of rows and columns in continued sphere" + 
+                        " object must be even")
+    
+    
 
 def spht_slow(ssphere, nmax, mmax):
     """Returns a ScalarCoefs object containing the spherical harmonic 
@@ -723,6 +889,7 @@ def ispht(scoefs, nrows, ncols):
     ds = np.fft.ifft2(fdata) * nrows * ncols
 
     return ScalarPatternUniform(ds, doublesphere=True)
+
 
 def ispht_slow(scoefs, nrows, ncols):
 

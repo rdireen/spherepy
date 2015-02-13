@@ -65,7 +65,7 @@ def pad_rows_fdata(fdata, fdata_extended):
     fdata_extended[-1:-M:-1, :] = fdata[-1:-M:-1, :]
 
 def sin_fc(fdata):
-    """Apply sin in the Fourier domain"""
+    """Apply sin in the Fourier domain."""
 
     nrows = fdata.shape[0]
     ncols = fdata.shape[1]
@@ -84,3 +84,61 @@ def sin_fc(fdata):
     work2[-1, :] = fdata[0, :]
 
     fdata[:, :] = 1.0 / (2 * 1j) * (work1 - work2)
+    
+def dtheta_fc(fdata):
+    """Apply theta derivative in the Fourier domain."""
+    
+    nrows = fdata.shape[0]
+    ncols = fdata.shape[0]
+    B = nrows / 2 #As always, we assume nrows and ncols are even
+    
+    a = range(0,B)
+    ap = range(-B,0)
+    a.extend(ap)
+    
+    dtheta = np.zeros([nrows,ncols],np.complex128)
+    
+    for k in xrange(0,ncols):
+        dtheta[:,k] = dtheta
+        
+    fdata *= 1j*dtheta
+    
+
+def dphi_fc(fdata):
+    """Apply phi derivative in the Fourier domain."""
+    
+    nrows = fdata.shape[0]
+    ncols = fdata.shape[0]
+    
+    B=nrows / 2 #As always, we assume nrows and ncols are even
+    
+    a = range(0,B)
+    ap = range(-B,0)
+    a.extend(ap)
+    
+    dphi = np.zeros([nrows,ncols],np.complex128)
+    
+    for k in xrange(0,nrows):
+        dphi[k,:] = dphi
+        
+    fdata *= 1j*dphi
+    
+    
+    
+def sinLdot_fc(tfdata,pfdata):
+    """Apply sin of theta times the L operator to the data in the Fourier 
+    domain."""
+    
+    dtheta_fc(tfdata)
+    
+    sin_fc(pfdata)
+    dphi_fc(pfdata)
+    
+    return 1j*(tfdata - pfdata)
+    
+    
+    
+
+
+
+    
