@@ -61,7 +61,7 @@ class SpherePyError(Exception):
     pass
 
 class ScalarCoefs(object):
-    """Holds the scalar coefficients that represent a spherical pattern the 
+    """Holds the scalar coefficients that represent a spherical pattern. The 
     function spht returns this object"""
     def __init__(self, vec, nmax, mmax):
 
@@ -335,7 +335,192 @@ class ScalarCoefs(object):
 
 
 class VectorCoefs(object):
-    pass
+    """Holds the vector coefficients that represent a vector spherical pattern. 
+    The function vspht returns this object"""
+    def __init__(self, vec1, vec2, nmax, mmax):
+        
+        if(vec1.shape != vec2.shape):
+            raise SpherePyError("Shape of vec1 and vec2 must be the " + \
+                                 "the same.")
+
+        self.scoef1 = ScalarCoefs(vec1, nmax, mmax)
+        self.scoef2 = ScalarCoefs(vec1, nmax, mmax)
+        self._nmax = nmax
+        self._mmax = mmax
+
+    @property
+    def nmax(self):
+        return self._nmax
+
+    @property
+    def mmax(self):
+        return self._mmax
+
+    def _array_2d_repr(self):
+        """creates a 2D array that has nmax + 1 rows and 2*mmax + 1 columns
+        and provides a representation for the coefficients that makes 
+        plotting easier"""
+
+        return (self.scoef1._array_2d_repr(),
+                self.scoef2._array_2d_repr())
+
+    def _reshape_n_vecs(self):
+        """return list of arrays, each array represents a different m mode"""
+
+        return (self.scoef1._reshape_n_vecs(),
+                self.scoef2._reshape_n_vecs())
+
+    def _reshape_m_vecs(self):
+        """return list of arrays, each array represents a different n mode"""
+        
+        return (self.scoef1._reshape_m_vecs(),
+                self.scoef2._reshape_m_vecs())
+
+    def __repr__(self):
+        return "vector_coef(nmax = {0}, mmax = {1})".format(self.nmax,
+                                                                     self.mmax)
+
+    def __setitem__(self, arg, val):
+        if len(arg) != 2:
+            raise AttributeError("tuple must have 2 elements")
+        
+        if len(val) != 2:
+            raise AttributeError("The value needs to be a tuple with " + \
+                                 "length = 2 and containing two numbers.")
+
+        if isinstance(arg[0], slice) and isinstance(arg[1], int):
+            raise SpherePyError("Set scalar coefficients individually " + \
+                                "(e.g. vcoef.scoef2[:,3] = vec)")
+
+        elif isinstance(arg[0], int) and isinstance(arg[1], slice):
+            raise SpherePyError("Set scalar coefficients individually " + \
+                                "(e.g. vcoef.scoef2[5,:] = vec)")
+
+        elif isinstance(arg[0], int) and isinstance(arg[1], int):
+            n = arg[0]
+            m = arg[1]
+
+            try:
+                self.scoef1[n, m] = val[0]
+                self.scoef2[n, m] = val[1]
+            except IndexError:
+                SpherePyError("Set coefficients like this " + \
+                              "vsc[n,m] = (val1,val2)")
+
+        else:
+            raise AttributeError("what?, indexing method not recognized")
+
+    def __getitem__(self, arg):
+
+        if len(arg) != 2:
+            raise AttributeError("tuple must have 2 elements")  
+
+        if isinstance(arg[0], slice) and isinstance(arg[1], int):
+
+            m = arg[1]
+
+            if ((arg[0].start is None) and
+               (arg[0].step is None) and
+               (arg[0].stop is None)):
+
+                return (self.scoef1[:, m], self.scoef2[:, m])
+            else:
+                raise AttributeError("slicing operation not permitted")
+
+        elif isinstance(arg[0], int) and isinstance(arg[1], slice):
+            
+            n = arg[0]
+
+            if ((arg[1].start is None) and
+               (arg[1].step is None) and
+               (arg[1].stop is None)):
+                
+                return (self.scoef1[n, :], self.scoef2[n, :])
+            
+            else:
+                raise AttributeError("slicing operation not permitted")
+
+        elif isinstance(arg[0], int) and isinstance(arg[1], int):
+            n = arg[0]
+            m = arg[1]
+            return (self.scoef1[n, m], self.scoef2[n, m])
+
+        else:
+            raise AttributeError("what?, indexing method not recognized")
+
+    def _vector_coef_op_left(func):
+        """decorator for operator overloading when VectorCoef is on the
+        left"""
+        @wraps(func)
+        def verif(self, vcoef):
+            if isinstance(vcoef, VectorCoefs):
+                if len(self._vec) == len(vcoef._vec):
+                    return VectorCoefs(func(self, self.scoef1._vec,
+                                                  vcoef.scoef1._vec),
+                                       func(self, self.scoef2._vec,
+                                                  vcoef.scoef2._vec),
+                                        self.nmax,
+                                        self.mmax)
+                else:
+                    raise SpherePyError("VectorCoefs could not be combined" + 
+                                    " with sizes (%d,%d) and (%d,%d)" % \
+                                    (self.nmax, self.mmax,
+                                     vcoef.nmax, vcoef.mmax))
+        
+            elif isinstance(vcoef, numbers.Number):
+                return VectorCoefs(func(self, self.scoef1._vec, vcoef),
+                                   func(self, self.scoef2._vec, vcoef),
+                                   self.nmax,
+                                   self.mmax)
+            else:
+                raise SpherePyError("cannot combine type with VectorCoefs")
+        return verif
+
+    def _vector_coef_op_right(func):
+        """decorator for operator overloading when VectorCoefs is on the
+        right"""
+        @wraps(func)
+        def verif(self, vcoef):
+            if isinstance(vcoef, numbers.Number):
+                return VectorCoefs(func(self, self.scoef1._vec, vcoef),
+                                   func(self, self.scoef2._vec, vcoef),
+                                   self.nmax, self.mmax)
+            else:
+                raise SpherePyError("cannot add type to VectorCoefs")
+        return verif
+
+    @_vector_coef_op_left
+    def __add__(self, a, b):
+        return a + b
+
+    @_vector_coef_op_right
+    def __radd__(self, a, b):
+        return  b + a
+
+    @_vector_coef_op_left
+    def __sub__(self, a, b):
+        return a - b
+
+    @_vector_coef_op_right
+    def __rsub__(self, a, b):
+        return b - a
+
+    @_vector_coef_op_left
+    def __mul__(self, a, b):
+        return a * b
+
+    @_vector_coef_op_right
+    def __rmul__(self, a, b):
+        return b * a
+
+    @_vector_coef_op_left
+    def __div__(self, a, b):
+        return a / b
+
+    @_vector_coef_op_right
+    def __rdiv__(self, a, b):
+        return b / a  
+
 
 class ScalarPatternUniform(object):
 
@@ -410,7 +595,7 @@ class ScalarPatternUniform(object):
         @wraps(func)
         def verif(self, patt):
             if isinstance(patt, ScalarPatternUniform):
-                if len(self._dsphere.shape) == len(patt._dsphere.shape):
+                if self._dsphere.shape == patt._dsphere.shape:
                     return ScalarPatternUniform(func(self, self._dsphere,
                                                      patt._dsphere),
                                                 doublesphere=True)
@@ -514,7 +699,7 @@ class VectorPatternUniform:
 
     @property
     def array(self):
-        return (self._tdsphere[0:self.nrows, :], 
+        return (self._tdsphere[0:self.nrows, :],
                 self._tdsphere[0:self.nrows, :])
 
     @property
@@ -537,7 +722,7 @@ class VectorPatternUniform:
         return (sv_t, sv_p)
         
     
-    def _sv(self,dat):
+    def _sv(self, dat):
         
         nrows = dat.shape[0]
         ncols = dat.shape[1]
@@ -545,7 +730,7 @@ class VectorPatternUniform:
         sv = 0.0
         for n in xrange(0, nrows):
             for m in xrange(0, ncols):
-                s = dat[np.mod(nrows - n, nrows),
+                s = -dat[np.mod(nrows - n, nrows),
                               np.mod(int(np.floor(ncols / 2)) + m, ncols)]
                 t = dat[n, m]
 
@@ -560,72 +745,76 @@ class VectorPatternUniform:
 
         return sv
         
-    def _scalar_pattern_uniform_op_left(func):
-        """decorator for operator overloading when ScalarPatternUniform is on 
+    def _vector_pattern_uniform_op_left(func):
+        """decorator for operator overloading when VectorPatternUniform is on 
         the left"""
         @wraps(func)
         def verif(self, patt):
-            if isinstance(patt, ScalarPatternUniform):
-                if len(self._dsphere.shape) == len(patt._dsphere.shape):
-                    return ScalarPatternUniform(func(self, self._dsphere,
-                                                     patt._dsphere),
+            if isinstance(patt, VectorPatternUniform):
+                if self._tdsphere.shape == patt._tdsphere.shape:
+                    return VectorPatternUniform(func(self, self._tdsphere,
+                                                     patt._tdsphere),
+                                                func(self, self._pdsphere,
+                                                     patt._pdsphere),
                                                 doublesphere=True)
                 else:
-                    raise SpherePyError("ScalarPatternUniform could not be" + 
+                    raise SpherePyError("VectorPatternUniform could not be" + 
                                         " combined with sizes (%d,%d) and "
                                         + "(%d,%d)" % \
                                             (self.nrows, self.ncols,
                                             patt.nrows, patt.ncols))
         
             elif isinstance(patt, numbers.Number):
-                return ScalarPatternUniform(func(self, self._dsphere, patt),
+                return VectorPatternUniform(func(self, self._tdsphere, patt),
+                                            func(self, self._pdsphere, patt),
                                             doublesphere=True)
             else:
                 raise SpherePyError("cannot combine type with" + 
-                                   " ScalarPatternUniform")
+                                   " VectorPatternUniform")
         return verif
 
-    def _scalar_pattern_uniform_op_right(func):
-        """decorator for operator overloading when ScalarPatternUniform is on
+    def _vector_pattern_uniform_op_right(func):
+        """decorator for operator overloading when VectorPatternUniform is on
         the right"""
         @wraps(func)
         def verif(self, patt):
             if isinstance(patt, numbers.Number):
-                return ScalarPatternUniform(func(self, self._dsphere, patt),
+                return ScalarPatternUniform(func(self, self._tdsphere, patt),
+                                            func(self, self._pdsphere, patt),
                                    doublesphere=True)
             else:
-                raise SpherePyError("cannot add type to ScalarPatternUniform")
+                raise SpherePyError("cannot add type to VectorPatternUniform")
         return verif
 
-    @_scalar_pattern_uniform_op_left
+    @_vector_pattern_uniform_op_left
     def __add__(self, a, b):
         return a + b
 
-    @_scalar_pattern_uniform_op_right
+    @_vector_pattern_uniform_op_right
     def __radd__(self, a, b):
         return  b + a
 
-    @_scalar_pattern_uniform_op_left
+    @_vector_pattern_uniform_op_left
     def __sub__(self, a, b):
         return a - b
 
-    @_scalar_pattern_uniform_op_right
+    @_vector_pattern_uniform_op_right
     def __rsub__(self, a, b):
         return b - a
 
-    @_scalar_pattern_uniform_op_left
+    @_vector_pattern_uniform_op_left
     def __mul__(self, a, b):
         return a * b
 
-    @_scalar_pattern_uniform_op_right
+    @_vector_pattern_uniform_op_right
     def __rmul__(self, a, b):
         return b * a
 
-    @_scalar_pattern_uniform_op_left
+    @_vector_pattern_uniform_op_left
     def __div__(self, a, b):
         return a / b
 
-    @_scalar_pattern_uniform_op_right
+    @_vector_pattern_uniform_op_right
     def __rdiv__(self, a, b):
         return b / a  
 
@@ -649,7 +838,10 @@ def zeros_coefs(nmax, mmax, coef_type=scalar):
         vec = np.zeros(L, dtype=np.complex128)
         return  ScalarCoefs(vec, nmax, mmax)
     elif(coef_type == vector):
-        raise NotImplementedError()
+        L = (nmax + 1) + mmax * (2 * nmax - mmax + 1)
+        vec1 = np.zeros(L, dtype=np.complex128)
+        vec2 = np.zeros(L, dtype=np.complex128)
+        return  VectorCoefs(vec1, vec2, nmax, mmax)
     else:
         raise SpherePyError("unknown coefficient type")
 
@@ -664,7 +856,10 @@ def ones_coefs(nmax, mmax, coef_type=scalar):
         vec = np.ones(L, dtype=np.complex128)
         return  ScalarCoefs(vec, nmax, mmax)
     elif(coef_type == vector):
-        raise NotImplementedError()
+        L = (nmax + 1) + mmax * (2 * nmax - mmax + 1)
+        vec1 = np.ones(L, dtype=np.complex128)
+        vec2 = np.ones(L, dtype=np.complex128)
+        return  VectorCoefs(vec1, vec2, nmax, mmax)
     else:
         raise SpherePyError("unknown coefficient type")
 
@@ -680,7 +875,12 @@ def random_coefs(nmax, mmax, mu=0.0, sigma=1.0, coef_type=scalar):
               1j * np.random.normal(mu, sigma, L)
         return  ScalarCoefs(vec, nmax, mmax)
     elif(coef_type == vector):
-        raise NotImplementedError()
+        L = (nmax + 1) + mmax * (2 * nmax - mmax + 1)
+        vec1 = np.random.normal(mu, sigma, L) + \
+              1j * np.random.normal(mu, sigma, L)
+        vec2 = np.random.normal(mu, sigma, L) + \
+              1j * np.random.normal(mu, sigma, L)
+        return  VectorCoefs(vec1, vec2, nmax, mmax)
     else:
         raise SpherePyError("unknown coefficient type")
 
@@ -694,7 +894,9 @@ def zeros_patt_uniform(nrows, ncols, patt_type=scalar):
         return ScalarPatternUniform(cdata, doublesphere=True)
 
     elif(patt_type == vector):
-        raise NotImplementedError()
+        tcdata = np.zeros((2 * nrows + 2, ncols), dtype=np.complex128)
+        pcdata = np.zeros((2 * nrows + 2, ncols), dtype=np.complex128)
+        return VectorPatternUniform(tcdata, pcdata, doublesphere=True)
 
     else:
         raise SpherePyError("unrecognized pattern type")
@@ -708,7 +910,8 @@ def ones_patt_uniform(nrows, ncols, patt_type=scalar):
         return ScalarPatternUniform(cdata, doublesphere=False)
 
     elif(patt_type == vector):
-        raise NotImplementedError()
+        cdata = np.ones((nrows, ncols), dtype=np.complex128)
+        return VectorPatternUniform(cdata, doublesphere=False)
 
     else:
         raise SpherePyError("unrecognized pattern type")
@@ -720,12 +923,18 @@ def random_patt_uniform(nrows, ncols, patt_type=scalar):
 
     if(patt_type == scalar):
         vec = np.random.normal(0.0, 1.0, nrows * ncols) + \
-              1j*np.random.normal(0.0, 1.0, nrows * ncols)
+              1j * np.random.normal(0.0, 1.0, nrows * ncols)
         return ScalarPatternUniform(vec.reshape((nrows, ncols)),
                                     doublesphere=False)
 
     elif(patt_type == vector):
-        raise NotImplementedError()
+        vec1 = np.random.normal(0.0, 1.0, nrows * ncols) + \
+              1j * np.random.normal(0.0, 1.0, nrows * ncols)
+        vec2 = np.random.normal(0.0, 1.0, nrows * ncols) + \
+              1j * np.random.normal(0.0, 1.0, nrows * ncols)
+        return VectorPatternUniform(vec1.reshape((nrows, ncols)),
+                                    vec2.reshape((nrows, ncols)),
+                                    doublesphere=False)
 
     else:
         raise SpherePyError("unrecognized pattern type")
@@ -753,16 +962,16 @@ def abs(sobj):
     if isinstance(sobj, ScalarPatternUniform):
         return np.abs(sobj.array)
     elif isinstance(sobj, ScalarCoefs):
-        return ScalarCoefs(np.abs(sobj._vec),sobj.nmax,sobj.mmax)
+        return ScalarCoefs(np.abs(sobj._vec), sobj.nmax, sobj.mmax)
     elif isinstance(sobj, VectorPatternUniform):
         raise NotImplementedError()
     else:
         raise SpherePyError("unrecognized type")
     
-def compare_relative(sc1,sc2):  
+def compare_relative(sc1, sc2):  
     num = np.sum(np.abs(sc1._vec - sc2._vec))
     den = np.sum(np.abs(sc1._vec))
-    return num/den
+    return num / den
     
 def continue_sphere(cdata, sym):
     
@@ -834,12 +1043,41 @@ def vspht(vsphere, nmax, mmax):
     if mmax > nmax:
         raise SpherePyError("Mmax must be less than or equal to Nmax")
 
-    nrows = vsphere._dsphere.shape[0]
-    ncols = vsphere._dsphere.shape[1]
+    nrows = vsphere.scoef1_dsphere.shape[0]
+    ncols = vsphere.scoef1_dsphere.shape[1]
 
     if np.mod(nrows, 2) == 1 or np.mod(ncols, 2) == 1:
         raise SpherePyError("number of rows and columns in continued sphere" + 
                         " object must be even")
+        
+    ft = np.fft.fft2(vsphere._tdsphere)
+    ops.fix_even_row_data_fc(ft)
+    
+    ft_extended = np.zeros([nrows + 2, ncols], dtype=np.complex128)
+    ops.pad_rows_fdata(ft, ft_extended)
+    
+    pt = np.fft.fft2(vsphere._pdsphere)
+    ops.fix_even_row_data_fc(pt)
+    
+    pt_extended = np.zeros([nrows + 2, ncols], dtype=np.complex128)
+    ops.pad_rows_fdata(pt, pt_extended)
+    
+    Lf1 = ops.sinLdot_fc(ft_extended, pt_extended)
+    Lf2 = ops.sinLdot_fc(ft_extended, pt_extended)
+    
+    N = nmax + 1;
+    NC = N + mmax * (2 * N - mmax - 1);
+    sc1 = np.zeros(NC, dtype=np.complex128)
+    sc2 = np.zeros(NC, dtype=np.complex128)
+    # check if we are using c extended versions of the code or not
+    if __init__.use_cext: 
+        csphi.fc_to_sc(Lf1, sc1, nmax, mmax)
+        csphi.fc_to_sc(Lf2, sc2, nmax, mmax)
+    else:   
+        sc1 = pysphi.fc_to_sc(Lf1, nmax, mmax)
+        sc2 = pysphi.fc_to_sc(Lf1, nmax, mmax)
+        
+    return VectorCoefs(sc1, sc2, nmax, mmax)
     
     
 
