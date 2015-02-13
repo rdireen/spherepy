@@ -236,9 +236,6 @@ def fcvec_m_sc(vec, m, nmax, nrows):
 def sc_to_fc(spvec, nmax, mmax, nrows, ncols):
     """assume Ncols is even"""
 
-    if np.mod(ncols, 2) == 1:
-        raise Exception("ncols is required to be even")
-
     fdata = np.zeros([nrows, ncols], dtype=np.complex128)
 
     for k in xrange(0, ncols / 2):
