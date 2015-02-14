@@ -84,7 +84,7 @@ err_msg['vec1_s_vec2'] = "shape of vec1 and vec2 must be the the same"
 err_msg['set_vc_val'] = "set coefficients like this vsc[n,m] = (val1,val2)"
 err_msg['val_2tuple'] = "the value needs to be a tuple with length = 2 and" + \
                         " containing 2 numbers"
-err_msg['set_sc1'] = "set scalar coefficients individually " +\
+err_msg['set_sc1'] = "set scalar coefficients individually " + \
                      "(e.g. vcoef.scoef2[:,3] = vec)"
 err_msg['set_sc2'] = "set scalar coefficients individually " + \
                                 "(e.g. vcoef.scoef2[5,:] = vec)"
@@ -371,11 +371,21 @@ class ScalarCoefs(object):
 
     @_scalar_coef_op_left
     def __div__(self, a, b):
-        return a / b
+        if isinstance(b, numbers.Number):
+            if b == 0:
+                return ZeroDivisionError()
+            return a / b
+        else:
+            return a / b
 
     @_scalar_coef_op_right
     def __rdiv__(self, a, b):
-        return b / a  
+        if isinstance(a, numbers.Number):
+            if a == 0:
+                return ZeroDivisionError()
+            return b / a
+        else:
+            return b / a  
 
 
 class VectorCoefs(object):
@@ -427,10 +437,14 @@ class VectorCoefs(object):
                                                                      self.mmax)
 
     def __setitem__(self, arg, val):
+        
         if len(arg) != 2:
             raise AttributeError(err_msg['tuple_2_el'])
         
-        if len(val) != 2:
+        if isinstance(val, (list, tuple)):
+            if len(val) != 2:
+                raise AttributeError(err_msg['val_2tuple'])
+        else:
             raise AttributeError(err_msg['val_2tuple'])
 
         if isinstance(arg[0], slice) and isinstance(arg[1], int):
@@ -496,7 +510,7 @@ class VectorCoefs(object):
         @wraps(func)
         def verif(self, vcoef):
             if isinstance(vcoef, VectorCoefs):
-                if len(self._vec) == len(vcoef._vec):
+                if len(vcoef.scoef1._vec) == len(vcoef.scoef1._vec):
                     return VectorCoefs(func(self, self.scoef1._vec,
                                                   vcoef.scoef1._vec),
                                        func(self, self.scoef2._vec,
@@ -556,11 +570,21 @@ class VectorCoefs(object):
 
     @_vector_coef_op_left
     def __div__(self, a, b):
-        return a / b
+        if isinstance(b, numbers.Number):
+            if b == 0:
+                return ZeroDivisionError()
+            return a / b
+        else:
+            return a / b
 
     @_vector_coef_op_right
     def __rdiv__(self, a, b):
-        return b / a  
+        if isinstance(a, numbers.Number):
+            if a == 0:
+                return ZeroDivisionError()
+            return b / a
+        else:
+            return b / a  
 
 
 class ScalarPatternUniform(object):
@@ -690,11 +714,21 @@ class ScalarPatternUniform(object):
 
     @_scalar_pattern_uniform_op_left
     def __div__(self, a, b):
-        return a / b
+        if isinstance(b, numbers.Number):
+            if b == 0:
+                return ZeroDivisionError()
+            return a / b
+        else:
+            return a / b
 
     @_scalar_pattern_uniform_op_right
     def __rdiv__(self, a, b):
-        return b / a  
+        if isinstance(a, numbers.Number):
+            if a == 0:
+                return ZeroDivisionError()
+            return b / a
+        else:
+            return b / a  
 
 
 class ScalarPatternNonUniform:
@@ -804,7 +838,7 @@ class VectorPatternUniform:
                                             func(self, self._pdsphere, patt),
                                             doublesphere=True)
             else:
-                raise TypeError(err_msg['no_combi_VP'] )
+                raise TypeError(err_msg['no_combi_VP'])
         return verif
 
     def _vector_pattern_uniform_op_right(func):
@@ -813,9 +847,9 @@ class VectorPatternUniform:
         @wraps(func)
         def verif(self, patt):
             if isinstance(patt, numbers.Number):
-                return ScalarPatternUniform(func(self, self._tdsphere, patt),
+                return VectorPatternUniform(func(self, self._tdsphere, patt),
                                             func(self, self._pdsphere, patt),
-                                   doublesphere=True)
+                                            doublesphere=True)
             else:
                 raise TypeError(err_msg['no_combi_VP'])
         return verif
@@ -846,11 +880,21 @@ class VectorPatternUniform:
 
     @_vector_pattern_uniform_op_left
     def __div__(self, a, b):
-        return a / b
+        if isinstance(b, numbers.Number):
+            if b == 0:
+                return ZeroDivisionError()
+            return a / b
+        else:
+            return a / b  
 
     @_vector_pattern_uniform_op_right
     def __rdiv__(self, a, b):
-        return b / a  
+        if isinstance(a, numbers.Number):
+            if a == 0:
+                return ZeroDivisionError()
+            return b / a
+        else:
+            return b / a    
 
 
 class VectorPatternNonUniform:
@@ -924,12 +968,12 @@ def zeros_patt_uniform(nrows, ncols, patt_type=scalar):
         raise ValueError(err_msg['ncols_even'])
 
     if(patt_type == scalar):
-        cdata = np.zeros((2 * nrows + 2, ncols), dtype=np.complex128)
+        cdata = np.zeros((2 * nrows - 2, ncols), dtype=np.complex128)
         return ScalarPatternUniform(cdata, doublesphere=True)
 
     elif(patt_type == vector):
-        tcdata = np.zeros((2 * nrows + 2, ncols), dtype=np.complex128)
-        pcdata = np.zeros((2 * nrows + 2, ncols), dtype=np.complex128)
+        tcdata = np.zeros((2 * nrows - 2, ncols), dtype=np.complex128)
+        pcdata = np.zeros((2 * nrows - 2, ncols), dtype=np.complex128)
         return VectorPatternUniform(tcdata, pcdata, doublesphere=True)
 
     else:
@@ -937,15 +981,16 @@ def zeros_patt_uniform(nrows, ncols, patt_type=scalar):
 
 def ones_patt_uniform(nrows, ncols, patt_type=scalar):
     if np.mod(ncols, 2) == 1:
-        raise SpherePyError(err_msg['ncols_even'])
+        raise ValueError(err_msg['ncols_even'])
 
     if(patt_type == scalar):
         cdata = np.ones((nrows, ncols), dtype=np.complex128)
         return ScalarPatternUniform(cdata, doublesphere=False)
 
     elif(patt_type == vector):
-        cdata = np.ones((nrows, ncols), dtype=np.complex128)
-        return VectorPatternUniform(cdata, doublesphere=False)
+        tcdata = np.ones((nrows, ncols), dtype=np.complex128)
+        pcdata = np.ones((nrows, ncols), dtype=np.complex128)
+        return VectorPatternUniform(tcdata, pcdata, doublesphere=False)
 
     else:
         raise TypeError(err_msg['ukn_patt_t'])
@@ -1173,9 +1218,24 @@ def ispht_slow(scoefs, nrows, ncols):
 
     return ScalarPatternUniform(ds, doublesphere=True)
 
-def L2_coef(scoef):
+def L2_coef(coef):
 
-    return np.sqrt(np.sum(np.abs(scoef._vec) ** 2))
+    if isinstance(coef, ScalarCoefs):
+        return np.sqrt(np.sum(np.abs(coef._vec) ** 2))
+    elif isinstance(coef, VectorCoefs):
+        l1 = np.sqrt(np.sum(np.abs(coef.scoef1._vec) ** 2))
+        l2 = np.sqrt(np.sum(np.abs(coef.scoef1._vec) ** 2))
+        return np.sqrt(l1 ** 2 + l2 ** 2)
+    
+def L2_patt(patt):
+
+    if isinstance(patt, ScalarPatternUniform):
+        return np.sqrt(np.sum(np.abs(patt._dsphere) ** 2))
+    elif isinstance(patt, VectorPatternUniform):
+        l1 = np.sqrt(np.sum(np.abs(patt._tdsphere) ** 2))
+        l2 = np.sqrt(np.sum(np.abs(patt._pdsphere) ** 2))
+        return np.sqrt(l1 ** 2 + l2 ** 2)
+        
 
 def sph_harmonic_tp(nrows, ncols, n, m):
     """Produces Ynm(theta,phi)

@@ -28,7 +28,7 @@ T5 = True
 if T1:
     nrows = 50
     ncols = 50
-    out = sp.pysphi.sph_harmonic_tp(nrows, ncols, 5, 2)
+    out = sp.sph_harmonic_tp(nrows, ncols, 5, 2)
     T = np.abs(out)
     sp.plot_mag_on_sphere(T)
 
