@@ -50,9 +50,6 @@ import ops
 # Global Declarations
 #==============================================================================
 
-class SpherePyError(Exception):
-    pass
-
 scalar = 0
 vector = 1
 
@@ -92,15 +89,9 @@ err_msg['set_sc2'] = "set scalar coefficients individually " + \
 err_msg['shape_tc_pc'] = "shape of tcdata and pcdata must be the the same"
                                 
                                 
-  
-        
-
-
 #==============================================================================
 # Classes
 #==============================================================================
-
-
 
 class ScalarCoefs(object):
     """Holds the scalar coefficients that represent a spherical pattern. The 
@@ -121,6 +112,17 @@ class ScalarCoefs(object):
     @property
     def mmax(self):
         return self._mmax
+
+    def window(self,vec):
+        """Apply a window to the coefficients defined by vec. vec must have
+        length nmax + 1."""
+
+        slce = slice(None,None,None)
+
+        self.__setitem__(slce,0,self.__getitem__(slce,0) * vec)  
+        for m in xrange(1,self.mmax + 1):
+            self.__setitem__(slce,-m,self.__getitem__(slce,-m) * vec[m:])
+            self.__setitem__(slce,m,self.__getitem__(slce,m) * vec[m:])
 
     def _array_2d_repr(self):
         """creates a 2D array that has nmax + 1 rows and 2*mmax + 1 columns
@@ -1121,42 +1123,53 @@ def vspht(vsphere, nmax, mmax):
     if mmax > nmax:
         raise ValueError(err_msg['nmax_g_mmax'])
 
-    nrows = vsphere.scoef1_dsphere.shape[0]
-    ncols = vsphere.scoef1_dsphere.shape[1]
+    nrows = vsphere._tdsphere.shape[0]
+    ncols = vsphere._tdsphere.shape[1]
 
     if np.mod(nrows, 2) == 1 or np.mod(ncols, 2) == 1:
         raise ValueError(err_msg['ncols_even'])
         
-    ft = np.fft.fft2(vsphere._tdsphere)
+    ft = np.fft.fft2(vsphere._tdsphere) / (nrows * ncols)
     ops.fix_even_row_data_fc(ft)
     
     ft_extended = np.zeros([nrows + 2, ncols], dtype=np.complex128)
     ops.pad_rows_fdata(ft, ft_extended)
     
-    pt = np.fft.fft2(vsphere._pdsphere)
+    pt = np.fft.fft2(vsphere._pdsphere) / (nrows * ncols)
     ops.fix_even_row_data_fc(pt)
     
     pt_extended = np.zeros([nrows + 2, ncols], dtype=np.complex128)
     ops.pad_rows_fdata(pt, pt_extended)
     
+    ftmp = np.copy(ft_extended)
+    ptmp = np.copy(pt_extended)
     Lf1 = ops.sinLdot_fc(ft_extended, pt_extended)
-    Lf2 = ops.sinLdot_fc(ft_extended, pt_extended)
+    Lf2 = ops.sinLdot_fc(-1j*ptmp, 1j*ftmp)
     
-    N = nmax + 1;
-    NC = N + mmax * (2 * N - mmax - 1);
-    sc1 = np.zeros(NC, dtype=np.complex128)
-    sc2 = np.zeros(NC, dtype=np.complex128)
     # check if we are using c extended versions of the code or not
     if __init__.use_cext: 
+        N = nmax + 1;
+        NC = N + mmax * (2 * N - mmax - 1);
+        sc1 = np.zeros(NC, dtype=np.complex128)
+        sc2 = np.zeros(NC, dtype=np.complex128)
         csphi.fc_to_sc(Lf1, sc1, nmax, mmax)
         csphi.fc_to_sc(Lf2, sc2, nmax, mmax)
     else:   
         sc1 = pysphi.fc_to_sc(Lf1, nmax, mmax)
         sc2 = pysphi.fc_to_sc(Lf1, nmax, mmax)
+
+    #TODO: Need to add 1/(n*(n+1))
+    vcoefs = VectorCoefs(sc1, sc2, nmax, mmax)
+
+    nvec = np.zeros(nmax + 1, dtype = np.complex128)
+
+    for n in xrange(1, nmax + 1):
+        nvec[n] = 1.0/(n*(n + 1.0))
+
+    vcoefs.scoef1.window(nvec)
+    vcoefs.scoef2.window(nvec)
         
-    return VectorCoefs(sc1, sc2, nmax, mmax)
-    
-    
+    return vcoefs
 
 def spht_slow(ssphere, nmax, mmax):
     """Returns a ScalarCoefs object containing the spherical harmonic 

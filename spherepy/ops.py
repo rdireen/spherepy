@@ -89,7 +89,7 @@ def dtheta_fc(fdata):
     """Apply theta derivative in the Fourier domain."""
     
     nrows = fdata.shape[0]
-    ncols = fdata.shape[0]
+    ncols = fdata.shape[1]
     B = nrows / 2 #As always, we assume nrows and ncols are even
     
     a = range(0,B)
@@ -99,16 +99,16 @@ def dtheta_fc(fdata):
     dtheta = np.zeros([nrows,ncols],np.complex128)
     
     for k in xrange(0,ncols):
-        dtheta[:,k] = dtheta
+        dtheta[:,k] = a
         
-    fdata *= 1j*dtheta
+    fdata[:,:] = 1j*dtheta * fdata
     
 
 def dphi_fc(fdata):
     """Apply phi derivative in the Fourier domain."""
     
     nrows = fdata.shape[0]
-    ncols = fdata.shape[0]
+    ncols = fdata.shape[1]
     
     B=nrows / 2 #As always, we assume nrows and ncols are even
     
@@ -119,20 +119,18 @@ def dphi_fc(fdata):
     dphi = np.zeros([nrows,ncols],np.complex128)
     
     for k in xrange(0,nrows):
-        dphi[k,:] = dphi
+        dphi[k,:] = a
         
-    fdata *= 1j*dphi
-    
-    
+    fdata[:,:] = 1j*dphi * fdata
     
 def sinLdot_fc(tfdata,pfdata):
     """Apply sin of theta times the L operator to the data in the Fourier 
     domain."""
     
-    dtheta_fc(tfdata)
+    dphi_fc(tfdata)
     
     sin_fc(pfdata)
-    dphi_fc(pfdata)
+    dtheta_fc(pfdata)
     
     return 1j*(tfdata - pfdata)
     
