@@ -2,7 +2,6 @@ from unittest import TestCase
 
 import spherepy as sp
 import numpy as np
-from spherepy.spherepy import SpherePyError
 
 """
 Randy Direen

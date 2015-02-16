@@ -118,11 +118,11 @@ class ScalarCoefs(object):
         length nmax + 1."""
 
         slce = slice(None,None,None)
-
-        self.__setitem__(slce,0,self.__getitem__(slce,0) * vec)  
+        
+        self.__setitem__((slce,0),self.__getitem__((slce,0)) * vec)  
         for m in xrange(1,self.mmax + 1):
-            self.__setitem__(slce,-m,self.__getitem__(slce,-m) * vec[m:])
-            self.__setitem__(slce,m,self.__getitem__(slce,m) * vec[m:])
+            self.__setitem__((slce,-m),self.__getitem__((slce,-m)) * vec[m:])
+            self.__setitem__((slce,m),self.__getitem__((slce,m)) * vec[m:])
 
     def _array_2d_repr(self):
         """creates a 2D array that has nmax + 1 rows and 2*mmax + 1 columns
@@ -402,7 +402,7 @@ class VectorCoefs(object):
             raise ValueError(err_msg['nmax_g_mmax'])
 
         self.scoef1 = ScalarCoefs(vec1, nmax, mmax)
-        self.scoef2 = ScalarCoefs(vec1, nmax, mmax)
+        self.scoef2 = ScalarCoefs(vec2, nmax, mmax)
         self._nmax = nmax
         self._mmax = mmax
 
@@ -1156,7 +1156,7 @@ def vspht(vsphere, nmax, mmax):
         csphi.fc_to_sc(Lf2, sc2, nmax, mmax)
     else:   
         sc1 = pysphi.fc_to_sc(Lf1, nmax, mmax)
-        sc2 = pysphi.fc_to_sc(Lf1, nmax, mmax)
+        sc2 = pysphi.fc_to_sc(Lf2, nmax, mmax)
 
     #TODO: Need to add 1/(n*(n+1))
     vcoefs = VectorCoefs(sc1, sc2, nmax, mmax)
@@ -1164,7 +1164,7 @@ def vspht(vsphere, nmax, mmax):
     nvec = np.zeros(nmax + 1, dtype = np.complex128)
 
     for n in xrange(1, nmax + 1):
-        nvec[n] = 1.0/(n*(n + 1.0))
+        nvec[n] = 1.0/np.sqrt(n*(n + 1.0))
 
     vcoefs.scoef1.window(nvec)
     vcoefs.scoef2.window(nvec)
