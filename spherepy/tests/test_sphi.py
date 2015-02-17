@@ -70,7 +70,6 @@ class TestSphi(TestCase):
                 sm = np.sum(np.abs(pyn) ** 2)
                 if (np.sqrt(diff / sm) > 1e-13):
                     res = False
-                
         
         self.assertTrue(res)
         
@@ -85,7 +84,7 @@ class TestSphi(TestCase):
             NNcols = Ncols - MM
             p = sp.random_patt_uniform(Nrows, NNcols)
             
-            spy = sp.spht(p, 100, 85)
+            spy = sp.spht_slow(p, 100, 85)
             sc = sp.spht(p, 100, 85)
             
             rerr = sp.compare_relative(spy, sc)
@@ -99,22 +98,21 @@ class TestSphi(TestCase):
         """::Compare ispht within pysphi and csphi""" 
         
         Nmax = 100
-        Nrows = 2000
+        Nrows = 1000
         res = True
         
         for MM in xrange(1, 5):
             Mmax = Nmax - MM
             c = sp.random_coefs(Nmax, Mmax)
             
-            ppy = sp.ispht_slow(c, Nrows, Nrows)
-            pc = sp.ispht_slow(c, Nrows, Nrows)
+            ppy = sp.ispht_slow(c, Nrows/2, Nrows)
+            pc = sp.ispht(c, Nrows/2, Nrows)
             
             rerr = np.sum(sp.abs(ppy - pc)) / np.sum(sp.abs(ppy))
             
             if (rerr > 1e-13):
                 res = False
                 
-        
         self.assertTrue(res)
         
    

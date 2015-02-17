@@ -8,5 +8,10 @@ vsc = sp.vspht(vpatt,4,4)
 
 c = vsc[:,0]
 
+c = sp.zeros_coefs(100, 100)
+c[2, 0] = 1.0
+p = sp.ispht(c, 102, 202)
+c2 = sp.spht(p, 100, 100)
+
 
 

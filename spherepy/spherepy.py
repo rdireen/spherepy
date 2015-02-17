@@ -85,8 +85,9 @@ err_msg['set_sc1'] = "set scalar coefficients individually " + \
                      "(e.g. vcoef.scoef2[:,3] = vec)"
 err_msg['set_sc2'] = "set scalar coefficients individually " + \
                                 "(e.g. vcoef.scoef2[5,:] = vec)"
-                                
 err_msg['shape_tc_pc'] = "shape of tcdata and pcdata must be the the same"
+err_msg['nmax_too_lrg'] = "nmax value must be less than patterns nrows"
+err_msg['mmax_too_lrg'] = "mmax value must be less than patterns ncols"
                                 
                                 
 #==============================================================================
@@ -1083,23 +1084,35 @@ def double_sphere(cdata, sym):
 
     return ddata
 
-def spht(ssphere, nmax, mmax):
+def spht(ssphere, nmax = None, mmax = None):
     """Returns a ScalarCoefs object containing the spherical harmonic 
     coefficients of the ScalarPatternUniform object"""
 
-    if mmax > nmax:
-        raise TypeError(err_msg['nmax_g_mmax'])
+    if nmax == None:
+        nmax = ssphere.nrows - 1 
 
-    nrows = ssphere._dsphere.shape[0]
+    if mmax == None:
+        mmax = ssphere.ncols / 2 - 1
+
+    if mmax > nmax:
+        raise ValueError(err_msg['nmax_g_mmax'])
+
+    if nmax >= ssphere.nrows:
+        raise ValueError(err_msg['nmax_too_lrg'])
+
+    if mmax >= ssphere.ncols / 2:
+        raise ValueError(err_msg['mmax_too_lrg'])
+
+    dnrows = ssphere._dsphere.shape[0]
     ncols = ssphere._dsphere.shape[1]
 
-    if np.mod(nrows, 2) == 1 or np.mod(ncols, 2) == 1:
+    if np.mod(ncols, 2) == 1:
         raise ValueError(err_msg['ncols_even'])
 
-    fdata = np.fft.fft2(ssphere._dsphere) / (nrows * ncols)
+    fdata = np.fft.fft2(ssphere._dsphere) / (dnrows * ncols)
     ops.fix_even_row_data_fc(fdata)
     
-    fdata_extended = np.zeros([nrows + 2, ncols], dtype=np.complex128)
+    fdata_extended = np.zeros([dnrows + 2, ncols], dtype=np.complex128)
 
     ops.pad_rows_fdata(fdata, fdata_extended)
 
@@ -1116,29 +1129,41 @@ def spht(ssphere, nmax, mmax):
                                 
     return ScalarCoefs(sc, nmax, mmax)
 
-def vspht(vsphere, nmax, mmax):
+def vspht(vsphere, nmax = None, mmax = None):
     """Returns a VectorCoefs object containt the vector spherical harmonic
     coefficients of the VectorPatternUniform object"""
     
+    if nmax == None:
+        nmax = vsphere.nrows - 1 
+
+    if mmax == None:
+        mmax = vsphere.ncols / 2 - 1
+
     if mmax > nmax:
         raise ValueError(err_msg['nmax_g_mmax'])
 
-    nrows = vsphere._tdsphere.shape[0]
+    if nmax >= vsphere.nrows:
+        raise ValueError(err_msg['nmax_too_lrg'])
+
+    if mmax >= vsphere.ncols / 2:
+        raise ValueError(err_msg['mmax_too_lrg'])
+
+    dnrows = vsphere._tdsphere.shape[0]
     ncols = vsphere._tdsphere.shape[1]
 
-    if np.mod(nrows, 2) == 1 or np.mod(ncols, 2) == 1:
+    if np.mod(ncols, 2) == 1:
         raise ValueError(err_msg['ncols_even'])
         
-    ft = np.fft.fft2(vsphere._tdsphere) / (nrows * ncols)
+    ft = np.fft.fft2(vsphere._tdsphere) / (dnrows * ncols)
     ops.fix_even_row_data_fc(ft)
     
-    ft_extended = np.zeros([nrows + 2, ncols], dtype=np.complex128)
+    ft_extended = np.zeros([dnrows + 2, ncols], dtype=np.complex128)
     ops.pad_rows_fdata(ft, ft_extended)
     
-    pt = np.fft.fft2(vsphere._pdsphere) / (nrows * ncols)
+    pt = np.fft.fft2(vsphere._pdsphere) / (dnrows * ncols)
     ops.fix_even_row_data_fc(pt)
     
-    pt_extended = np.zeros([nrows + 2, ncols], dtype=np.complex128)
+    pt_extended = np.zeros([dnrows + 2, ncols], dtype=np.complex128)
     ops.pad_rows_fdata(pt, pt_extended)
     
     ftmp = np.copy(ft_extended)
@@ -1158,7 +1183,6 @@ def vspht(vsphere, nmax, mmax):
         sc1 = pysphi.fc_to_sc(Lf1, nmax, mmax)
         sc2 = pysphi.fc_to_sc(Lf2, nmax, mmax)
 
-    #TODO: Need to add 1/(n*(n+1))
     vcoefs = VectorCoefs(sc1, sc2, nmax, mmax)
 
     nvec = np.zeros(nmax + 1, dtype = np.complex128)
@@ -1193,31 +1217,34 @@ def spht_slow(ssphere, nmax, mmax):
 
     ops.sin_fc(fdata_extended)
     
-    # check if we are using c extended versions of the code or not
     sc = pysphi.fc_to_sc(fdata_extended, nmax, mmax)
                                 
     return ScalarCoefs(sc, nmax, mmax)
 
 def ispht(scoefs, nrows, ncols):
 
+    dnrows = 2 * nrows - 2
+
     if np.mod(ncols, 2) == 1:
         raise ValueError(err_msg['ncols_even'])
 
     if __init__.use_cext: 
-        fdata = np.zeros([nrows, ncols], dtype=np.complex128)
+        fdata = np.zeros([dnrows, ncols], dtype=np.complex128)
         csphi.sc_to_fc(fdata, scoefs._vec, scoefs._nmax, scoefs._mmax)
     else:   
         fdata = pysphi.sc_to_fc(scoefs._vec,
                             scoefs._nmax,
                             scoefs._mmax,
-                            nrows, ncols)
+                            dnrows, ncols)
     
-    ds = np.fft.ifft2(fdata) * nrows * ncols
+    ds = np.fft.ifft2(fdata) * dnrows * ncols
 
     return ScalarPatternUniform(ds, doublesphere=True)
 
 
 def ispht_slow(scoefs, nrows, ncols):
+
+    dnrows = 2 * nrows - 2
 
     if np.mod(ncols, 2) == 1:
         raise ValueError(err_msg['ncols_even'])
@@ -1225,9 +1252,9 @@ def ispht_slow(scoefs, nrows, ncols):
     fdata = pysphi.sc_to_fc(scoefs._vec,
                             scoefs._nmax,
                             scoefs._mmax,
-                            nrows, ncols)
+                            dnrows, ncols)
     
-    ds = np.fft.ifft2(fdata) * nrows * ncols
+    ds = np.fft.ifft2(fdata) * dnrows * ncols
 
     return ScalarPatternUniform(ds, doublesphere=True)
 
