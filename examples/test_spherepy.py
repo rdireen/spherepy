@@ -18,17 +18,14 @@
 import spherepy as sp
 import profile
 
+c = sp.random_coefs(500, 498)
 
-c = sp.zeros_coefs(400, 400)
-c[4, 3] = 1.0
-c[3, 0] = 1.0
-
-p = sp.ispht(c, 804, 804)
+p = sp.ispht(c, 506, 1010)
 # profile.run('p = sp.ispht(c,602,602)')
 
-c2 = sp.spht(p, 400, 400)
+c2 = sp.spht(p, 500, 498)
 
-profile.run('c2 = sp.spht(p,400,400)')
+#profile.run('c2 = sp.spht(p,400,400)')
 
 print(sp.L2_coef(c - c2) / sp.L2_coef(c))
 

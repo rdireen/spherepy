@@ -15,6 +15,16 @@
 # You should have received a copy of the GNU General Public License
 # along with SpherePy.  If not, see <http://www.gnu.org/licenses/>
 
+"""
+             test_sphi: Compare c extensions to python
+
+Randy Direen
+2/19/2015
+
+These are tests that compare the c extensions to the python versions.
+
+"""
+
 from unittest import TestCase
 
 import spherepy as sp

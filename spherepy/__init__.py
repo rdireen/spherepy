@@ -1,7 +1,10 @@
 
 import json
 from os.path import dirname
+import pysphi
 import csphi
+import file
+import verify
 
 
 with open(dirname(__file__) + '/pkg_info.json') as fp:

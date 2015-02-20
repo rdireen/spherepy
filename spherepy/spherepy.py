@@ -1275,6 +1275,24 @@ def L2_patt(patt):
         l1 = np.sqrt(np.sum(np.abs(patt._tdsphere) ** 2))
         l2 = np.sqrt(np.sum(np.abs(patt._pdsphere) ** 2))
         return np.sqrt(l1 ** 2 + l2 ** 2)
+
+def LInf_coef(coef):
+
+    if isinstance(coef, ScalarCoefs):
+        return np.max(np.abs(coef._vec))
+    elif isinstance(coef, VectorCoefs):
+        l1 = np.max(np.abs(coef.scoef1._vec))
+        l2 = np.max(np.abs(coef.scoef1._vec))
+        return np.sqrt(l1 ** 2 + l2 ** 2)
+    
+def LInf_patt(patt):
+
+    if isinstance(patt, ScalarPatternUniform):
+        return np.amax(np.abs(patt._dsphere))
+    elif isinstance(patt, VectorPatternUniform):
+        l1 = np.amax(np.abs(patt._tdsphere))
+        l2 = np.amax(np.abs(patt._pdsphere))
+        return np.sqrt(l1 ** 2 + l2 ** 2)
         
 
 def sph_harmonic_tp(nrows, ncols, n, m):

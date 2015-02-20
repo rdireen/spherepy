@@ -31,6 +31,6 @@ p = sp.ispht(c, Nrows, Nrows)
 c2 = None
 profile.run('c2 = sp.spht(p,Nmax,Nmax)',sort=1)
 
-print(sp.L2_coef(c - c2) / sp.L2_coef(c))
+print(sp.L2_coef(c - c2) )
 
 

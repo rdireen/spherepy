@@ -1,4 +1,14 @@
+"""***************************************************************************
 
+Randy Direen
+2/19/2015
+
+This script attempts to trip as many exceptions as it can to see what the 
+output of the exceptions are. The long strings below show all the nasty 
+things that will trip exceptions. When you run this script you will see 
+a list responses from all of the exceptions.
+
+***************************************************************************"""
 
 
 import spherepy as sp
@@ -16,7 +26,6 @@ test_scalar_coefs = True
 test_vector_coefs = True
 test_scalar_patt_unif = True
 test_vector_patt_unif = True
-
 
 def pt(n, ex, e):
     print(template.format(str(n), ex, str(type(e)), str(e)))
