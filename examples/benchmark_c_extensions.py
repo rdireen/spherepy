@@ -1,4 +1,14 @@
+"""***************************************************************************
 
+         benchmark_c_extentions: Compare c extentions to pure python. 
+
+Randy Direen
+2/18/2015
+
+This file shows how much faster the c extensions perform over the pure 
+python version. 
+
+***************************************************************************"""
 
 import spherepy as sp
 import profile

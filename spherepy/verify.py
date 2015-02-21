@@ -27,6 +27,9 @@ Specifically, these routines were put together to compare SpherePy to the
 code written in Matlab. At some point we should use these routines to 
 compare results to the NIST code.
 
+The file format is expected to be in the form specified in the file.py 
+module. 
+
 ***************************************************************************"""
 
 import spherepy as sp

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright (C) 2015  Randy Direen <spherepy@direentech.com>
 #
 # This file is part of SpherePy.
@@ -62,6 +60,7 @@ err_msg['ukn_patt_t'] = "unknown pattern type"
 err_msg['uknown_typ'] = "unknown type"
 err_msg['m_out_bound'] = "m value out of bounds"
 err_msg['n_out_bound'] = "n value out of bounds"
+err_msg['no_v0_mode'] = "monopoles (n = 0) do not exist for type VectorCoefs"
 err_msg['dim_no_mtch'] = "dimension mismatch"
 err_msg['slice_noper'] = "slicing operation not permitted"
 err_msg['idx_no_rec'] = "indexing method not recognized"
@@ -407,6 +406,10 @@ class VectorCoefs(object):
         if mmax > nmax:
             raise ValueError(err_msg['nmax_g_mmax'])
 
+        #There are no monopoles for structure VectorCoefs
+        vec1[0] = 0
+        vec2[0] = 0
+
         self.scoef1 = ScalarCoefs(vec1, nmax, mmax)
         self.scoef2 = ScalarCoefs(vec2, nmax, mmax)
         self._nmax = nmax
@@ -459,10 +462,14 @@ class VectorCoefs(object):
             raise AttributeError(err_msg['set_sc1'])
 
         elif isinstance(arg[0], int) and isinstance(arg[1], slice):
+            if arg[0] == 0:
+                raise AttributeError(err_msg['no_v0_mode'])
             raise AttributeError(err_msg['set_sc2'])
 
         elif isinstance(arg[0], int) and isinstance(arg[1], int):
             n = arg[0]
+            if n == 0:
+                raise AttributeError(err_msg['no_v0_mode'])
             m = arg[1]
 
             try:
@@ -494,6 +501,8 @@ class VectorCoefs(object):
         elif isinstance(arg[0], int) and isinstance(arg[1], slice):
             
             n = arg[0]
+            if n == 0:
+                raise AttributeError(err_msg['no_v0_mode'])
 
             if ((arg[1].start is None) and
                (arg[1].step is None) and
@@ -506,6 +515,8 @@ class VectorCoefs(object):
 
         elif isinstance(arg[0], int) and isinstance(arg[1], int):
             n = arg[0]
+            if n == 0:
+                raise AttributeError(err_msg['no_v0_mode'])
             m = arg[1]
             return (self.scoef1[n, m], self.scoef2[n, m])
 
@@ -944,7 +955,9 @@ def ones_coefs(nmax, mmax, coef_type=scalar):
     elif(coef_type == vector):
         L = (nmax + 1) + mmax * (2 * nmax - mmax + 1)
         vec1 = np.ones(L, dtype=np.complex128)
+        vec1[0] = 0
         vec2 = np.ones(L, dtype=np.complex128)
+        vec2[0] = 0
         return  VectorCoefs(vec1, vec2, nmax, mmax)
     else:
         raise SpherePyError(err_msg['ukn_coef_t'])
@@ -964,8 +977,10 @@ def random_coefs(nmax, mmax, mu=0.0, sigma=1.0, coef_type=scalar):
         L = (nmax + 1) + mmax * (2 * nmax - mmax + 1)
         vec1 = np.random.normal(mu, sigma, L) + \
               1j * np.random.normal(mu, sigma, L)
+        vec1[0] = 0
         vec2 = np.random.normal(mu, sigma, L) + \
               1j * np.random.normal(mu, sigma, L)
+        vec2[0] = 0
         return  VectorCoefs(vec1, vec2, nmax, mmax)
     else:
         raise SpherePyError(err_msg['ukn_coef_t'])

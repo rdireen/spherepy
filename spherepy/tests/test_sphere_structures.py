@@ -1,8 +1,19 @@
-from unittest import TestCase
-
-import spherepy as sp
-import numpy as np
-
+# Copyright (C) 2015  Randy Direen <spherepy@direentech.com>
+#
+# This file is part of SpherePy.
+#
+# SpherePy is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# SpherePy is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with SpherePy.  If not, see <http://www.gnu.org/licenses/>
 """
 Randy Direen
 2/14/2015
@@ -15,6 +26,13 @@ TODO: Test the single_val, doublesphere, continue, etc. functions in here as
 well.
 
 """
+
+from unittest import TestCase
+
+import spherepy as sp
+import numpy as np
+
+
 
 
 class TestScalarCoefsStructure(TestCase):
@@ -282,7 +300,19 @@ class TestVectorCoefsStructure(TestCase):
         """::raise an error if I try to set mmax > nmax: random""" 
         with self.assertRaises(ValueError):
             zz = sp.random_coefs(11, 13)
-      
+     
+    def test_monopole_access(self):
+        """::raise an error if I try to access monopole"""
+        zz = sp.random_coefs(11, 10,coef_type=sp.vector)
+        with self.assertRaises(AttributeError):
+            a = zz[0,0]
+
+    def test_monopole_set(self):
+        """::raise an error if I try to set monopole"""
+        zz = sp.random_coefs(11, 10,coef_type=sp.vector)
+        with self.assertRaises(AttributeError):
+            zz[0,0] = (1,2)
+             
     def test_bounds_checking_access_m_greater_n(self):
         """::raise an error if I go out of bounds m > n access"""
         zz = sp.random_coefs(11, 10,coef_type=sp.vector)
