@@ -69,30 +69,35 @@ def verify_fdata(fdatafile, scoeffile):
 
 def verify_vspht(pattf1, pattf2, scoeff1, scoeff2):
     
-    fpatt1 = fl.load_patt(pattf1)
-    fpatt2 = fl.load_patt(pattf2)
+    vfpatt = fl.load_vpatt(pattf1, pattf2)
 
     fsc1 = fl.load_coef(scoeff1)
     fsc2 = fl.load_coef(scoeff2)
 
-    vfpatt = sp.VectorPatternUniform(fpatt1,fpatt2)
-    vfsc = sp.VectorCoefs(fsc1,fsc2,fsc1.nmax,fsc1.mmax)
+    vfsc = sp.VectorCoefs(fsc1._vec,fsc2._vec,fsc1.nmax,fsc1.mmax)
 
-    vsc = sp.vspht(vfpatt,fsc.nmax,fsc.mmax)
-    
-    return sp.L2_coef(vfsc - vsc)
+    vsc = sp.vspht(vfpatt,fsc1.nmax,fsc1.mmax)
 
-def verify_vispht(pattf1,pattf2, scoeff1, scoeff2):
+    diff = vfsc - vsc
     
-    fpatt1 = fl.load_patt(pattf1)
-    fpatt2 = fl.load_patt(pattf2)
+    return (sp.L2_coef(diff), sp.LInf_coef(diff),
+            sp.L2_coef(diff) / sp.L2_coef(vfsc),
+            sp.LInf_coef(diff) / sp.LInf_coef(vfsc))
+
+def verify_vispht(pattf1, pattf2, scoeff1, scoeff2):
+    
+    vfpatt = fl.load_vpatt(pattf1, pattf2)
 
     fsc1 = fl.load_coef(scoeff1)
     fsc2 = fl.load_coef(scoeff2)
 
-    vfpatt = sp.VectorPatternUniform(fpatt1,fpatt2)
-    vfsc = sp.VectorCoefs(fsc1,fsc2,fsc1.nmax,fsc1.mmax)
+    vfsc = sp.VectorCoefs(fsc1._vec,fsc2._vec,fsc1.nmax,fsc1.mmax)
 
-    vpatt = sp.vispht(vfsc,fpatt1.nrows,fpatt1.ncols)
+    vpatt = sp.vispht(vfsc,vfpatt.nrows,vfpatt.ncols)
+
+    diff = vfpatt - vpatt
     
-    return sp.L2_patt(vfpatt - vpatt)
+    return (sp.L2_patt(diff), sp.LInf_patt(diff),
+            sp.L2_patt(diff) / sp.L2_patt(vfpatt),
+            sp.LInf_patt(diff) / sp.LInf_patt(vfpatt))
+             

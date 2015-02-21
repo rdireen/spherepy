@@ -65,7 +65,7 @@ def pad_rows_fdata(fdata, fdata_extended):
     fdata_extended[-1:-M:-1, :] = fdata[-1:-M:-1, :]
 
 def sin_fc(fdata):
-    """Apply sin in the Fourier domain."""
+    """Apply sine in the Fourier domain."""
 
     nrows = fdata.shape[0]
     ncols = fdata.shape[1]
@@ -84,7 +84,24 @@ def sin_fc(fdata):
     work2[-1, :] = fdata[0, :]
 
     fdata[:, :] = 1.0 / (2 * 1j) * (work1 - work2)
+
+def divsin_fc(fdata):
+    """Apply divide by sine in the Fourier domain."""
     
+    nrows = fdata.shape[0]
+    ncols = fdata.shape[1]
+
+    L = nrows / 2 # Assuming nrows is even, which it should be.
+    L2 = L - 2 # This is the last index in the recursion for division by sine.
+    
+    g = np.zeros([nrows, ncols], dtype = np.complex128)
+    g[L2, :] = 2 * 1j * fdata[L - 1, :]
+
+    for k in xrange(L2, -L2, -1):
+        g[k - 1, :] = 2 * 1j * fdata[k, :] + g[k + 1, :]
+
+    fdata[:, :] = g
+
 def dtheta_fc(fdata):
     """Apply theta derivative in the Fourier domain."""
     
@@ -110,7 +127,7 @@ def dphi_fc(fdata):
     nrows = fdata.shape[0]
     ncols = fdata.shape[1]
     
-    B=nrows / 2 #As always, we assume nrows and ncols are even
+    B=ncols / 2 #As always, we assume nrows and ncols are even
     
     a = range(0,B)
     ap = range(-B,0)
@@ -133,6 +150,22 @@ def sinLdot_fc(tfdata,pfdata):
     dtheta_fc(pfdata)
     
     return 1j*(tfdata - pfdata)
+
+def L_fc(fdata):
+    """Apply L in the Fourier domain."""
+
+    fd = np.copy(fdata)
+
+    dphi_fc(fdata)
+    divsin_fc(fdata)
+
+    dtheta_fc(fd)
+
+    return (1j * fdata, - 1j * fd)
+
+
+
+
     
     
     

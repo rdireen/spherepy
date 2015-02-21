@@ -58,7 +58,7 @@ err_msg['nmax_g_mmax'] = "nmax must be greater than or equal to mmax"
 err_msg['ncols_even'] = "the number of columns must be even"  
 err_msg['tuple_2_el'] = "tuple must have 2 elements"
 err_msg['ukn_coef_t'] = "unknown coefficient type"
-err_msg['ukn_patt_t'] = "unknown coefficient type"
+err_msg['ukn_patt_t'] = "unknown pattern type"
 err_msg['uknown_typ'] = "unknown type"
 err_msg['m_out_bound'] = "m value out of bounds"
 err_msg['n_out_bound'] = "n value out of bounds"
@@ -113,6 +113,11 @@ class ScalarCoefs(object):
     @property
     def mmax(self):
         return self._mmax
+
+    def copy(self):
+        """Make a deep copy of itself"""
+        vec = np.copy(self._vec)
+        return ScalarCoefs(vec, self.nmax, self.mmax)
 
     def window(self,vec):
         """Apply a window to the coefficients defined by vec. vec must have
@@ -1188,7 +1193,7 @@ def vspht(vsphere, nmax = None, mmax = None):
     nvec = np.zeros(nmax + 1, dtype = np.complex128)
 
     for n in xrange(1, nmax + 1):
-        nvec[n] = 1.0/np.sqrt(n*(n + 1.0))
+        nvec[n] = 1.0 / np.sqrt(n * (n + 1.0))
 
     vcoefs.scoef1.window(nvec)
     vcoefs.scoef2.window(nvec)
@@ -1241,6 +1246,50 @@ def ispht(scoefs, nrows, ncols):
 
     return ScalarPatternUniform(ds, doublesphere=True)
 
+def vispht(vcoefs, nrows, ncols):
+
+    dnrows = 2 * nrows - 2
+
+    if np.mod(ncols, 2) == 1:
+        raise ValueError(err_msg['ncols_even'])
+
+    nvec = np.zeros(vcoefs.nmax + 1, dtype = np.complex128)
+    for n in xrange(1, vcoefs.nmax + 1):
+        nvec[n] = 1.0 / np.sqrt(n * (n + 1.0))
+
+    sc1 = vcoefs.scoef1.copy()
+    sc2 = vcoefs.scoef2.copy()
+
+    sc1.window(nvec)
+    sc2.window(nvec)
+
+    if __init__.use_cext: 
+        fdata1 = np.zeros([dnrows, ncols], dtype=np.complex128)
+        fdata2 = np.zeros([dnrows, ncols], dtype=np.complex128)
+        csphi.sc_to_fc(fdata1, sc1._vec,
+                       sc1.nmax, sc1.mmax)
+        csphi.sc_to_fc(fdata2, sc2._vec,
+                       sc1.nmax, sc1.mmax)
+    else:   
+        fdata1 = pysphi.sc_to_fc(sc1._vec,
+                            sc1.nmax,
+                            sc1.mmax,
+                            dnrows, ncols)
+        fdata2 = pysphi.sc_to_fc(sc2._vec,
+                            sc2.nmax,
+                            sc2.mmax,
+                            dnrows, ncols)
+
+    f1 = ops.L_fc(fdata1)
+    f2 = ops.L_fc(fdata2)
+
+    ftheta = f1[0] - 1j * f2[1]
+    fphi = f1[1] + 1j * f2[0]
+    
+    dtheta = np.fft.ifft2(ftheta) * dnrows * ncols
+    dphi = np.fft.ifft2(fphi) * dnrows * ncols
+
+    return VectorPatternUniform(dtheta, dphi, doublesphere=True)
 
 def ispht_slow(scoefs, nrows, ncols):
 
