@@ -471,6 +471,24 @@ class ScalarCoefs(object):
         return b * a
 
     @_scalar_coef_op_left
+    def __div__(self, a, b):
+        if isinstance(b, numbers.Number):
+            if b == 0:
+                return ZeroDivisionError()
+            return a / b
+        else:
+            return a / b
+
+    @_scalar_coef_op_right
+    def __rdiv__(self, a, b):
+        if isinstance(a, numbers.Number):
+            if a == 0:
+                return ZeroDivisionError()
+            return b / a
+        else:
+            return b / a
+
+    @_scalar_coef_op_left
     def __truediv__(self, a, b):
         if isinstance(b, numbers.Number):
             if b == 0:
@@ -698,6 +716,24 @@ class VectorCoefs(object):
         return b * a
 
     @_vector_coef_op_left
+    def __div__(self, a, b):
+        if isinstance(b, numbers.Number):
+            if b == 0:
+                return ZeroDivisionError()
+            return a / b
+        else:
+            return a / b
+
+    @_vector_coef_op_right
+    def __rdiv__(self, a, b):
+        if isinstance(a, numbers.Number):
+            if a == 0:
+                return ZeroDivisionError()
+            return b / a
+        else:
+            return b / a  
+
+    @_vector_coef_op_left
     def __truediv__(self, a, b):
         if isinstance(b, numbers.Number):
             if b == 0:
@@ -840,6 +876,24 @@ class ScalarPatternUniform(object):
     @_scalar_pattern_uniform_op_right
     def __rmul__(self, a, b):
         return b * a
+
+    @_scalar_pattern_uniform_op_left
+    def __div__(self, a, b):
+        if isinstance(b, numbers.Number):
+            if b == 0:
+                return ZeroDivisionError()
+            return a / b
+        else:
+            return a / b
+
+    @_scalar_pattern_uniform_op_right
+    def __rdiv__(self, a, b):
+        if isinstance(a, numbers.Number):
+            if a == 0:
+                return ZeroDivisionError()
+            return b / a
+        else:
+            return b / a 
 
     @_scalar_pattern_uniform_op_left
     def __truediv__(self, a, b):
@@ -1014,6 +1068,24 @@ class VectorPatternUniform:
     @_vector_pattern_uniform_op_right
     def __rmul__(self, a, b):
         return b * a
+
+    @_vector_pattern_uniform_op_left
+    def __div__(self, a, b):
+        if isinstance(b, numbers.Number):
+            if b == 0:
+                return ZeroDivisionError()
+            return a / b
+        else:
+            return a / b  
+
+    @_vector_pattern_uniform_op_right
+    def __rdiv__(self, a, b):
+        if isinstance(a, numbers.Number):
+            if a == 0:
+                return ZeroDivisionError()
+            return b / a
+        else:
+            return b / a 
 
     @_vector_pattern_uniform_op_left
     def __truediv__(self, a, b):
