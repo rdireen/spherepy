@@ -9,7 +9,7 @@ It can provides:
 	* the ability to plot coefficients and patterns
 	
 [![Build status](https://ci.appveyor.com/api/projects/status/ccwuv424wao4rbly?svg=true)](https://ci.appveyor.com/project/rdireen/spherepy)
-[![Build status](https://ci.appveyor.com/api/projects/status/ccwuv424wao4rbly/branch/master?svg=true)](https://ci.appveyor.com/project/rdireen/spherepy/branch/master)
+
 	
 Install
 =======
