@@ -19,6 +19,7 @@ Install
 * Install :ref:`ref-linux`
 * Install :ref:`ref-windows`
 * Install :ref:`ref-source`
+* :ref:`ref-uninstall`
 
 .. _ref-pip:
 
@@ -49,6 +50,10 @@ SpherePy requires C extensions to be compiled. On Ubuntu, you will have to do th
 
     $ sudo apt-get install build-essentials python-dev
 
+Building C extensions also requires NumPy to be installed::
+
+    $ sudo pip install numpy
+
 You may then install SpherePy::
 
     $ sudo pip install spherepy
@@ -67,10 +72,7 @@ SpherePy on Windows
 
 SpherePy requires NumPy, which contains a lot of binaries. There are a lot of ways to get 
 NumPy installed on Windows, but one of the easiest ways is to install a Python distribution
-such as `Anaconda <http://continuum.io/downloads>`_. Once NumPy has been installed, we need to 
-make sure we can install `wheel <http://pythonwheels.com/>`_::
-
-    $ pip install wheel
+such as `Anaconda <http://continuum.io/downloads>`_. 
 
 Now we should be able to install SpherePy::	
 
@@ -105,6 +107,10 @@ Ubuntu you'll need build-essentials and python-dev::
     I've been able to develop these extensions on Windows as well by using 
     the compiler `here <http://www.microsoft.com/en-us/download/details.aspx?id=44266>`_.
 
+Building C extensions also requires NumPy to be installed::
+
+    $ pip install numpy
+
 You should now be able to install the code by entering the directory containing the 
 *setup.py* script and typing::
 
@@ -114,18 +120,26 @@ To see if things are working, start python and type::
 
     >>> import spherepy
 
-If you don't like it, you can remove SpherePy from your machine cleanly by entering::
 
-    $ pip uninstall spherepy
 
-I didn't make it necessary, but to use any of the plotting routines within SpherePy you must 
-install matplotlib::
+To plot stuff you'll need matplotlib::
 
     $ pip install matplotlib
 
+	
+.. _ref-uninstall:
 
-Simple Examples
-===============
+Uninstall
+---------
+
+If you don't like it, you can cleanly remove SpherePy from your machine with::
+
+    $ pip uninstall spherepy
+
+
+
+Quick Example
+-------------
 
 Plotting individual scalar spherical harmonics::
 

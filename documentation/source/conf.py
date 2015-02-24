@@ -15,6 +15,8 @@
 import sys
 import os
 
+import sphinx_bootstrap_theme
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -108,16 +110,33 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+#html_theme = 'default'
+
+html_theme = 'bootstrap'
+html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
+#html_theme_options = {
+#    "collapsiblesidebar": "true"
+#}
+
 html_theme_options = {
-    "collapsiblesidebar": "true"
+    'navbar_title': "SpherePy",
+	'navbar_site_name': "Site",
 	
-	
-    
+	'navbar_links': [
+        ("DireenTech", "http://www.direentech.com", True),
+    ],
+			
+	'navbar_sidebarrel': True,
+	'navbar_pagenav': False,
+	'navbar_pagenav_name': "Content Here",
+	'globaltoc_depth': 2,
+	'globaltoc_includehidden': "true",
+	'navbar_class': "navbar navbar-inverse",
+	'source_link_position': "nfooter",
 
 }
 
@@ -133,7 +152,8 @@ html_theme_options = {
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = "_static/logo_spherepy.png"
+#html_logo = "_static/logo_spherepy.png"
+html_logo = "_static/icon_spherepy.ico"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32

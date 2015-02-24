@@ -59,9 +59,15 @@ setup(name='spherepy',
       long_description=readme(),
       classifiers=[
           'Development Status :: 3 - Alpha',
+          'Intended Audience :: Education',
           'Intended Audience :: Science/Research',
           'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+          'Operating System :: Microsoft :: Windows :: Windows 7',
+          'Operating System :: POSIX :: Linux',
           'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3.3',
+          'Programming Language :: Python :: 3.4',
+          'Programming Language :: Python :: Implementation :: CPython'
           'Topic :: Scientific/Engineering :: Mathematics'
       ],
       url='https://github.com/rdireen/spherepy',  # url to github repo

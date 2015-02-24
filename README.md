@@ -2,36 +2,47 @@ SpherePy
 ========
 
 SpherePy is a package for working with scalar and vector spherical harmonics.
-It's capabilities include:
+It can provides:
 
 	* scalar and vector spherical harmonic decompositions
 	* objects for algebraically manipulating harmonic coefficients
-	* plotting capabilities using the matplotlib library
+	* the ability to plot coefficients and patterns
+	
+[![Build status](https://ci.appveyor.com/api/projects/status/ccwuv424wao4rbly?svg=true)](https://ci.appveyor.com/project/rdireen/spherepy)
+[![Build status](https://ci.appveyor.com/api/projects/status/ccwuv424wao4rbly/branch/master?svg=true)](https://ci.appveyor.com/project/rdireen/spherepy/branch/master)
 	
 Install
 =======
 
 **Ubuntu:**
-Before installing SpherePy, which is dependent on NumPy, you must install 
-build-essential and python-dev
+Before installing SpherePy you must install build-essential, python-dev, and NumPy
 
-    sudo apt-get install build-essential python-dev
+    $ sudo apt-get install build-essential python-dev
+    $ sudo pip install numpy
 
 Then you can 
 
-    sudo pip install spherepy
+    $ sudo pip install spherepy
     
 **Windows:**
 Make sure you have Numpy on your machine, then
 
-    sudo pip install spherepy
+    $ pip install spherepy
 	
 Plotting
 ========
 
 If you would like to use the plotting routines within SpherePy, install matplotlib:
 
-	sudo pip install matplotlib
+	$ sudo pip install matplotlib
+	
+Quick Example
+=============
+
+    >>> import spherepy as sp 
+    >>> c = sp.random_coefs(4, 4) # generate some random coefficients
+    >>> p = sp.ispht(c, 50, 50) # inverse spherical transform to pattern
+    >>> sp.plot_sphere_mag(p) # plot the magnitude of the pattern
 
 License
 =======
