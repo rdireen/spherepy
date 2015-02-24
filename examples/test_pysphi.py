@@ -15,6 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with SpherePy.  If not, see <http://www.gnu.org/licenses/>
 
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
 
 import spherepy as sp
 import numpy as np

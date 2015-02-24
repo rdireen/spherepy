@@ -31,6 +31,10 @@ them, matplotlib must be installed.
 import numpy as np
 from functools import wraps
 
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
 #------------------------------------------------------------------------Custom
 import spherepy as sp
 
@@ -55,7 +59,7 @@ def matplotlibensure(func):
     @wraps(func)
     def wrap(*args):
         if MPLINSTALLED == False:
-            raise sp.SpherePyError(msg)
+            raise ImportError(msg)
         
         return func(*args)   
         

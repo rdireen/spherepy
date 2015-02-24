@@ -10,6 +10,10 @@ import spherepy as sp
 import numpy as np
 import profile
 
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
 Nmax = 400
 Nrows = 1024
 
@@ -19,7 +23,7 @@ VISPHT = 2
 VSPHT = 3
 FFT = 4
 
-ctrl = VSPHT
+ctrl = SPHT
 
 c = sp.random_coefs(Nmax, Nmax)
 vc  = sp.random_coefs(Nmax, Nmax, coef_type = sp.vector)

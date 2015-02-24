@@ -29,6 +29,10 @@ Some file handling routines.
 import numpy as np
 import spherepy as sp
 
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
 def save_patt(patt, filename):
     """Saves ScalarPatternUniform object 'patt' to file. The first line of the 
     file has the number of rows and the number of columns in the pattern 

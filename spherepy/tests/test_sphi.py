@@ -30,6 +30,10 @@ from unittest import TestCase
 import spherepy as sp
 import numpy as np
 
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
 Nmodes = 100
 
 class TestSphi(TestCase):
@@ -98,7 +102,6 @@ class TestSphi(TestCase):
             sc = sp.spht(p, 100, 85)
             
             rerr = sp.compare_relative(spy, sc)
-            print rerr
             if (rerr > 1e-13):
                 res = False
         

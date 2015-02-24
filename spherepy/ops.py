@@ -32,6 +32,10 @@ coefficients.
 #---------------------------------------------------------------------3rd Party
 import numpy as np
 
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
 #==============================================================================
 # Operator  Functions
 #==============================================================================
@@ -47,7 +51,7 @@ def fix_even_row_data_fc(fdata):
 
     L = fdata.shape[0]
     if np.mod(L, 2) == 0:
-        fdata[L / 2, :] = 0
+        fdata[int(L / 2), :] = 0
 
 def pad_rows_fdata(fdata, fdata_extended):
     
@@ -71,8 +75,8 @@ def sin_fc(fdata):
     ncols = fdata.shape[1]
 
     M = nrows / 2
-    fdata[M - 1, :] = 0
-    fdata[M + 1, :] = 0
+    fdata[int(M - 1), :] = 0
+    fdata[int(M + 1), :] = 0
     
     work1 = np.zeros([nrows, ncols], dtype=np.complex128)
     work2 = np.zeros([nrows, ncols], dtype=np.complex128)
@@ -91,7 +95,7 @@ def divsin_fc(fdata):
     nrows = fdata.shape[0]
     ncols = fdata.shape[1]
 
-    L = nrows / 2 # Assuming nrows is even, which it should be.
+    L = int(nrows / 2) # Assuming nrows is even, which it should be.
     L2 = L - 2 # This is the last index in the recursion for division by sine.
     
     g = np.zeros([nrows, ncols], dtype = np.complex128)
@@ -107,10 +111,10 @@ def dtheta_fc(fdata):
     
     nrows = fdata.shape[0]
     ncols = fdata.shape[1]
-    B = nrows / 2 #As always, we assume nrows and ncols are even
+    B = int(nrows / 2) #As always, we assume nrows and ncols are even
     
-    a = range(0,B)
-    ap = range(-B,0)
+    a = list(range(0,B))
+    ap = list(range(-B,0))
     a.extend(ap)
     
     dtheta = np.zeros([nrows,ncols],np.complex128)
@@ -127,10 +131,10 @@ def dphi_fc(fdata):
     nrows = fdata.shape[0]
     ncols = fdata.shape[1]
     
-    B=ncols / 2 #As always, we assume nrows and ncols are even
+    B= int(ncols / 2) #As always, we assume nrows and ncols are even
     
-    a = range(0,B)
-    ap = range(-B,0)
+    a = list(range(0,int(B)))
+    ap = list(range(-int(B),0))
     a.extend(ap)
     
     dphi = np.zeros([nrows,ncols],np.complex128)

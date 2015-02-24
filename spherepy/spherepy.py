@@ -32,17 +32,30 @@
 """
 
 #---------------------------------------------------------------------Built-ins
+from __future__ import division
 from functools import wraps
 import numbers
-import __init__
+
+
 
 #---------------------------------------------------------------------3rd Party
 import numpy as np
 
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
 #------------------------------------------------------------------------Custom
-import pysphi  # python versions of the low level routines
-import csphi  # c extensions of the low level routines
-import ops
+try:
+    import __init__
+    import pysphi  # python versions of the low level routines
+    import csphi  # c extensions of the low level routines
+    import ops
+except ImportError:
+    import spherepy.__init__ as __init__
+    import spherepy.pysphi as pysphi  # python versions of the low level routines
+    import spherepy.csphi as csphi # c extensions of the low level routines
+    import spherepy.ops as ops
 
 #==============================================================================
 # Global Declarations
@@ -458,7 +471,7 @@ class ScalarCoefs(object):
         return b * a
 
     @_scalar_coef_op_left
-    def __div__(self, a, b):
+    def __truediv__(self, a, b):
         if isinstance(b, numbers.Number):
             if b == 0:
                 return ZeroDivisionError()
@@ -467,7 +480,7 @@ class ScalarCoefs(object):
             return a / b
 
     @_scalar_coef_op_right
-    def __rdiv__(self, a, b):
+    def __rtruediv__(self, a, b):
         if isinstance(a, numbers.Number):
             if a == 0:
                 return ZeroDivisionError()
@@ -685,7 +698,7 @@ class VectorCoefs(object):
         return b * a
 
     @_vector_coef_op_left
-    def __div__(self, a, b):
+    def __truediv__(self, a, b):
         if isinstance(b, numbers.Number):
             if b == 0:
                 return ZeroDivisionError()
@@ -694,7 +707,7 @@ class VectorCoefs(object):
             return a / b
 
     @_vector_coef_op_right
-    def __rdiv__(self, a, b):
+    def __rtruediv__(self, a, b):
         if isinstance(a, numbers.Number):
             if a == 0:
                 return ZeroDivisionError()
@@ -718,7 +731,7 @@ class ScalarPatternUniform(object):
 
     @property
     def nrows(self):
-        return self._dsphere.shape[0] / 2 + 1 
+        return int(self._dsphere.shape[0] / 2 + 1)
 
     @property
     def ncols(self):
@@ -829,7 +842,7 @@ class ScalarPatternUniform(object):
         return b * a
 
     @_scalar_pattern_uniform_op_left
-    def __div__(self, a, b):
+    def __truediv__(self, a, b):
         if isinstance(b, numbers.Number):
             if b == 0:
                 return ZeroDivisionError()
@@ -838,7 +851,7 @@ class ScalarPatternUniform(object):
             return a / b
 
     @_scalar_pattern_uniform_op_right
-    def __rdiv__(self, a, b):
+    def __rtruediv__(self, a, b):
         if isinstance(a, numbers.Number):
             if a == 0:
                 return ZeroDivisionError()
@@ -1003,7 +1016,7 @@ class VectorPatternUniform:
         return b * a
 
     @_vector_pattern_uniform_op_left
-    def __div__(self, a, b):
+    def __truediv__(self, a, b):
         if isinstance(b, numbers.Number):
             if b == 0:
                 return ZeroDivisionError()
@@ -1012,7 +1025,7 @@ class VectorPatternUniform:
             return a / b  
 
     @_vector_pattern_uniform_op_right
-    def __rdiv__(self, a, b):
+    def __rtruediv__(self, a, b):
         if isinstance(a, numbers.Number):
             if a == 0:
                 return ZeroDivisionError()
@@ -1419,7 +1432,7 @@ def spht_slow(ssphere, nmax, mmax):
 
 def ispht(scoefs, nrows, ncols):
 
-    dnrows = 2 * nrows - 2
+    dnrows = int(2 * nrows - 2)
 
     if np.mod(ncols, 2) == 1:
         raise ValueError(err_msg['ncols_even'])

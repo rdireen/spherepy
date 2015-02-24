@@ -14,6 +14,10 @@ a list responses from all of the exceptions.
 import spherepy as sp
 import numpy as np
 
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
 print("")
 
 template = """

@@ -19,6 +19,10 @@ import profile
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
 Nmax = 500
 Nrows = 1024
 

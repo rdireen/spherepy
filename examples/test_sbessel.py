@@ -24,6 +24,10 @@ Randy Direen
 
 """
 
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
 import spherepy as sp
 import numpy as np
 import random as rn

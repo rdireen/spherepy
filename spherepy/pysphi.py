@@ -32,6 +32,10 @@ For c versions, see csphi.c in src folder.
 #---------------------------------------------------------------------3rd Party
 import numpy as np
 
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
 #==============================================================================
 # Low Level Functions
 #==============================================================================
@@ -123,7 +127,7 @@ def s_data(nrows_fdata, Nmax, Q):
     L1 = nrows_fdata
 
     s = np.zeros(Q, dtype=np.complex128)
-    MM = L1 / 2
+    MM = int(L1 / 2)
 
     for nu in xrange(-MM, MM + Nmax + 1):
         if np.mod(nu, 2) == 1:
@@ -136,7 +140,7 @@ def hkm_fc(fdata, Nmax, m, s):
 
     f = fdata[:, m]
     L1 = f.size
-    MM = L1 / 2
+    MM = int(L1 / 2)
     Q = s.size
 
     ff = np.zeros(Q, dtype=np.complex128)
@@ -211,7 +215,7 @@ def mindx(m, nmax, mmax):
 
 def fcvec_m_sc(vec, m, nmax, nrows):
     
-    F = np.zeros(nrows, dtype=np.complex128)
+    F = np.zeros(int(nrows), dtype=np.complex128)
     K = nmax + 1 
 
     for n in xrange(np.abs(m), K):
@@ -224,9 +228,9 @@ def fcvec_m_sc(vec, m, nmax, nrows):
 
     mm = (-1) ** m
     if np.mod(nrows, 2) == 0:
-        H = nrows / 2 - 1
+        H = int(nrows / 2 - 1)
     else:
-        H = (nrows - 1) / 2
+        H = int((nrows - 1) / 2)
 
     for k in xrange(0, H):
         F[-(k + 1)] = mm * F[k + 1]
@@ -236,9 +240,9 @@ def fcvec_m_sc(vec, m, nmax, nrows):
 def sc_to_fc(spvec, nmax, mmax, nrows, ncols):
     """assume Ncols is even"""
 
-    fdata = np.zeros([nrows, ncols], dtype=np.complex128)
+    fdata = np.zeros([int(nrows), ncols], dtype=np.complex128)
 
-    for k in xrange(0, ncols / 2):
+    for k in xrange(0, int(ncols / 2)):
         if k < mmax:
             kk = k
             ind = mindx(kk, nmax, mmax)

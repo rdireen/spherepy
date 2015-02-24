@@ -2,6 +2,10 @@ import numpy as np
 import spherepy as sp
 from mayavi import mlab
 
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
 
 def plot_mag_on_sphere(T):
 

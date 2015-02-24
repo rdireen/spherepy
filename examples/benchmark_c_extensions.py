@@ -14,6 +14,10 @@ import spherepy as sp
 import profile
 import time
 
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
 Nmax = 200
 Mmax = Nmax
 Nrows = 2000

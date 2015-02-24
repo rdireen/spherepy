@@ -34,7 +34,17 @@ module.
 
 import spherepy as sp
 import numpy as np
-import file as fl
+
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
+try:
+    #Python27
+    import file as fl
+except ImportError:
+    #Python3x
+    import spherepy.file as fl
 
 def verify_spht(pattfile, scoeffile):
 

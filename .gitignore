@@ -7,4 +7,5 @@ build/
 images/
 dist/
 spherepy.egg-info/
+nose*
 .eggs/

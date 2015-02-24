@@ -3,6 +3,10 @@ sys.path.append('../spherepy')
 import spherepy as sp
 import numpy as np
 
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
 vpatt = sp.ones_patt_uniform(5, 10,patt_type = sp.vector)
 
 vsc = sp.vspht(vpatt,4,4)

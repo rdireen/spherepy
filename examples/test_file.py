@@ -2,6 +2,10 @@ import sys
 sys.path.append('../spherepy')
 import spherepy as sp
 
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
 
 patt1 = sp.random_patt_uniform(5, 10,patt_type = sp.scalar)
 

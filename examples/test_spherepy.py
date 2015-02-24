@@ -18,6 +18,10 @@
 import spherepy as sp
 import profile
 
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
 c = sp.random_coefs(500, 498)
 
 p = sp.ispht(c, 506, 1010)
