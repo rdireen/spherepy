@@ -88,13 +88,15 @@ if test_scalar_coefs:
                 """a = 4.5 - scoef2""",
                 """a = 4.5 * scoef2""",
                 """a = 4.5 / scoef2""",
-                """a = scoef / 0"""]
+                """a = scoef / 0""",
+                """sc = sp.ScalarCoefs(vec, 2, 2)"""]
     
     scoef = sp.zeros_coefs(11, 7)
     scoef2 = sp.random_coefs(11, 7)
     scoef3 = sp.random_coefs(11, 8)
     scoef4 = sp.random_coefs(12, 7)
     vec = np.zeros(11, dtype=np.complex128)
+    
     
     test_executes(executes_scoefs)
 
@@ -154,7 +156,8 @@ if test_vector_coefs:
                 """a = 4.5 - vcoef2""",
                 """a = 4.5 * vcoef2""",
                 """a = 4.5 / vcoef2""",
-                """a = vcoef / 0"""]
+                """a = vcoef / 0""",
+                """sc = sp.VectorCoefs(vec, vec, 2, 2)"""]
     
     vcoef = sp.zeros_coefs(11, 7, coef_type=sp.vector)
     vcoef2 = sp.random_coefs(11, 7, coef_type=sp.vector)

@@ -36,6 +36,12 @@ import numpy as np
 
 
 class TestScalarCoefsStructure(TestCase):
+
+    def test_create_sc(self):
+        """::raise an error if I try to pass a vec of wrong size"""
+        vec = np.zeros(11, dtype=np.complex128)
+        with self.assertRaises(ValueError):
+            sc = sp.ScalarCoefs(vec,2,2)
     
     def test_make_sure_mmax_not_greater_nmax_z(self):
         """::raise an error if I try to set mmax > nmax: zeros"""  
@@ -87,6 +93,18 @@ class TestScalarCoefsStructure(TestCase):
         zz = sp.random_coefs(11, 10)
         with self.assertRaises(AttributeError):
             zz[12,10] = 8
+
+    def test_slice_to_sc1(self):
+        """::raise an error if I slice incorrectly1"""
+        zz = sp.random_coefs(11, 10)
+        with self.assertRaises(AttributeError):
+            sc = zz[0:5,10]
+
+    def test_slice_to_sc2(self):
+        """::raise an error if I slice incorrectly2"""
+        zz = sp.random_coefs(11, 10)
+        with self.assertRaises(AttributeError):
+            sc = zz[1:5,:]
             
     def test_add_diff_sizes(self):
         """::can't add two ScalarCoefs that are different """
@@ -285,6 +303,12 @@ class TestScalarCoefsStructure(TestCase):
         self.assertTrue(True)
         
 class TestVectorCoefsStructure(TestCase):
+
+    def test_create_vc(self):
+        """::raise an error if I try to pass a vec1 and vec2 of wrong size"""
+        vec = np.zeros(11, dtype=np.complex128)
+        with self.assertRaises(ValueError):
+            vc = sp.VectorCoefs(vec,vec,2,2)
     
     def test_make_sure_mmax_not_greater_nmax_z(self):
         """::raise an error if I try to set mmax > nmax: zeros"""  

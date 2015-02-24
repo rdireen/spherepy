@@ -4,6 +4,7 @@
 *.so
 *~
 build/
+images/
 dist/
 spherepy.egg-info/
 .eggs/

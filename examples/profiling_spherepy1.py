@@ -6,14 +6,12 @@ Profiling script to see where the bottlenecks are in the spht, vspht, ispht,
 and the vispht routines.  Set ctrl below, to one of the tests.
 
 """
-
 import spherepy as sp
 import numpy as np
 import profile
 
 Nmax = 400
 Nrows = 1024
-
 
 ISPHT = 0
 SPHT = 1

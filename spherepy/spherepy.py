@@ -87,6 +87,13 @@ err_msg['set_sc2'] = "set scalar coefficients individually " + \
 err_msg['shape_tc_pc'] = "shape of tcdata and pcdata must be the the same"
 err_msg['nmax_too_lrg'] = "nmax value must be less than patterns nrows"
 err_msg['mmax_too_lrg'] = "mmax value must be less than patterns ncols"
+err_msg['use_mag_instead'] = "use mag( x ) instead"
+
+err_msg['scoef_size'] = "vec must have length = " + \
+                              "nmax + 1 + mmax * (2 * (nmax + 1) - mmax - 1)"
+
+err_msg['vcoef_size'] = "vec1 and vec2 must have length = " + \
+                              "nmax + 1 + mmax * (2 * (nmax + 1) - mmax - 1)"
                                 
                                 
 #==============================================================================
@@ -94,12 +101,29 @@ err_msg['mmax_too_lrg'] = "mmax value must be less than patterns ncols"
 #==============================================================================
 
 class ScalarCoefs(object):
-    """Holds the scalar coefficients that represent a spherical pattern. The 
-    function spht returns this object"""
     def __init__(self, vec, nmax, mmax):
+        """Example of docstring on the __init__ method.
+
+        The __init__ method may be documented in either the class level
+        docstring, or as a docstring on the __init__ method itself.
+
+        Either form is acceptable, but the two should not be mixed. Choose one
+        convention to document the __init__ method and be consistent with it.
+
+        Args:
+          vec (numpy array complex128): Vector containing the coefficients.
+          nmax (int): Largest `n` value in the set of modes.
+          mmax (int): Largest abs(`m`) value in the set of modes.
+
+        """
         
         if mmax > nmax:
             raise ValueError(err_msg['nmax_g_mmax'])
+
+        N = nmax + 1;
+        NC = N + mmax * (2 * N - mmax - 1);
+        if NC != len(vec):
+            raise ValueError(err_msg['scoef_size'])
 
         self._vec = vec
         self._nmax = nmax
@@ -107,11 +131,21 @@ class ScalarCoefs(object):
 
     @property
     def nmax(self):
+        """Largest `n` value."""
         return self._nmax
 
     @property
     def mmax(self):
+        """Largest abs(`m`) value."""
         return self._mmax
+
+    @property
+    def size(self):
+        """The number of modes in the structure"""
+        N = self.nmax + 1;
+        NC = N + self.mmax * (2 * N - self.mmax - 1);
+        assert N == len(self._vec)
+        return N
 
     def copy(self):
         """Make a deep copy of itself"""
@@ -119,8 +153,16 @@ class ScalarCoefs(object):
         return ScalarCoefs(vec, self.nmax, self.mmax)
 
     def window(self,vec):
-        """Apply a window to the coefficients defined by vec. vec must have
-        length nmax + 1."""
+        """Apply a window to the coefficients defined by `vec`. `vec` must
+        have length `nmax` + 1.
+
+        Args:
+          vec: Vector of values to apply in the n direction of the data.
+
+        Returns:
+          Nothing, applies window to the data in place.
+
+        """
 
         slce = slice(None,None,None)
         
@@ -173,13 +215,13 @@ class ScalarCoefs(object):
 
     def __repr__(self):
         rs = self._reshape_m_vecs()
-        return "scalar_coef((nmax = {0}, mmax = {1}) , {2} )".format(self.nmax,
+        return "ScalarCoefs((nmax = {0}, mmax = {1}) , {2} )".format(self.nmax,
                                                                      self.mmax,
                                                                      str(rs))
 
     def __str__(self):
         rs = self._reshape_m_vecs()
-        st = ["scalar_coef(nmax = {0}, mmax = {1}):".format(self.nmax,
+        st = ["ScalarCoefs(nmax = {0}, mmax = {1}):".format(self.nmax,
                                                           self.mmax)]
         for n, x in enumerate(rs):
             st.append("n = {0} :: {1}".format(n, x))
@@ -274,6 +316,8 @@ class ScalarCoefs(object):
                 idx_stop = idx_start + self.nmax - np.abs(m) + 1
 
                 return self._vec[idx_start:idx_stop]
+
+
             else:
                 raise AttributeError(err_msg['slice_noper'])
 
@@ -315,6 +359,43 @@ class ScalarCoefs(object):
 
             return self._vec[idx]
 
+        elif isinstance(arg[0], slice) and isinstance(arg[1], slice):
+
+            if ((arg[1].start is None) and
+                (arg[1].step is None) and
+                (arg[1].stop is None) and
+                (arg[0].start == 0) and
+                (arg[0].step is None) and
+                isinstance(arg[0].stop, int)):
+                
+                if (arg[0].stop > self.nmax):
+                    raise AttributeError(err_msg['n_out_bound'])
+
+                new_nmax = arg[0].stop
+                if new_nmax > self.mmax:
+                    new_mmax = self.mmax
+                else:
+                    new_mmax = new_nmax
+
+                N = new_nmax + 1;
+                NC = N + new_mmax * (2 * N - new_mmax - 1);
+                vec = np.zeros(NC,dtype = np.complex128)
+
+                vec[0:new_nmax + 1] = self._vec[0:new_nmax + 1]
+                for m in xrange(1,new_mmax + 1):
+                    idx = pysphi.mindx(-m, self.nmax, self.mmax)
+                    nidx = pysphi.mindx(-m, new_nmax, new_mmax)
+                    ln = new_nmax - np.abs(m) + 1
+                    vec[nidx:nidx + ln] = self._vec[idx:idx + ln]
+
+                    idx = pysphi.mindx(m, self.nmax, self.mmax)
+                    nidx = pysphi.mindx(m, new_nmax, new_mmax)
+                    ln = new_nmax - np.abs(m) + 1
+                    vec[nidx:nidx + ln] = self._vec[idx:idx + ln]
+
+                return ScalarCoefs(vec, new_nmax, new_mmax)
+            else:
+                raise AttributeError(err_msg['idx_no_rec'])
         else:
             raise AttributeError(err_msg['idx_no_rec'])
 
@@ -406,6 +487,11 @@ class VectorCoefs(object):
         if mmax > nmax:
             raise ValueError(err_msg['nmax_g_mmax'])
 
+        N = nmax + 1;
+        NC = N + mmax * (2 * N - mmax - 1);
+        if NC != len(vec1):
+            raise ValueError(err_msg['vcoef_size'])
+
         #There are no monopoles for structure VectorCoefs
         vec1[0] = 0
         vec2[0] = 0
@@ -417,11 +503,22 @@ class VectorCoefs(object):
 
     @property
     def nmax(self):
+        """Largest n value."""
         return self._nmax
 
     @property
     def mmax(self):
+        """Largest abs(m) value."""
         return self._mmax
+
+    @property
+    def size(self):
+        """The number of modes in the structure"""
+        N = self.nmax + 1;
+        NC = N + self.mmax * (2 * N - self.mmax - 1);
+        assert N == len(self.scoef1._vec)
+        assert N == len(self.scoef2._vec)
+        return N
 
     def _array_2d_repr(self):
         """creates a 2D array that has nmax + 1 rows and 2*mmax + 1 columns
@@ -444,7 +541,7 @@ class VectorCoefs(object):
                 self.scoef2._reshape_m_vecs())
 
     def __repr__(self):
-        return "vector_coef(nmax = {0}, mmax = {1})".format(self.nmax,
+        return "VectorCoefs(nmax = {0}, mmax = {1})".format(self.nmax,
                                                                      self.mmax)
 
     def __setitem__(self, arg, val):
@@ -790,7 +887,15 @@ class VectorPatternUniform:
     @property
     def array(self):
         return (self._tdsphere[0:self.nrows, :],
-                self._tdsphere[0:self.nrows, :])
+                self._pdsphere[0:self.nrows, :])
+
+    @property
+    def theta(self):
+        return self._tdsphere[0:self.nrows, :]
+
+    @property
+    def phi(self):
+        return self._pdsphere[0:self.nrows, :]
 
     @property
     def is_symmetric(self):
@@ -1066,7 +1171,30 @@ def abs(sobj):
     elif isinstance(sobj, ScalarCoefs):
         return ScalarCoefs(np.abs(sobj._vec), sobj.nmax, sobj.mmax)
     elif isinstance(sobj, VectorPatternUniform):
-        raise NotImplementedError()
+        raise TypeError(err_msg['use_mag_instead'])
+    else:
+        raise TypeError(err_msg['uknown_typ'])
+
+def mag2(sobj):
+    if isinstance(sobj, ScalarPatternUniform):
+        return np.abs(sobj.array) ** 2
+    elif isinstance(sobj, ScalarCoefs):
+        return ScalarCoefs(np.abs(sobj._vec), sobj.nmax, sobj.mmax)
+    elif isinstance(sobj, VectorPatternUniform):
+        return np.abs(sobj.theta) ** 2 + np.abs(sobj.phi) ** 2
+    elif isinstance(sobj, VectorCoefs):
+        return ScalarCoefs(np.abs(sobj.scoef1._vec) ** 2 + \
+                           np.abs(sobj.scoef2._vec) ** 2)
+    else:
+        raise TypeError(err_msg['uknown_typ'])
+
+def mag(sobj):
+    if isinstance(sobj, ScalarPatternUniform):
+        return np.abs(sobj.array)
+    elif isinstance(sobj, ScalarCoefs):
+        return ScalarCoefs(np.abs(sobj._vec), sobj.nmax, sobj.mmax)
+    elif isinstance(sobj, VectorPatternUniform):
+        return np.sqrt(mag2(obj))
     else:
         raise TypeError(err_msg['uknown_typ'])
     
@@ -1106,7 +1234,55 @@ def double_sphere(cdata, sym):
 
 def spht(ssphere, nmax = None, mmax = None):
     """Returns a ScalarCoefs object containing the spherical harmonic 
-    coefficients of the ScalarPatternUniform object"""
+    coefficients of the ScalarPatternUniform object
+
+    Function parameters should be documented in the ``Args`` section. The name
+    of each parameter is required. The type and description of each parameter
+    is optional, but should be included if not obvious.
+
+    If the parameter itself is optional, it should be noted by adding
+    ", optional" to the type. If \*args or \*\*kwargs are accepted, they
+    should be listed as \*args and \*\*kwargs.
+
+    The format for a parameter is::
+
+        name (type): description
+          The description may span multiple lines. Following
+          lines should be indented.
+
+          Multiple paragraphs are supported in parameter
+          descriptions.
+
+    Args:
+      param1 (int): The first parameter.
+      param2 (str, optional): The second parameter. Defaults to None.
+        Second line of description should be indented.
+      *args: Variable length argument list.
+      **kwargs: Arbitrary keyword arguments.
+
+    Returns:
+      bool: True if successful, False otherwise.
+
+      The return type is optional and may be specified at the beginning of
+      the ``Returns`` section followed by a colon.
+
+      The ``Returns`` section may span multiple lines and paragraphs.
+      Following lines should be indented to match the first line.
+
+      The ``Returns`` section supports any reStructuredText formatting,
+      including literal blocks::
+
+          {
+              'param1': param1,
+              'param2': param2
+          }
+
+    Raises:
+      AttributeError: The ``Raises`` section is a list of all exceptions
+        that are relevant to the interface.
+      ValueError: If `param2` is equal to `param1`.
+
+    """
 
     if nmax == None:
         nmax = ssphere.nrows - 1 

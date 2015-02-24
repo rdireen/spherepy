@@ -82,8 +82,12 @@ def plot_mag_on_sphere(T):
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    phi, theta = np.meshgrid(np.linspace(0, 2 * np.pi, ncols),
+    phi, theta = np.meshgrid(np.linspace(0, 2 * np.pi, ncols + 1),
                              np.linspace(0, np.pi, nrows))
+
+    v = np.array(T[:,0]).reshape(-1, 1)
+    T = np.hstack((T, v))
+
     X = T * np.cos(phi) * np.sin(theta)
     Y = T * np.sin(phi) * np.sin(theta)
     Z = T * np.cos(theta)
@@ -110,6 +114,51 @@ def plot_mag_on_sphere(T):
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
 
+    plt.show()
+
+@matplotlibensure
+def plot_sphere_mag(patt):
+
+    T = sp.mag(patt)
+
+    nrows = patt.nrows
+    ncols = patt.ncols
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    delta = 2 * np.pi / ncols + 1
+    phi, theta = np.meshgrid(np.linspace(0, 2 * np.pi, ncols + 1),
+                             np.linspace(0, np.pi, nrows))
+
+    v = np.array(T[:,0]).reshape(-1, 1)
+    T = np.hstack((T, v))
+
+    X = T * np.cos(phi) * np.sin(theta)
+    Y = T * np.sin(phi) * np.sin(theta)
+    Z = T * np.cos(theta)
+
+    ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap='jet', alpha=.5,
+                    linewidth=0.5)
+
+
+
+    # Create cubic bounding box to simulate equal aspect ratio
+    max_range = np.array([X.max() - X.min(),
+                          Y.max() - Y.min(),
+                          Z.max() - Z.min()]).max()
+    Xb = 0.5 * max_range * np.mgrid[-1:2:2, -1:2:2, -1:2:2][0].flatten() + \
+         0.5 * (X.max() + X.min())
+    Yb = 0.5 * max_range * np.mgrid[-1:2:2, -1:2:2, -1:2:2][1].flatten() + \
+         0.5 * (Y.max() + Y.min())
+    Zb = 0.5 * max_range * np.mgrid[-1:2:2, -1:2:2, -1:2:2][2].flatten() + \
+         0.5 * (Z.max() + Z.min())
+    # Comment or uncomment following both lines to test the fake bounding box:
+    for xb, yb, zb in zip(Xb, Yb, Zb):
+        ax.plot([xb], [yb], [zb], 'w')
+
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
 
     plt.show()
 
