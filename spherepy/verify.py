@@ -31,7 +31,7 @@ The file format is expected to be in the form specified in the file.py
 module. 
 
 ***************************************************************************"""
-
+from __future__ import division
 import spherepy as sp
 import numpy as np
 

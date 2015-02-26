@@ -23,6 +23,7 @@ Randy Direen
 
 
 """
+from __future__ import division
 import numpy as np
 
 #TODO: Change all xrange instances to range

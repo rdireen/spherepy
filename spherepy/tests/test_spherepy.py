@@ -22,7 +22,7 @@ Unit tests for the Spherical Bessel functions and the spht, vspht, ispht,
 and vspht routines.
 
 """
-
+from __future__ import division
 from unittest import TestCase
 
 import spherepy as sp
@@ -128,7 +128,7 @@ class TestScalarSphericalTransform(TestCase):
                 vc2 = sp.vspht(p, 15, 15)
                 s = sp.L2_coef(vc - vc2) / sp.L2_coef(vc)
                 
-                if s > 1e-12:
+                if s > 1e-10:
                     res = False
             
         self.assertTrue(res)

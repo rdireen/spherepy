@@ -26,7 +26,7 @@ TODO: Test the single_val, doublesphere, continue, etc. functions in here as
 well.
 
 """
-
+from __future__ import division
 from unittest import TestCase
 
 import spherepy as sp

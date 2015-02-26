@@ -25,7 +25,7 @@ Randy Direen
 Some file handling routines.
 
 ***************************************************************************"""
-
+from __future__ import division
 import numpy as np
 import spherepy as sp
 

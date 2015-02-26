@@ -30,6 +30,7 @@ coefficients.
 ***************************************************************************"""
 
 #---------------------------------------------------------------------3rd Party
+from __future__ import division
 import numpy as np
 
 #TODO: Change all xrange instances to range

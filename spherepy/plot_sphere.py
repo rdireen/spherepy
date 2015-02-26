@@ -28,6 +28,7 @@ them, matplotlib must be installed.
 ***************************************************************************"""
 
 #---------------------------------------------------------------------Built-ins
+from __future__ import division
 import numpy as np
 from functools import wraps
 

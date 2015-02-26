@@ -130,13 +130,14 @@ html_theme_options = {
         ("DireenTech", "http://www.direentech.com", True),
     ],
 			
-	'navbar_sidebarrel': True,
-	'navbar_pagenav': False,
-	'navbar_pagenav_name': "Content Here",
+	'navbar_sidebarrel': False,
+	'navbar_pagenav': True,
+	'navbar_pagenav_name': "This Page",
 	'globaltoc_depth': 2,
 	'globaltoc_includehidden': "true",
 	'navbar_class': "navbar navbar-inverse",
 	'source_link_position': "nfooter",
+	'bootstrap_version': "3",
 
 }
 

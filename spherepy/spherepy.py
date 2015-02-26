@@ -107,6 +107,19 @@ err_msg['scoef_size'] = "vec must have length = " + \
 
 err_msg['vcoef_size'] = "vec1 and vec2 must have length = " + \
                               "nmax + 1 + mmax * (2 * (nmax + 1) - mmax - 1)"
+
+
+pretty_display_string = """
+
+c[n, m]
+=======
+
+2: {7}  {4}  {2}  {6}  {8} 
+1:                {3}  {1}  {5} 
+0:                               {0}   
+n  -------------  -------------  -------------  -------------  -------------  
+       m = -2         m = -1         m = 0          m = 1          m = 2        
+"""
                                 
                                 
 #==============================================================================
@@ -763,7 +776,7 @@ class ScalarPatternUniform(object):
 
     def __repr__(self):
 
-        return self.array.__repr__()
+        return "ScalarPatternUniform({0})".format(self.array.__repr__())
 
     @property
     def nrows(self):
@@ -783,6 +796,10 @@ class ScalarPatternUniform(object):
 
     @property
     def array(self):
+        return self._dsphere[0:self.nrows, :]
+
+    @property
+    def cdata(self):
         return self._dsphere[0:self.nrows, :]
 
     @property
@@ -1316,6 +1333,31 @@ def double_sphere(cdata, sym):
                 ddata[n, m] = (s + t) / 2
 
     return ddata
+
+def _tiny_rep(c):
+    sr = "{0:.2}".format(c)
+    if sr[0] == '(':
+        sr =  sr[1:-1]
+    return sr
+
+def pretty_coefs(c):
+    """Print first three modes"""
+
+    sa = []
+    cfit = c[0:2,:]
+    cvec = cfit._vec
+
+    sa = [_tiny_rep(val) for val in cvec]
+
+    while len(sa) < 9:
+        sa.append("")
+
+    sa = [sa[n].center(13) for n in range(0, 9)]
+
+    print(pretty_display_string.format(sa[0],sa[1],sa[2],
+                                       sa[3],sa[4],sa[5],
+                                       sa[6],sa[7],sa[8]))
+
 
 def spht(ssphere, nmax = None, mmax = None):
     """Returns a ScalarCoefs object containing the spherical harmonic 

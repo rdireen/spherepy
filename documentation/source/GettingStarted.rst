@@ -3,13 +3,8 @@
 Getting Started
 ***************
 
-We'll first install SpherePy and then try some simple examples.
+Works on Python 2.7, 3.3, and 3.4 under Linux and Windows (not sure about OS X).
 
-Note that SpherePy is build on top of NumPy. The installation procedures below 
-will automatically install NumPy.
-
-Plotting routines within SpherePy use matplotlib. This package is not automatically
-installed and must be installed separately from SpherePy.
 
 
 Install
@@ -139,7 +134,7 @@ If you don't like it, you can cleanly remove SpherePy from your machine with::
 
 
 Quick Example
--------------
+=============
 
 Plotting individual scalar spherical harmonics::
 

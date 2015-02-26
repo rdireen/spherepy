@@ -24,7 +24,7 @@ Randy Direen
 These are tests that compare the c extensions to the python versions.
 
 """
-
+from __future__ import division
 from unittest import TestCase
 
 import spherepy as sp

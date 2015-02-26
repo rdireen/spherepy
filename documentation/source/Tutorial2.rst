@@ -11,11 +11,11 @@ as well as vector spherical harmonics
 where the vector spherical harmonics are defined in J. D. Jackson's *Classical Electrodynamics* [JDJ1998]_
 
 
-Example *vspht* Of My Head
-==========================
+*vspht* Of My Head
+==================
 
-Example *vspht* Of Antenna Data
-===============================
+*vspht* Of Antenna Data
+=======================
 
 
 .. note::

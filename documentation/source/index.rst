@@ -6,25 +6,30 @@
  
 .. COMMENT: Put all references to media here
  
-.. |rndc| image:: images/rnd_coefsp.png
-   :width: 400px
+
+  
+
+**********************
+
+
+.. image:: images/sph.jpg
+   :height: 200px
+   :align: right
+
    
-.. |rndp| image:: images/rnd1p.png
-   :width: 350px
+SpherePy
+********
+**Jump straight to** :doc:`GettingStarted` **or the** :ref:`ref-toc`
 
-
-**********************
-SpherePy Documentation
-**********************
-
-SpherePy is a python package for doing spherical harmonic transformations. So given a
-function that lives on a sphere :math:`f(\theta, \phi)`, and assuming :math:`f(\theta, \phi)` can be represented as 
-a finite sum of spherical harmonics :math:`Y_{nm}(\theta, \phi)`,
+SpherePy is a Python package for doing spherical harmonic transformations. Given a
+function that lives on a sphere :math:`f(\theta, \phi)`, SpherePy breaks the function into a finite 
+sum of spherical harmonics :math:`Y_{nm}(\theta, \phi)`:
 
 .. math::
     f(\theta, \phi) = \sum_{n=0}^{N} \sum_{m=-n}^{n} c_{nm} Y_{nm}(\theta, \phi)
 
-SpherePy will calculate the coefficients :math:`c_{nm}`. 
+The output of the transform is the set of coefficients :math:`c_{nm}`, and SpherePy enables you
+to work algebraically with those coefficients.
 
 Here is a simple code example::
 
@@ -45,21 +50,28 @@ Here is a simple code example::
 
 and here are the results from the plotting commands above
 
-|rndc|
-|rndp|
+.. image:: images/rnd_coefsp.png
+   :width: 400px
+   
+.. image:: images/rnd1p.png
+   :width: 350px
+
 
 Now What?
 =========
-**Get up and going fast**: :doc:`GettingStarted`
 
-**What you need to know**: :doc:`GruesomeDetails`
+**Get SperePy**: :doc:`GettingStarted`
+
+.. _ref-toc:
 
 Table of Contents
 =================
-
-.. sidebar:: Summary
-
-    Here is some sidebar stuff
+.. figure:: images/me.jpg
+   :width: 250px
+   :align: right
+   :figclass: align-center
+   
+   A picture of me
 
 .. toctree::
    :maxdepth: 2
@@ -78,6 +90,11 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+
+
+
 
 
 
