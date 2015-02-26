@@ -14,6 +14,9 @@ It can provides:
 Install
 =======
 
+**pip**
+For Windows I use wheels to distribute the binaries, so make sure pip is up to date.
+
 **Ubuntu:**
 Before installing SpherePy you must install build-essential, python-dev, and NumPy
 
@@ -34,7 +37,7 @@ Plotting
 
 If you would like to use the plotting routines within SpherePy, install matplotlib:
 
-	$ sudo pip install matplotlib
+    $ sudo pip install matplotlib
 	
 Quick Example
 =============
