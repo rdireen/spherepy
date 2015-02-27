@@ -1,0 +1,4 @@
+nose
+wheel
+six
+numpy
