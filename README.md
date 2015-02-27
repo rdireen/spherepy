@@ -9,6 +9,7 @@ It provides:
 	* the ability to plot coefficients and patterns
 	
 [![Build status](https://ci.appveyor.com/api/projects/status/ccwuv424wao4rbly?svg=true)](https://ci.appveyor.com/project/rdireen/spherepy)
+[![Build Status](https://travis-ci.org/rdireen/spherepy.svg?branch=master)](https://travis-ci.org/rdireen/spherepy)
 
 	
 Install
