@@ -1,17 +1,17 @@
 .. include global.rst
 
-HOW TO with SpherePy
-********************
+SpherePy Documentation
+**********************
+
+This documentation is stripped directly from the code. For more details you
+may just want to check the code out at `GitHub <http://github.com/rdireen/spherepy>`_,
+or if you have *git* installed::
+
+    $ git clone http://github.com/rdireen/spherepy.git
 
 Scalar Case
 ===========
 
-Vector Case
-===========
-
-
-
-Here is the ScalarCoefs structure
 
 .. _fun-scalarcoefs:
 
@@ -35,18 +35,12 @@ Here is the ScalarCoefs structure
    :members:
    :undoc-members:
    
-.. _fun-vectorpatt:
 
-*VectorPatternUniform*
-----------------------
-   
-.. autoclass:: spherepy.VectorPatternUniform
-   :members:
-   :undoc-members:
-   
-.. autofunction:: spherepy.spht
 
 .. _fun-ispht:
+
+Scalar Routines
+===============
 
 *ispht*
 -------
@@ -80,4 +74,23 @@ Here is the ScalarCoefs structure
 --------------
 
 .. autofunction:: spherepy.pretty_coefs
+
+.. _fun-zerospattuniform:
+
+*zeros_patt_uniform*
+--------------------
+
+.. autofunction:: spherepy.zeros_patt_uniform
+
+.. _fun-randompattuniform:
+
+*random_patt_uniform*
+---------------------
+
+.. autofunction:: spherepy.random_patt_uniform
+
+.. _fun-prettycoefs:
+
+Vector Case
+===========
 

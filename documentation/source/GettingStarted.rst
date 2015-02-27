@@ -3,6 +3,8 @@
 Getting Started
 ***************
 
+**If you know this stuff, jump to** :doc:`Tutorial1` 
+
 Works on Python 2.7, 3.3, and 3.4 under Linux and Windows (not sure about OS X).
 
 
@@ -148,6 +150,8 @@ As a result you should see a plot of the spherical function :math:`Y_{2,0}(\thet
 
 .. figure::  images/sph2_0p.png 
    :width: 600px
+   
+**What to do next:** :doc:`Tutorial1` 
 
 
 

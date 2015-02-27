@@ -21,14 +21,22 @@
 Randy Direen
 1/28/2015
 
+TODO: Describe how I came to these routines and site Gouchie
 
 """
+#---------------------------------------------------------------------Built-ins
 from __future__ import division
+
+#---------------------------------------------------------------------3rd Party
 import numpy as np
 
 #TODO: Change all xrange instances to range
 #and do a 'from six.moves import range' here
 from six.moves import xrange
+
+#==============================================================================
+# Routines
+#==============================================================================
 
 def sbessely(x, N):
     """Returns a vector of spherical bessel functions yn:
@@ -105,13 +113,9 @@ def sbesselh2(x, N):
 
     return jn - 1j * yn
 
-"""***************************************************************************
-******************************************************************************
-
-            The following routines are useful for testing.
-
-******************************************************************************
-***************************************************************************"""
+#==============================================================================
+# Testing Routines
+#==============================================================================
 
 def sbesselj_array(xvec, N):
     """Outputs an array where each column is a vector of sbessel values. This

@@ -593,6 +593,21 @@ class TestScalarPatternUniform(TestCase):
         z2 = sp.ones_patt_uniform(12, 12)
         with self.assertRaises(ValueError):
             a = z1 / z2
+
+
+    def test_single_val(self):
+        """::test single_val method"""
+        z2 = sp.random_patt_uniform(11, 10)
+        if z2.single_val > 1e-13:
+            self.assertTrue(False)
+
+        self.assertTrue(True)
+
+    def test_single_val(self):
+        """::test single_val method"""
+        z2 = sp.random_patt_uniform(11, 10)
+        self.assertTrue(z2.is_symmetric)
+
             
     def test_add_same_sizes(self):
         """::can add two ScalarPatternUniform that are same sized """

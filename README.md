@@ -2,7 +2,7 @@ SpherePy
 ========
 
 SpherePy is a package for working with scalar and vector spherical harmonics.
-It can provides:
+It provides:
 
 	* scalar and vector spherical harmonic decompositions
 	* objects for algebraically manipulating harmonic coefficients
@@ -15,6 +15,7 @@ Install
 =======
 
 **pip**
+
 For Windows I use wheels to distribute the binaries, so make sure pip is up to date.
 
 **Ubuntu:**

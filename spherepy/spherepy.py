@@ -127,21 +127,65 @@ n  -------------  -------------  -------------  -------------  -------------
 #==============================================================================
 
 class ScalarCoefs(object):
-    def __init__(self, vec, nmax, mmax):
-        """Example of docstring on the __init__ method.
+    """This is the object for holding scalar spherical harmonic coefficients.
+    To generate one of these objects it's best to used one of the factory 
+    methods (e.g. spherepy.zeros_coefs, spherepy.random_coefs) or transform
+    a pattern (ScalarPatternUniform) into a set of coefficients using 
+    spherepy.spht. 
 
-        The __init__ method may be documented in either the class level
-        docstring, or as a docstring on the __init__ method itself.
-
-        Either form is acceptable, but the two should not be mixed. Choose one
-        convention to document the __init__ method and be consistent with it.
-
-        Args:
+    Args:
           vec (numpy array complex128): Vector containing the coefficients.
-          nmax (int): Largest `n` value in the set of modes.
-          mmax (int): Largest abs(`m`) value in the set of modes.
 
-        """
+          nmax (int): Largest *n* value in the set of modes.
+
+          mmax (int): Largest abs(*m*) value in the set of modes.
+
+    Example 1:
+        Create a set of random coefficients::
+
+            >>> c = spherepy.random_coefs(5,5)
+
+    Example 2:
+        Transform a pattern into coefficients::
+
+            >>> f = spherepy.random_patt_uniform(6,8)
+            >>> c = spherepy.spht(2,2)
+
+    Example 2:
+        Access *nmax* and *mmax*:
+
+            >>> c.nmax
+            >>> c.mmax
+
+    **What are nmax and mmax?**
+
+    Below is a diagram of a ScalarCoefs object with *nmax* = 5 and *mmax* = 2.
+    If you count, you will see that there are 24 coefficients within *c*. 
+    *nmax* is the largest *n* value in the object and *mmax* is the largest 
+    *m* value in the structure (-*mmax* is the largest negative *m* value)::
+
+        
+        c[n, m]
+        =======
+
+        nmax = 5      *     *     *     *     *
+        4:            *     *     *     *     *
+        3:            *     *     *     *     *
+        2:            *     *     *     *     *
+        1:                  *     *     *
+        0:                        *  
+        n            ---   ---   ---   ---   ---
+             -mmax = m=-2  m=-1  m=0   m=1   m=2 = mmax    
+        
+
+    .. note::
+        In almost all cases, you can choose to set mmax to nmax. 
+
+        
+   
+
+    """
+    def __init__(self, vec, nmax, mmax):
         
         if mmax > nmax:
             raise ValueError(err_msg['nmax_g_mmax'])
@@ -157,36 +201,57 @@ class ScalarCoefs(object):
 
     @property
     def nmax(self):
-        """Largest `n` value."""
+        """Largest *n* value."""
         return self._nmax
 
     @property
     def mmax(self):
-        """Largest abs(`m`) value."""
+        """Largest abs(*m*) value."""
         return self._mmax
 
     @property
     def size(self):
-        """The number of modes in the structure"""
+        """Total number of coefficients in the ScalarCoefs structure.
+
+        Example::
+
+            >>> sz  = c.size
+            >>> N = c.nmax + 1
+            >>> L = N+ c.mmax * (2 * N - c.mmax - 1);
+            >>> assert sz == L
+        """
         N = self.nmax + 1;
         NC = N + self.mmax * (2 * N - self.mmax - 1);
         assert N == len(self._vec)
         return N
 
     def copy(self):
-        """Make a deep copy of itself"""
+        """Make a deep copy of this object.
+        
+        Example::
+
+            >>> c2 = c.copy()
+        
+        """
         vec = np.copy(self._vec)
         return ScalarCoefs(vec, self.nmax, self.mmax)
 
     def window(self,vec):
-        """Apply a window to the coefficients defined by `vec`. `vec` must
-        have length `nmax` + 1.
+        """Apply a window to the coefficients defined by *vec*. *vec* must
+        have length *nmax* + 1.  This is good way to filter the pattern by
+        windowing in the coefficient domain.
+
+        Example::
+
+            >>> vec = numpy.linspace(0, 1, c.nmax + 1)
+            >>> c.window(vec)
 
         Args:
-          vec: Vector of values to apply in the n direction of the data.
+          vec (numpy.array): Vector of values to apply in the n direction of
+          the data. Has length *nmax* + 1.
 
         Returns:
-          Nothing, applies window to the data in place.
+          Nothing, applies the window to the data in place.
 
         """
 
@@ -766,6 +831,77 @@ class VectorCoefs(object):
 
 
 class ScalarPatternUniform(object):
+    """This is the object for holding a scalar pattern. 
+    
+    .. note::
+
+        The scalar pattern must satisfy certain symmetry constraints for the
+        *spht* function to operate on it. This is really the only reason why
+        you wouldn't just pass a 2D NumPy array directly to *spht*. 
+
+    Args:
+          cdata (2D numpy array complex128): Pattern to be transformed.
+
+          doublesphere (bool, optional): Don't worry about it.
+    
+    Example 1
+        Creating a ScalarPatternUniform object from a NumPy array::
+
+            >>> a = numpy.zeros((5, 8), dtype = numpy.complex128)
+            >>> f = ScalarPatternUniform(a)
+
+        The above will put the array into the proper form for processing 
+        with the *spht*.
+
+    Example 2:
+        Same as Example 1, but using a factory I made::
+
+            >>> f = spherepy.zeros_patt_uniform(5, 8)
+
+
+    **How do I put my own pattern in?**
+
+    You must have a full set of data over the surface of a sphere. The 
+    theta coordinate runs *0* to *pi* radians from the north to south poles,
+    and corresponds to the rows of the NumPy array. The phi coordinate runs
+    from 0 to *2*pi - 2*pi / ncols*  radians, and corresponds to the colums
+    of the NumPy array.
+    
+    As an example, consider a pattern *f* with *nrows* = 5 and *ncols* = 8. 
+    If you place an array with these dimensions into ScalarPatternUniform, the
+    code will assume each row and column corresponds to a position on the 
+    sphere, as depicted in the following table::
+
+        f[n_row, n_col]
+        ===============
+
+               
+              : phi  0     pi/4   pi/2  3*pi/4  pi  5*pi/4  3*pi/2  7*pi/4
+         theta      ---    ---    ---    ---    ---    ---    ---    ---
+             0:      *      *      *      *      *      *      *      *
+          pi/4:      *      *      *      *      *      *      *      *
+          pi/2:      *      *      *      *      *      *      *      *
+        3*pi/4:      *     5.0     *      *      *      *      *      *
+            pi:      *      *      *      *      *      *      *      *  
+       
+    Therefore  *f[3, 1]*, which indexes the  value 5.0 in the array above, 
+    corresponds to location *theta = 3*pi/4*, *phi = pi/4* on the sphere. 
+
+    **Some notes:**
+
+    It should be clear that *f[0, :]* corresponds to the north pole of the 
+    sphere, and *f[4, :]* corresponds to the south pole of the sphere.
+
+    .. note::
+        **BIG NOTE:** I think the most difficult part of using this code is 
+        getting the pattern data in right. If you're getting strange 
+        results, come back to this section often to make sure you understand
+        how the data is supposed to be entered. 
+
+        
+   
+
+    """
 
     def __init__(self, cdata, doublesphere=False):
 
@@ -780,31 +916,45 @@ class ScalarPatternUniform(object):
 
     @property
     def nrows(self):
+        """Returns the number of rows in the NumPy array."""
+
         return int(self._dsphere.shape[0] / 2 + 1)
 
     @property
     def ncols(self):
+        """Returns the number of columns in the NumPy array."""
+
         return self._dsphere.shape[1]
 
     @property
     def shape(self):
+        """Same as patt.cdata.shape"""
+
         return (self.nrows, self.ncols)
 
     @property
     def doublesphere(self):
+        """ Returns a NumPy array with the proper symmetry for 
+        transformation."""
+
         return self._dsphere
 
     @property
     def array(self):
+        """Returns the NumPy array (same as cdata)"""
+
         return self._dsphere[0:self.nrows, :]
 
     @property
     def cdata(self):
+        """Return the NumPy array."""
+
         return self._dsphere[0:self.nrows, :]
 
     @property
     def is_symmetric(self):
-        """return true if the data is symmetric"""
+        """return true if the data has the proper symmetry for transformation.
+        """
         if self.single_val < 1e-14:
             return True 
         else:
@@ -837,8 +987,8 @@ class ScalarPatternUniform(object):
         return sv
 
     def _scalar_pattern_uniform_op_left(func):
-        """decorator for operator overloading when ScalarPatternUniform is on 
-        the left"""
+        """Decorator for operator overloading when ScalarPatternUniform is on 
+        the left."""
         @wraps(func)
         def verif(self, patt):
             if isinstance(patt, ScalarPatternUniform):
@@ -859,8 +1009,8 @@ class ScalarPatternUniform(object):
         return verif
 
     def _scalar_pattern_uniform_op_right(func):
-        """decorator for operator overloading when ScalarPatternUniform is on
-        the right"""
+        """Decorator for operator overloading when ScalarPatternUniform is on
+        the right."""
         @wraps(func)
         def verif(self, patt):
             if isinstance(patt, numbers.Number):
@@ -1132,7 +1282,36 @@ class VectorPatternNonUniform:
         
 #---------------------------------------------------------------------Factories
 def zeros_coefs(nmax, mmax, coef_type=scalar):
-    """return ScalarCoefs with all coefficients set to zeros"""
+    """Returns a ScalarCoefs object or a VectorCoeffs object where each of the 
+    coefficients is set to 0. The structure is such that *nmax* is th largest 
+    *n* can be in c[n, m], and *mmax* is the largest *m* can be for any *n*.
+    (See *ScalarCoefs* and *VectorCoefs* for details.)
+    
+
+    Examples::
+        
+        >>> c = spherepy.zeros_coefs(5, 3, coef_type = spherepy.scalar)
+        >>> c = spherepy.zeros_coefs(5, 3) # same as above
+        >>> vc = spherepy.zeros_coefs(5, 3, coef_type = spherepy.vector)
+
+    Args:
+          nmax (int): Largest *n* value in the set of modes.
+
+          mmax (int): Largest abs(*m*) value in the set of modes.
+
+          coef_type (int, optional): Set to 0 for scalar, and 1 for vector.
+          The default option is scalar. If you would like to return a set of 
+          vector spherical hamonic coefficients, the preferred way to do so 
+          is vc = spherepy.zeros_coefs( 10, 12, coef_type = spherepy.vector).
+
+    Returns:
+      coefs: Returns a ScalarCoefs object if coef_type is either blank or
+      set to 0. Returns a VectorCoefs object if coef_type = 1.
+
+    Raises:
+      TypeError: If coef_type is anything but 0 or 1.
+
+    """
 
     if(mmax > nmax):
         raise ValueError(err_msg['nmax_g_mmax'])
@@ -1150,7 +1329,36 @@ def zeros_coefs(nmax, mmax, coef_type=scalar):
         raise TypeError(err_msg['ukn_coef_t'])
 
 def ones_coefs(nmax, mmax, coef_type=scalar):
-    """return ScalarCoefs with all coefficients set to ones"""
+    """Returns a ScalarCoefs object or a VectorCoeffs object where each of the 
+    coefficients is set to 1.0. The structure is such that *nmax* is th largest 
+    *n* can be in c[n, m], and *mmax* is the largest *m* can be for any *n*.
+    (See *ScalarCoefs* and *VectorCoefs* for details.)
+    
+
+    Examples::
+        
+        >>> c = spherepy.ones_coefs(5, 3, coef_type = spherepy.scalar)
+        >>> c = spherepy.ones_coefs(5, 3) # same as above
+        >>> vc = spherepy.ones_coefs(5, 3, coef_type = spherepy.vector)
+
+    Args:
+          nmax (int): Largest *n* value in the set of modes.
+
+          mmax (int): Largest abs(*m*) value in the set of modes.
+
+          coef_type (int, optional): Set to 0 for scalar, and 1 for vector.
+          The default option is scalar. If you would like to return a set of 
+          vector spherical hamonic coefficients, the preferred way to do so 
+          is vc = spherepy.zeros_coefs( 10, 12, coef_type = spherepy.vector).
+
+    Returns:
+      coefs: Returns a ScalarCoefs object if coef_type is either blank or
+      set to 0. Returns a VectorCoefs object if coef_type = 1.
+
+    Raises:
+      TypeError: If coef_type is anything but 0 or 1.
+
+    """
 
     if(mmax > nmax):
         raise ValueError(err_msg['nmax_g_mmax'])
@@ -1167,10 +1375,40 @@ def ones_coefs(nmax, mmax, coef_type=scalar):
         vec2[0] = 0
         return  VectorCoefs(vec1, vec2, nmax, mmax)
     else:
-        raise SpherePyError(err_msg['ukn_coef_t'])
+        raise TypeError(err_msg['ukn_coef_t'])
 
 def random_coefs(nmax, mmax, mu=0.0, sigma=1.0, coef_type=scalar):
-    """return ScalarCoefs with all coefficients random normal variables"""
+    """Returns a ScalarCoefs object or a VectorCoeffs object where each of the 
+    coefficients is a normal random variable with mean 0 and standardard 
+    deviation 1.0. The structure is such that *nmax* is th largest 
+    *n* can be in c[n, m], and *mmax* is the largest *m* can be for any *n*.
+    (See *ScalarCoefs* and *VectorCoefs* for details.)
+    
+
+    Examples::
+        
+        >>> c = spherepy.random_coefs(5, 3, coef_type = spherepy.scalar)
+        >>> c = spherepy.random_coefs(5, 3) # same as above
+        >>> vc = spherepy.random_coefs(5, 3, coef_type = spherepy.vector)
+
+    Args:
+          nmax (int): Largest *n* value in the set of modes.
+
+          mmax (int): Largest abs(*m*) value in the set of modes.
+
+          coef_type (int, optional): Set to 0 for scalar, and 1 for vector.
+          The default option is scalar. If you would like to return a set of 
+          vector spherical hamonic coefficients, the preferred way to do so 
+          is vc = spherepy.zeros_coefs( 10, 12, coef_type = spherepy.vector).
+
+    Returns:
+      coefs: Returns a ScalarCoefs object if coef_type is either blank or
+      set to 0. Returns a VectorCoefs object if coef_type = 1.
+
+    Raises:
+      TypeError: If coef_type is anything but 0 or 1.
+
+    """
 
     if(mmax > nmax):
         raise ValueError(err_msg['nmax_g_mmax'])
@@ -1193,6 +1431,39 @@ def random_coefs(nmax, mmax, mu=0.0, sigma=1.0, coef_type=scalar):
         raise SpherePyError(err_msg['ukn_coef_t'])
 
 def zeros_patt_uniform(nrows, ncols, patt_type=scalar):
+    """Returns a ScalarPatternUniform object or a VectorPatternUniform object
+    where each of the elements is set to 0. *nrows* is the number of rows in 
+    the pattern, which corresponds to the theta axis. *ncols* must be even
+    and is the number of columns in the pattern and corresponds to the phi 
+    axis.
+    (See *ScalarPatternUniform* and *VectorPatternUniform* for details.)
+    
+    Examples::
+        
+        >>> f = spherepy.zeros_patt_uniform(6, 8, coef_type = spherepy.scalar)
+        >>> f = spherepy.zeros_patt_uniform(6, 8) # same as above
+        >>> F = spherepy.zeros_patt_uniform(6, 8, coef_type = spherepy.vector)
+
+    Args:
+          nrows (int): Number of rows corresponding to the theta axis.
+
+          ncols (int): Number of columns corresponding to the phi axis. To get 
+          the speed and accuracy I need, this value **must** be even. 
+
+          coef_type (int, optional): Set to 0 for scalar, and 1 for vector.
+          The default option is scalar. 
+
+    Returns:
+      coefs: Returns a ScalarPatternUniform object if coef_type is either 
+      blank or set to 0. Returns a VectorPatternUniform object if 
+      coef_type = 1.
+
+    Raises:
+      ValueError: If ncols is not even.
+
+      TypeError: If coef_type is anything but 0 or 1.
+
+    """
     
     if np.mod(ncols, 2) == 1:
         raise ValueError(err_msg['ncols_even'])
@@ -1210,22 +1481,90 @@ def zeros_patt_uniform(nrows, ncols, patt_type=scalar):
         raise TypeError(err_msg['ukn_patt_t'])
 
 def ones_patt_uniform(nrows, ncols, patt_type=scalar):
+    """Returns a ScalarPatternUniform object or a VectorPatternUniform object
+    where each of the elements is set to 1. *nrows* is the number of rows in 
+    the pattern, which corresponds to the theta axis. *ncols* must be even
+    and is the number of columns in the pattern and corresponds to the phi 
+    axis.
+    (See *ScalarPatternUniform* and *VectorPatternUniform* for details.)
+    
+    Examples::
+        
+        >>> f = spherepy.ones_patt_uniform(6, 8, coef_type = spherepy.scalar)
+        >>> f = spherepy.ones_patt_uniform(6, 8) # same as above
+        >>> F = spherepy.ones_patt_uniform(6, 8, coef_type = spherepy.vector)
+
+    Args:
+          nrows (int): Number of rows corresponding to the theta axis.
+
+          ncols (int): Number of columns corresponding to the phi axis. To get 
+          the speed and accuracy I need, this value **must** be even. 
+
+          coef_type (int, optional): Set to 0 for scalar, and 1 for vector.
+          The default option is scalar. 
+
+    Returns:
+      coefs: Returns a ScalarPatternUniform object if coef_type is either 
+      blank or set to 0. Returns a VectorPatternUniform object if 
+      coef_type = 1.
+
+    Raises:
+      ValueError: If ncols is not even.
+
+      TypeError: If coef_type is anything but 0 or 1.
+
+    """
+    
     if np.mod(ncols, 2) == 1:
         raise ValueError(err_msg['ncols_even'])
 
     if(patt_type == scalar):
-        cdata = np.ones((nrows, ncols), dtype=np.complex128)
-        return ScalarPatternUniform(cdata, doublesphere=False)
+        cdata = np.ones((2 * nrows - 2, ncols), dtype=np.complex128)
+        return ScalarPatternUniform(cdata, doublesphere=True)
 
     elif(patt_type == vector):
-        tcdata = np.ones((nrows, ncols), dtype=np.complex128)
-        pcdata = np.ones((nrows, ncols), dtype=np.complex128)
-        return VectorPatternUniform(tcdata, pcdata, doublesphere=False)
+        tcdata = np.ones((2 * nrows - 2, ncols), dtype=np.complex128)
+        pcdata = np.ones((2 * nrows - 2, ncols), dtype=np.complex128)
+        return VectorPatternUniform(tcdata, pcdata, doublesphere=True)
 
     else:
         raise TypeError(err_msg['ukn_patt_t'])
 
 def random_patt_uniform(nrows, ncols, patt_type=scalar):
+    """Returns a ScalarPatternUniform object or a VectorPatternUniform object
+    where each of the elements is set to a normal random variable with zero 
+    mean and unit standard deviation. *nrows* is the number of rows in 
+    the pattern, which corresponds to the theta axis. *ncols* must be even
+    and is the number of columns in the pattern and corresponds to the phi 
+    axis.
+    (See *ScalarPatternUniform* and *VectorPatternUniform* for details.)
+    
+    Examples::
+        
+        >>> f = spherepy.random_patt_uniform(6, 8, coef_type = spherepy.scalar)
+        >>> f = spherepy.random_patt_uniform(6, 8) # same as above
+        >>> F = spherepy.random_patt_uniform(6, 8, coef_type = spherepy.vector)
+
+    Args:
+          nrows (int): Number of rows corresponding to the theta axis.
+
+          ncols (int): Number of columns corresponding to the phi axis. To get 
+          the speed and accuracy I need, this value **must** be even. 
+
+          coef_type (int, optional): Set to 0 for scalar, and 1 for vector.
+          The default option is scalar. 
+
+    Returns:
+      coefs: Returns a ScalarPatternUniform object if coef_type is either 
+      blank or set to 0. Returns a VectorPatternUniform object if 
+      coef_type = 1.
+
+    Raises:
+      ValueError: If ncols is not even.
+
+      TypeError: If coef_type is anything but 0 or 1.
+
+    """
 
     if np.mod(ncols, 2) == 1:
         raise ValueError(err_msg['ncols_even'])
@@ -1341,7 +1680,30 @@ def _tiny_rep(c):
     return sr
 
 def pretty_coefs(c):
-    """Print first three modes"""
+    """Prints out the first 2 modes of a ScalarCoeffs object. This is mostly 
+    used for instructional purposes.
+    (*ScalarPatternUniform*)
+    
+    Example::
+        
+        >>> spherepy.pretty_coefs(c)
+        
+        c[n, m]
+        =======
+
+        2:       0j             0j            0j             0j             0j 
+        1:                     1+0j           0j           -1+0j 
+        0:                                    1j  
+        n  -------------  -------------  -------------  -------------  -------------  
+               m = -2         m = -1         m = 0          m = 1          m = 2    
+
+    Args:
+          c (ScalarCoefs): Coefficients to be printed.
+
+    Returns:
+      nothing, just outputs something pretty to the console.
+
+    """
 
     sa = []
     cfit = c[0:2,:]
@@ -1360,54 +1722,32 @@ def pretty_coefs(c):
 
 
 def spht(ssphere, nmax = None, mmax = None):
-    """Returns a ScalarCoefs object containing the spherical harmonic 
-    coefficients of the ScalarPatternUniform object
+    """Transforms ScalarPatternUniform object *ssphere* into a set of scalar
+    spherical harmonics stored in ScalarCoefs.
 
-    Function parameters should be documented in the ``Args`` section. The name
-    of each parameter is required. The type and description of each parameter
-    is optional, but should be included if not obvious.
+    Example::
 
-    If the parameter itself is optional, it should be noted by adding
-    ", optional" to the type. If \*args or \*\*kwargs are accepted, they
-    should be listed as \*args and \*\*kwargs.
-
-    The format for a parameter is::
-
-        name (type): description
-          The description may span multiple lines. Following
-          lines should be indented.
-
-          Multiple paragraphs are supported in parameter
-          descriptions.
+        >>> p = spherepy.random_patt_uniform(6, 8)
+        >>> c = spherepy.spht(p)
+        >>> spherepy.pretty_coefs(c)
 
     Args:
-      param1 (int): The first parameter.
-      param2 (str, optional): The second parameter. Defaults to None.
-        Second line of description should be indented.
-      *args: Variable length argument list.
-      **kwargs: Arbitrary keyword arguments.
+      ssphere (ScalarPatternUniform): The pattern to be transformed.
+
+      nmax (int, optional): The maximum number of *n* values required. If a 
+      value isn't passed, *nmax* is the number of rows in ssphere minus one.
+
+      mmax (int, optional): The maximum number of *m* values required. If a 
+      value isn't passed, *mmax* is half the number of columns in ssphere
+      minus one.
 
     Returns:
-      bool: True if successful, False otherwise.
+      ScalarCoefs: The object containing the coefficients of the scalar
+      spherical harmonic transform.
 
-      The return type is optional and may be specified at the beginning of
-      the ``Returns`` section followed by a colon.
-
-      The ``Returns`` section may span multiple lines and paragraphs.
-      Following lines should be indented to match the first line.
-
-      The ``Returns`` section supports any reStructuredText formatting,
-      including literal blocks::
-
-          {
-              'param1': param1,
-              'param2': param2
-          }
 
     Raises:
-      AttributeError: The ``Raises`` section is a list of all exceptions
-        that are relevant to the interface.
-      ValueError: If `param2` is equal to `param1`.
+      ValueError: If *nmax* and *mmax* are too large or *mmax* > *nmax*.
 
     """
 
@@ -1519,8 +1859,34 @@ def vspht(vsphere, nmax = None, mmax = None):
     return vcoefs
 
 def spht_slow(ssphere, nmax, mmax):
-    """Returns a ScalarCoefs object containing the spherical harmonic 
-    coefficients of the ssphere object"""
+    """(PURE PYTHON) Transforms ScalarPatternUniform object *ssphere* 
+    into a set of scalar spherical harmonics stored in ScalarCoefs.
+
+    Example::
+
+        >>> p = spherepy.random_patt_uniform(6, 8)
+        >>> c = spherepy.spht(p)
+        >>> spherepy.pretty_coefs(c)
+
+    Args:
+      ssphere (ScalarPatternUniform): The pattern to be transformed.
+
+      nmax (int, optional): The maximum number of *n* values required. If a 
+      value isn't passed, *nmax* is the number of rows in ssphere minus one.
+
+      mmax (int, optional): The maximum number of *m* values required. If a 
+      value isn't passed, *mmax* is half the number of columns in ssphere
+      minus one.
+
+    Returns:
+      ScalarCoefs: The object containing the coefficients of the scalar
+      spherical harmonic transform.
+
+
+    Raises:
+      ValueError: If *nmax* and *mmax* are too large or *mmax* > *nmax*.
+
+    """
 
     if mmax > nmax:
         raise ValueError(err_msg['nmax_g_mmax'])
@@ -1545,6 +1911,33 @@ def spht_slow(ssphere, nmax, mmax):
     return ScalarCoefs(sc, nmax, mmax)
 
 def ispht(scoefs, nrows, ncols):
+    """Transforms ScalarCoefs object *scoefs* into a scalar pattern 
+    ScalarPatternUniform.
+
+    Example::
+
+        >>> c = spherepy.random_coefs(3,3)
+        >>> p = spherepy.ispht(c)
+        >>> print(p)
+
+    Args:
+      scoefs (ScalarCoefs): The coefficients to be transformed to pattern
+      space.
+
+      nrows (int): The number of rows desired in the pattern.
+
+      ncols (int): The number of columns desired in the pattern. This must be 
+      an even number.
+
+    Returns:
+      ScalarPatternUniform: This is the pattern. It contains a NumPy array that
+      can be viewed with *patt.cdata*.
+
+
+    Raises:
+      ValueError: Is raised if *ncols* isn't even.
+
+    """
 
     dnrows = int(2 * nrows - 2)
 
@@ -1610,6 +2003,33 @@ def vispht(vcoefs, nrows, ncols):
     return VectorPatternUniform(dtheta, dphi, doublesphere=True)
 
 def ispht_slow(scoefs, nrows, ncols):
+    """(PURE PYTHON) Transforms ScalarCoefs object *scoefs* into a scalar
+    pattern ScalarPatternUniform.
+
+    Example::
+
+        >>> c = spherepy.random_coefs(3,3)
+        >>> p = spherepy.ispht(c)
+        >>> print(p)
+
+    Args:
+      scoefs (ScalarCoefs): The coefficients to be transformed to pattern
+      space.
+
+      nrows (int): The number of rows desired in the pattern.
+
+      ncols (int): The number of columns desired in the pattern. This must be 
+      an even number.
+
+    Returns:
+      ScalarPatternUniform: This is the pattern. It contains a NumPy array that
+      can be viewed with *patt.cdata*.
+
+
+    Raises:
+      ValueError: Is raised if *ncols* isn't even.
+
+    """
 
     dnrows = 2 * nrows - 2
 

@@ -29,8 +29,11 @@ them, matplotlib must be installed.
 
 #---------------------------------------------------------------------Built-ins
 from __future__ import division
-import numpy as np
 from functools import wraps
+
+#---------------------------------------------------------------------3rd Party
+import numpy as np
+
 
 #TODO: Change all xrange instances to range
 #and do a 'from six.moves import range' here

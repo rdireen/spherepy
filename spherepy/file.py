@@ -25,8 +25,18 @@ Randy Direen
 Some file handling routines.
 
 ***************************************************************************"""
+
+#---------------------------------------------------------------------Built-ins
 from __future__ import division
+
+#---------------------------------------------------------------------3rd Party
 import numpy as np
+
+#TODO: Change all xrange instances to range
+#and do a 'from six.moves import range' here
+from six.moves import xrange
+
+#------------------------------------------------------------------------Custom
 import spherepy as sp
 
 #TODO: Change all xrange instances to range

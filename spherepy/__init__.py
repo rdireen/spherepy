@@ -24,8 +24,6 @@ import os
 from os.path import dirname
 import sys
 
-
-
 try:
     #Python27
     import pysphi
@@ -38,9 +36,6 @@ except ImportError:
     import spherepy.csphi as csphi
     import spherepy.file as file
     import spherepy.verify as verify
-	
-    
-
 
 with open(dirname(__file__) + '/pkg_info.json') as fp:
     _info = json.load(fp)
@@ -69,5 +64,5 @@ except ImportError:
         #Python3x
         from spherepy.plot_sphere import *
     except ImportError:
-	    pass
+        pass
 
