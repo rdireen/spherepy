@@ -8,5 +8,15 @@ python:
 install:
   - "pip install ."
   - "pip install -r travis-reqs.txt"
+  - "pip install coveralls"
 # command to run tests
-script: nosetests
+script: 
+  - "nosetests --with-coverage --cover-erase --cov-report term-missing"
+  
+after_success:
+  - coveralls
+
+# here is a list of whitelisted branches
+branches:
+  only:
+    - master

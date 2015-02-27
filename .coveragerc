@@ -1,0 +1,6 @@
+[run]
+branch = True
+
+[report]
+omit = *csphi.py 
+include = *spherepy*
