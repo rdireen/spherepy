@@ -11,14 +11,14 @@ It provides:
 Pin Crazy
 ---------
 
-**AppVeyor: **	
+**AppVeyor:**	
 [![Build status](https://ci.appveyor.com/api/projects/status/ccwuv424wao4rbly?svg=true)](https://ci.appveyor.com/project/rdireen/spherepy)
 
-**TravisCI: **
+**TravisCI:**
 [![Build Status](https://travis-ci.org/rdireen/spherepy.svg?branch=master)](https://travis-ci.org/rdireen/spherepy)
 [![Coverage Status](https://coveralls.io/repos/rdireen/spherepy/badge.svg?branch=master)](https://coveralls.io/r/rdireen/spherepy?branch=master)
 
-**PyPI: **
+**PyPI:**
 [![Downloads](https://pypip.in/download/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
 [![Latest Version](https://pypip.in/version/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
 [![Supported Python versions](https://pypip.in/py_versions/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
