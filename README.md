@@ -34,7 +34,9 @@ Badges (lots of them)
 [![License](https://pypip.in/license/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
 
 
-**Better Documentation:**
+Better Documentation
+--------------------
+
 
 I'm working on a more complete documentation 
 [HERE](http://www.direentech.com/docs/spherepy).

@@ -4,6 +4,7 @@ Thank you for helping to make spherepy a little less bad!
 
 # Bug Reports
 
+
 File Bug Reports on the GitHub [issue tracker](https://github.com/rdireen/spherepy/issues). 
 I know there are plenty, so please don't hesitate to let me know where they are.
 
