@@ -622,8 +622,8 @@ class VectorCoefs(object):
         """The number of modes in the structure"""
         N = self.nmax + 1;
         NC = N + self.mmax * (2 * N - self.mmax - 1);
-        assert N == len(self.scoef1._vec)
-        assert N == len(self.scoef2._vec)
+        assert NC  == len(self.scoef1._vec)
+        assert NC  == len(self.scoef2._vec)
         return N
 
     def _array_2d_repr(self):
@@ -1608,8 +1608,6 @@ def abs(sobj):
         return np.abs(sobj.array)
     elif isinstance(sobj, ScalarCoefs):
         return ScalarCoefs(np.abs(sobj._vec), sobj.nmax, sobj.mmax)
-    elif isinstance(sobj, VectorPatternUniform):
-        raise TypeError(err_msg['use_mag_instead'])
     else:
         raise TypeError(err_msg['uknown_typ'])
 
@@ -1622,7 +1620,8 @@ def mag2(sobj):
         return np.abs(sobj.theta) ** 2 + np.abs(sobj.phi) ** 2
     elif isinstance(sobj, VectorCoefs):
         return ScalarCoefs(np.abs(sobj.scoef1._vec) ** 2 + \
-                           np.abs(sobj.scoef2._vec) ** 2)
+                           np.abs(sobj.scoef2._vec) ** 2,
+                           sobj.nmax, sobj.mmax)
     else:
         raise TypeError(err_msg['uknown_typ'])
 
@@ -1632,7 +1631,10 @@ def mag(sobj):
     elif isinstance(sobj, ScalarCoefs):
         return ScalarCoefs(np.abs(sobj._vec), sobj.nmax, sobj.mmax)
     elif isinstance(sobj, VectorPatternUniform):
-        return np.sqrt(mag2(obj))
+        return np.sqrt(mag2(sobj))
+    elif isinstance(sobj, VectorCoefs):
+        return ScalarCoefs(np.sqrt(mag2(sobj)._vec),
+                           sobj.nmax, sobj.mmax)
     else:
         raise TypeError(err_msg['uknown_typ'])
     
@@ -1649,7 +1651,8 @@ def continue_sphere(cdata, sym):
     zdata = np.zeros([nrows - 2, ncols], dtype=np.complex128)
     ddata = np.concatenate([cdata, zdata])
     return double_sphere(ddata, sym)
-    
+
+
 def double_sphere(cdata, sym):
     
     nrows = cdata.shape[0]

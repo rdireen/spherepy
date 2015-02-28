@@ -114,6 +114,10 @@ pygments_style = 'sphinx'
 
 html_theme = 'bootstrap'
 html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+html_sidebars = {
+   '**': ['localtoc.html', 'searchbox.html'],
+   'using/windows': ['windowssidebar.html', 'searchbox.html'],
+}
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -135,7 +139,7 @@ html_theme_options = {
 	'navbar_pagenav_name': "This Page",
 	'globaltoc_depth': 2,
 	'globaltoc_includehidden': "true",
-	'navbar_class': "navbar navbar-inverse",
+	'navbar_class': "navbar",
 	'source_link_position': "nfooter",
 	'bootstrap_version': "3",
 

@@ -2,5 +2,5 @@
 branch = True
 
 [report]
-omit = *csphi.py, *tests* 
+omit = *csphi.py, *tests*, *plot_sphere.py  
 include = *spherepy*

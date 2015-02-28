@@ -20,7 +20,7 @@ from six.moves import xrange
 
 Nmax = 200
 Mmax = Nmax
-Nrows = 2000
+Nrows = 2048
 c = sp.random_coefs(Nmax, Nmax)
 
 N = Nmax + 1;

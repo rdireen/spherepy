@@ -36,6 +36,17 @@ from six.moves import xrange
 
 class TestSBessel(TestCase):
     """Tests for the Spherical Bessel functions"""
+
+    def test_misc_excercise(self):
+        """:: Just exercise routines I know work"""
+
+        a = sp.sbesselh1(1.0, 3)
+        a = sp.sbesselh2(1.0, 3)
+        a = sp.sbesselj_array([1.0, 2.0], 3)
+        a = sp.sbessely_array([1.0, 2.0], 3)
+
+        self.assertTrue(True)
+
     
     def test_sbesselj_sums(self):
         """::Test the jn(z) functions using the summation formula:

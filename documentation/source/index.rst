@@ -21,15 +21,14 @@ SpherePy
 ********
 **Jump straight to** :doc:`GettingStarted` **or the** :ref:`ref-toc`
 
-SpherePy is a Python package for doing spherical harmonic transformations. Given a
-function that lives on a sphere :math:`f(\theta, \phi)`, SpherePy breaks the function into a finite 
+SpherePy does spherical harmonic transforms. Given a
+function on a sphere :math:`f(\theta, \phi)`, SpherePy breaks the function into a finite 
 sum of spherical harmonics :math:`Y_{nm}(\theta, \phi)`:
 
 .. math::
     f(\theta, \phi) = \sum_{n=0}^{N} \sum_{m=-n}^{n} c_{nm} Y_{nm}(\theta, \phi)
 
-The output of the transform is the set of coefficients :math:`c_{nm}`, and SpherePy enables you
-to work algebraically with those coefficients.
+The output of the transform is the set of coefficients :math:`c_{nm}`. 
 
 Here is a simple code example::
 
@@ -48,7 +47,7 @@ Here is a simple code example::
     >>> f2 = sp.ispht(c[0:4,:], 50, 50) # do the inverse transform of the first 5 modes
     >>> sp.plot_sphere_mag(f2) # plot the pattern (see below)
 
-and here are the results from the plotting commands above
+and here are the plots:
 
 .. image:: images/rnd_coefsp.png
    :width: 400px
