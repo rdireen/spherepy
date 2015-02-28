@@ -28,6 +28,7 @@ SpherePy
 
 **Jump straight to** :doc:`GettingStarted` **or the** :ref:`ref-toc`
 
+
 SpherePy does spherical harmonic transforms. Given a
 function on a sphere :math:`f(\theta, \phi)`, SpherePy breaks the function into a finite 
 sum of spherical harmonics :math:`Y_{nm}(\theta, \phi)`:
