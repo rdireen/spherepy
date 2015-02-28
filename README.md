@@ -7,10 +7,26 @@ It provides:
 	* scalar and vector spherical harmonic decompositions
 	* objects for algebraically manipulating harmonic coefficients
 	* the ability to plot coefficients and patterns
+
+**Pin Crazy:** 
 	
 [![Build status](https://ci.appveyor.com/api/projects/status/ccwuv424wao4rbly?svg=true)](https://ci.appveyor.com/project/rdireen/spherepy)
 [![Build Status](https://travis-ci.org/rdireen/spherepy.svg?branch=master)](https://travis-ci.org/rdireen/spherepy)
 [![Coverage Status](https://coveralls.io/repos/rdireen/spherepy/badge.svg?branch=master)](https://coveralls.io/r/rdireen/spherepy?branch=master)
+
+[![Downloads](https://pypip.in/download/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
+[![Latest Version](https://pypip.in/version/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
+[![Supported Python versions](https://pypip.in/py_versions/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
+[![Supported Python implementations](https://pypip.in/implementation/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
+
+[![Development Status](https://pypip.in/status/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
+[![Wheel Status](https://pypip.in/wheel/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
+[![Egg Status](https://pypip.in/egg/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
+
+[![Download format](https://pypip.in/format/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
+[![License](https://pypip.in/license/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
+
+
 
 	
 Install

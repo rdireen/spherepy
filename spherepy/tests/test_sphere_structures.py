@@ -37,15 +37,20 @@ import numpy as np
 from six.moves import xrange
 
 
-
-
 class TestScalarCoefsStructure(TestCase):
 
-    def test_create_sc(self):
+    def test_pass_vec_wrong_size(self):
         """::raise an error if I try to pass a vec of wrong size"""
         vec = np.zeros(11, dtype=np.complex128)
         with self.assertRaises(ValueError):
             sc = sp.ScalarCoefs(vec,2,2)
+
+    def test_create_sc(self):
+        """::raise an error if I try to make mmax larger than nmax in
+        ScalarCoefs"""
+        vec = np.zeros(11, dtype=np.complex128)
+        with self.assertRaises(ValueError):
+            sc = sp.ScalarCoefs(vec,2,3)
     
     def test_make_sure_mmax_not_greater_nmax_z(self):
         """::raise an error if I try to set mmax > nmax: zeros"""  
@@ -85,24 +90,60 @@ class TestScalarCoefsStructure(TestCase):
         zz = sp.random_coefs(11, 10)
         with self.assertRaises(AttributeError):
             zz[2,3] = 8
-            
+
     def test_bounds_checking_set_m_greater_mmax(self):
         """::raise an error if I go out of bounds m > mmax set"""
         zz = sp.random_coefs(11, 10)
         with self.assertRaises(AttributeError):
             zz[11,11] = 8
             
+    def test_bounds_checking_set_m_greater_mmax(self):
+        """::raise an error if I go out of bounds m > mmax set"""
+        zz = sp.random_coefs(11, 10)
+        with self.assertRaises(AttributeError):
+            zz[11,11] = 8
+
+    def test_bounds_checking_slice_n_not_right_size(self):
+        """::raise an error I try to set slice to wrong size, zz[:,1] = vec TOO BIG"""
+        zz = sp.random_coefs(11, 10)
+        with self.assertRaises(AttributeError):
+            zz[:,1] = np.zeros(15, dtype = np.complex128)
+
+    def test_bounds_checking_slice_n_slice_semi_m(self):
+        """::raise an error, I can't slice like that yet z[:,-1:1] = vec"""
+        zz = sp.random_coefs(11, 10)
+        with self.assertRaises(AttributeError):
+            zz[:,1:2] = np.zeros(15, dtype = np.complex128)
+
+    def test_indexing_not_recognized(self):
+        """::raise an error, z[apple,:]"""
+        zz = sp.random_coefs(11, 10)
+        with self.assertRaises(AttributeError):
+            zz[np,:] = 8
+
     def test_bounds_checking_set_n_greater_nmax(self):
         """::raise an error if I go out of bounds n > nmax set"""
         zz = sp.random_coefs(11, 10)
         with self.assertRaises(AttributeError):
             zz[12,10] = 8
 
+    def test_bounds_checking_set_larger_than_one_item(self):
+        """::raise an error if I set with larger tuple"""
+        zz = sp.random_coefs(11, 10)
+        with self.assertRaises(AttributeError):
+            zz[12,10] = (8, 0)
+
     def test_slice_to_sc1(self):
         """::raise an error if I slice incorrectly1"""
         zz = sp.random_coefs(11, 10)
         with self.assertRaises(AttributeError):
             sc = zz[0:5,10]
+
+    def test_too_many_idx(self):
+        """::raise an error too many indexes"""
+        zz = sp.random_coefs(11, 10)
+        with self.assertRaises(AttributeError):
+            sc = zz[0:5,10,:]
 
     def test_slice_to_sc2(self):
         """::raise an error if I slice incorrectly2"""
@@ -137,6 +178,64 @@ class TestScalarCoefsStructure(TestCase):
         z2 = sp.random_coefs(12, 10)
         with self.assertRaises(ValueError):
             a = z1 / z2
+
+    def test_bounds_checking_n_slice_m(self):
+        """::this should work z[1,:] = vec[0:3]"""
+        zz = sp.random_coefs(11, 10)
+        zz[1,:] = np.zeros(3, dtype = np.complex128)
+        self.assertTrue(True)
+
+    def test_size(self):
+        """::make sure c.size works."""
+        z1 = sp.random_coefs(11, 10)
+        N = z1.nmax + 1;
+        NC = N + z1.mmax * (2 * N - z1.mmax - 1);
+
+        res = False
+        if z1.size == NC:
+            res = True
+
+        self.assertTrue(res)
+
+    def test___array_2d_repr(self):
+        """::excercise _array_2d_repr"""
+        z1 = sp.random_coefs(11, 10)
+        x = z1._array_2d_repr()
+        self.assertTrue(True)
+
+    def test___reshape_n_vecs(self):
+        """::excercise _reshape_n_vecs"""
+        z1 = sp.random_coefs(11, 10)
+        nv = z1._reshape_n_vecs()
+
+        res = False
+        if len(nv) == 2*z1.mmax + 1:
+            res = True
+
+        self.assertTrue(res)
+
+    def test___reshape_m_vecs(self):
+        """::excercise _reshape_m_vecs"""
+        z1 = sp.random_coefs(11, 10)
+        nv = z1._reshape_m_vecs()
+
+        res = False
+        if len(nv) == z1.nmax + 1:
+            res = True
+
+        self.assertTrue(res)
+
+    def test__repr_str(self):
+        """::excercise __repr__ and __str__"""
+
+        z1 = sp.random_coefs(2, 1)
+        a = z1.__repr__()
+        a = str(z1)
+
+        self.assertTrue(True)
+
+        
+                 
             
     def test_add_same_sizes(self):
         """::can add two ScalarCoefs that are same sized """

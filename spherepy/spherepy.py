@@ -181,9 +181,6 @@ class ScalarCoefs(object):
     .. note::
         In almost all cases, you can choose to set mmax to nmax. 
 
-        
-   
-
     """
     def __init__(self, vec, nmax, mmax):
         
@@ -222,8 +219,8 @@ class ScalarCoefs(object):
         """
         N = self.nmax + 1;
         NC = N + self.mmax * (2 * N - self.mmax - 1);
-        assert N == len(self._vec)
-        return N
+        assert NC == len(self._vec)
+        return NC
 
     def copy(self):
         """Make a deep copy of this object.
