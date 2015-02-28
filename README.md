@@ -8,8 +8,8 @@ It provides:
 	* objects for algebraically manipulating harmonic coefficients
 	* the ability to plot coefficients and patterns
 
-Pin Crazy
----------
+Badges (lots of them)
+---------------------
 
 **AppVeyor:**
 
@@ -34,6 +34,10 @@ Pin Crazy
 [![License](https://pypip.in/license/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
 
 
+**Better Documentation:**
+
+I'm working on a more complete documentation 
+[HERE](http://www.direentech.com/docs/spherepy).
 
 	
 Install
@@ -72,6 +76,11 @@ Quick Example
     >>> c = sp.random_coefs(4, 4) # generate some random coefficients
     >>> p = sp.ispht(c, 50, 50) # inverse spherical transform to pattern
     >>> sp.plot_sphere_mag(p) # plot the magnitude of the pattern
+
+Contributing
+============
+Reporting bugs, suggesting features, helping with documentation, and adding to the code is very welcome. See
+[Contributing](CONTRIBUTING.md). 
 
 License
 =======

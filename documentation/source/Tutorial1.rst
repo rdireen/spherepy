@@ -3,6 +3,12 @@
 Working with Spherical Harmonics
 ********************************
 
+.. warning:: 
+
+   In mega alpha mode. Please fork this on GitHub (`spherepy <http://github.com/rdireen/spherepy>`_)
+   and help me. 
+
+
 Spherical harmonics :math:`Y_{nm}(\theta, \phi)` are defined for nonnegative :math:`n` and 
 :math:`-n \leq m \leq n`. To work with these, you can create a set of coefficients :math:`c_{nm}`, where 
 each element is set to zero::

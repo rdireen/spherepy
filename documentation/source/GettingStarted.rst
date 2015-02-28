@@ -3,6 +3,12 @@
 Getting Started
 ***************
 
+.. warning:: 
+
+   In mega alpha mode. Please fork this on GitHub (`spherepy <http://github.com/rdireen/spherepy>`_)
+   and help me. 
+
+
 **If you know this stuff, jump to** :doc:`Tutorial1` 
 
 Works on Python 2.7, 3.3, and 3.4 under Linux and Windows (not sure about OS X).

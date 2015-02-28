@@ -3,6 +3,12 @@
 SpherePy Documentation
 **********************
 
+.. warning:: 
+
+   In mega alpha mode. Please fork this on GitHub (`spherepy <http://github.com/rdireen/spherepy>`_)
+   and help me. 
+
+
 This documentation is stripped directly from the code. For more details you
 may just want to check the code out at `GitHub <http://github.com/rdireen/spherepy>`_,
 or if you have *git* installed::
