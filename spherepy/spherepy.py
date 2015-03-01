@@ -53,7 +53,8 @@ try:
     import pysphi  # python versions of the low level routines
     import csphi  # c extensions of the low level routines
     import ops
-except ImportError:
+except ImportError as e:
+    print(e)
     import spherepy.pysphi as pysphi  # python versions of the low level routines
     import spherepy.csphi as csphi # c extensions of the low level routines
     import spherepy.ops as ops
