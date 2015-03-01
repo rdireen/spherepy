@@ -33,6 +33,7 @@
 
 #---------------------------------------------------------------------Built-ins
 from __future__ import division
+import sys
 import json
 import os
 from os.path import dirname
@@ -49,15 +50,15 @@ import numpy as np
 from six.moves import xrange
 
 #------------------------------------------------------------------------Custom
-try:
+#Test Python version an import accordingly 
+if sys.version_info < (2, 8):
     import pysphi  # python versions of the low level routines
-    import csphi  # c extensions of the low level routines
     import ops
-except ImportError as e:
-    print(e)
+    import csphi  # c extensions of the low level routines
+else:
     import spherepy.pysphi as pysphi  # python versions of the low level routines
-    import spherepy.csphi as csphi # c extensions of the low level routines
     import spherepy.ops as ops
+    import spherepy.csphi as csphi # c extensions of the low level routines
 
 #==============================================================================
 # Global Declarations
