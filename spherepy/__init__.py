@@ -51,10 +51,6 @@ except ImportError:
     #Python3x
     from spherepy.spherepy import *
     from spherepy.sbessel import *
-    
-
-#Set to true if you want to use the c extensions
-use_cext = True    
 
 try:
     #Python27
