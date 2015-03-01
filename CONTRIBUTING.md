@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for helping to make spherepy a little less bad! 
+Thank you for helping to make SpherePy a little less bad! 
 
 # Bug Reports
 

@@ -33,6 +33,10 @@
 
 #---------------------------------------------------------------------Built-ins
 from __future__ import division
+import sys
+import json
+import os
+from os.path import dirname
 from functools import wraps
 import numbers
 
@@ -46,20 +50,23 @@ import numpy as np
 from six.moves import xrange
 
 #------------------------------------------------------------------------Custom
-try:
-    import __init__
+#Test Python version an import accordingly 
+if sys.version_info < (2, 8):
     import pysphi  # python versions of the low level routines
-    import csphi  # c extensions of the low level routines
     import ops
-except ImportError:
-    import spherepy.__init__ as __init__
+    import csphi  # c extensions of the low level routines
+else:
     import spherepy.pysphi as pysphi  # python versions of the low level routines
-    import spherepy.csphi as csphi # c extensions of the low level routines
     import spherepy.ops as ops
+    import spherepy.csphi as csphi # c extensions of the low level routines
 
 #==============================================================================
 # Global Declarations
 #==============================================================================
+
+with open(dirname(__file__) + '/pkg_info.json') as fp:
+    _info = json.load(fp)
+use_cext = _info["use_cext"]
 
 scalar = 0
 vector = 1
@@ -1785,7 +1792,7 @@ def spht(ssphere, nmax = None, mmax = None):
     NC = N + mmax * (2 * N - mmax - 1);
     sc = np.zeros(NC, dtype=np.complex128)
     # check if we are using c extended versions of the code or not
-    if __init__.use_cext: 
+    if use_cext: 
         csphi.fc_to_sc(fdata_extended, sc, nmax, mmax)
     else:   
         sc = pysphi.fc_to_sc(fdata_extended, nmax, mmax)
@@ -1835,7 +1842,7 @@ def vspht(vsphere, nmax = None, mmax = None):
     Lf2 = ops.sinLdot_fc(-1j*ptmp, 1j*ftmp)
     
     # check if we are using c extended versions of the code or not
-    if __init__.use_cext: 
+    if use_cext: 
         N = nmax + 1;
         NC = N + mmax * (2 * N - mmax - 1);
         sc1 = np.zeros(NC, dtype=np.complex128)
@@ -1944,7 +1951,7 @@ def ispht(scoefs, nrows, ncols):
     if np.mod(ncols, 2) == 1:
         raise ValueError(err_msg['ncols_even'])
 
-    if __init__.use_cext: 
+    if use_cext: 
         fdata = np.zeros([dnrows, ncols], dtype=np.complex128)
         csphi.sc_to_fc(fdata, scoefs._vec, scoefs._nmax, scoefs._mmax)
     else:   
@@ -1974,7 +1981,7 @@ def vispht(vcoefs, nrows, ncols):
     sc1.window(nvec)
     sc2.window(nvec)
 
-    if __init__.use_cext: 
+    if use_cext: 
         fdata1 = np.zeros([dnrows, ncols], dtype=np.complex128)
         fdata2 = np.zeros([dnrows, ncols], dtype=np.complex128)
         csphi.sc_to_fc(fdata1, sc1._vec,

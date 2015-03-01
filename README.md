@@ -22,6 +22,9 @@ Badges (lots of them)
 
 **PyPI:**
 
+Note that 0.0.6 of the PyPI package you get with pip does not work on Linux and on Windows it will try to download the latest
+NumPy if you don't have that. I'm fixing this issue in 0.0.7 and will hopefully have it up soon.
+
 [![Downloads](https://pypip.in/download/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
 [![Latest Version](https://pypip.in/version/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
 [![Supported Python versions](https://pypip.in/py_versions/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
@@ -53,7 +56,16 @@ For Windows I use wheels to distribute the binaries, so make sure pip is up to d
 Before installing SpherePy you must install build-essential, python-dev, and NumPy
 
     $ sudo apt-get install build-essential python-dev
+
+For NumPy you need to decide if you want to build it yourself with
+
     $ sudo pip install numpy
+
+or download the package with
+
+    $ sudo apt-get install python-numpy
+
+I have been building NumPy using the pip method, but it takes a long time. 
 
 Then you can 
 
@@ -76,6 +88,7 @@ Quick Example
 
     >>> import spherepy as sp 
     >>> c = sp.random_coefs(4, 4) # generate some random coefficients
+    >>> sp.pretty_coefs(c)
     >>> p = sp.ispht(c, 50, 50) # inverse spherical transform to pattern
     >>> sp.plot_sphere_mag(p) # plot the magnitude of the pattern
 

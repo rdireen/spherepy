@@ -32,6 +32,7 @@ module.
 
 ***************************************************************************"""
 from __future__ import division
+import sys
 import spherepy as sp
 import numpy as np
 
@@ -39,10 +40,10 @@ import numpy as np
 #and do a 'from six.moves import range' here
 from six.moves import xrange
 
-try:
+if sys.version_info < (2, 8):
     #Python27
     import file as fl
-except ImportError:
+else: 
     #Python3x
     import spherepy.file as fl
 

@@ -24,42 +24,39 @@ import os
 from os.path import dirname
 import sys
 
-try:
+if sys.version_info < (2, 8):
     #Python27
     import pysphi
     import csphi
     import file
     import verify
-except ImportError:
+    from .spherepy import *
+    from .sbessel import *
+else:
     #Python3x
     import spherepy.pysphi as pysphi
     import spherepy.csphi as csphi
     import spherepy.file as file
     import spherepy.verify as verify
+    from spherepy.spherepy import *
+    from spherepy.sbessel import *
 
 with open(dirname(__file__) + '/pkg_info.json') as fp:
     _info = json.load(fp)
 
 __version__ = _info['version']
 __author__ = _info['author']
+__use_cext__ = _info['use_cext']
 
-try:
+
+#Import matplotlib plotting if it has been installed
+if sys.version_info < (2, 8):
     #Python27
-    from .spherepy import *
-    from .sbessel import *
-except ImportError:
-    #Python3x
-    from spherepy.spherepy import *
-    from spherepy.sbessel import *
-    
-
-#Set to true if you want to use the c extensions
-use_cext = True    
-
-try:
-    #Python27
-    from .plot_sphere import *
-except ImportError:
+    try:
+        from .plot_sphere import *
+    except ImportError:
+        pass
+else:
     try:
         #Python3x
         from spherepy.plot_sphere import *
