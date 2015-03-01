@@ -17,6 +17,20 @@
 # You should have received a copy of the GNU General Public License
 # along with SpherePy.  If not, see <http://www.gnu.org/licenses/>
 
+"""
+
+Note about NumPy:
+
+    NumPy is a necessary part of SpherePy, but there are many ways to install
+    it. On Ubuntu you can install the the python-numpy package with apt-get or
+    use pip, and on Windows you can use full systems like Anaconda, download
+    wheels from unofficial sites, or if you have the compilers for the right 
+    version of the Python distribution you can build it yourself. Since there
+    are so many ways to get NumPy, I think I will require people to install
+    and update it themselves and not put it in the requirements here.
+
+"""
+
 import os
 import sys
 import json
@@ -43,8 +57,7 @@ except ImportError:
           "setuptools")
     sys.exit(1)
  
-try:
-        
+try:   
     import numpy
     # Obtain the numpy include directory.  
     # This logic works across numpy versions.
@@ -62,7 +75,8 @@ except ImportError:
 description = 'Numerical routines for working with spherical harmonic ' + \
               'coefficients' 
  
-srcs = ['src/csphi.c', 'src/csphi_wrap.c', 'src/kiss_fft.c']            
+srcs = ['src/csphi.c', 'src/csphi_wrap.c', 'src/kiss_fft.c',
+        'src/csphi.h', 'src/kiss_fft.h', 'src/_kiss_fft_guts.h']            
 csphi_module = Extension('_csphi',
                          sources=srcs,
                          include_dirs=['src', numpy_include]
@@ -90,7 +104,7 @@ setup(name='spherepy',
       url='https://github.com/rdireen/spherepy',  # url to github repo
       download_url='https://github.com/rdireen/spherepy/tarball/0.2',
       license='GPLv3',
-      install_requires=['numpy', 'setuptools', 'six'],
+      install_requires=['setuptools', 'six'],
       keywords=['sphere transform'],
       packages=['spherepy'],
       package_dir={'spherepy':'spherepy', 'test':'spherepy/test'},
