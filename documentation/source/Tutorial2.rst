@@ -31,3 +31,7 @@ Subsection
 
 Subsubsection
 +++++++++++++
+
+**Bibliography**
+.. [JDJ1998]
+   Jackson, J. D. (1998) [1962]. Classical Electrodynamics (3rd ed.). New York: John Wiley & Sons. ISBN 978-0-471-30932-1. OCLC 535998

@@ -3,11 +3,6 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
  
- 
-.. COMMENT: Put all references to media here
- 
-
-  
 
 **********************
 
@@ -86,10 +81,9 @@ Table of Contents
    
    GettingStarted
    Tutorial1
-   GruesomeDetails
    Tutorial2
    Details
-   CodeDoc
+
    
    
 Indices and tables

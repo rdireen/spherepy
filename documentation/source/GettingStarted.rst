@@ -1,5 +1,3 @@
-.. include global.rst
-
 Getting Started
 ***************
 
@@ -22,6 +20,7 @@ Install
 * Install :ref:`ref-linux`
 * Install :ref:`ref-windows`
 * Install :ref:`ref-source`
+* :ref:`ref-upgrade`
 * :ref:`ref-uninstall`
 
 .. _ref-pip:
@@ -134,6 +133,16 @@ To see if things are working, start python and type::
 To plot stuff you'll need matplotlib::
 
     $ pip install matplotlib
+
+
+.. _ref-upgrade:
+
+Upgrading
+---------
+
+Things will probably be turning around often. To upgrade to the latest version::
+
+    $ pip install spherepy --upgrade
 
 	
 .. _ref-uninstall:
