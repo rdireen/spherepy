@@ -47,6 +47,7 @@ def readme():
 __version__ = _info['version']
 __author__ = _info['author']
 __email__ = _info['email']
+__download_url__ = _info['download_url']
 
 try:
     from setuptools import setup, Extension
@@ -75,8 +76,10 @@ except ImportError:
 description = 'Numerical routines for working with spherical harmonic ' + \
               'coefficients' 
  
+
+#TODO: I really don't know how to get my header files into my sdist
 srcs = ['src/csphi.c', 'src/csphi_wrap.c', 'src/kiss_fft.c']  
-headers=['src/csphi.h', 'src/kiss_fft.h', 'src/_kiss_fft_guts.h']          
+#headers=['src/csphi.h', 'src/kiss_fft.h', 'src/_kiss_fft_guts.h']          
 csphi_module = Extension('_csphi',
                          sources=srcs,
                          include_dirs=['src', numpy_include]
@@ -102,9 +105,9 @@ setup(name='spherepy',
           'Topic :: Scientific/Engineering :: Mathematics'
       ],
       url='https://github.com/rdireen/spherepy',  # url to github repo
-      download_url='https://github.com/rdireen/spherepy/tarball/0.3',
+      download_url=__download_url__,
       license='GPLv3',
-      install_requires=['setuptools', 'six'],
+      install_requires=['six'],
       keywords=['sphere transform'],
       packages=['spherepy'],
       package_dir={'spherepy':'spherepy', 'test':'spherepy/test'},
@@ -112,7 +115,6 @@ setup(name='spherepy',
       include_package_data=True,
       test_suite='nose.collector',
       tests_require=['nose'],
-      ext_modules=[csphi_module],
-      headers=headers  
+      ext_modules=[csphi_module]
      )
 

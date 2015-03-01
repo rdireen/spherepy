@@ -1,4 +1,5 @@
 {"version":"0.0.7",
+"download_url":"https://github.com/rdireen/spherepy/tarball/0.3",
 "author":"Randy Direen",
 "email":"spherepy@direentech.com",
 "use_cext":"True"
