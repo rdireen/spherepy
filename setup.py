@@ -84,7 +84,7 @@ setup(name='spherepy',
           'Programming Language :: Python :: 2.7',
           'Programming Language :: Python :: 3.3',
           'Programming Language :: Python :: 3.4',
-          'Programming Language :: Python :: Implementation :: CPython'
+          'Programming Language :: Python :: Implementation :: CPython',
           'Topic :: Scientific/Engineering :: Mathematics'
       ],
       url='https://github.com/rdireen/spherepy',  # url to github repo
