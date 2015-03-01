@@ -102,7 +102,7 @@ setup(name='spherepy',
           'Topic :: Scientific/Engineering :: Mathematics'
       ],
       url='https://github.com/rdireen/spherepy',  # url to github repo
-      download_url='https://github.com/rdireen/spherepy/tarball/0.2',
+      download_url='https://github.com/rdireen/spherepy/tarball/0.3',
       license='GPLv3',
       install_requires=['setuptools', 'six'],
       keywords=['sphere transform'],

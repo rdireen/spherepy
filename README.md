@@ -22,8 +22,8 @@ Badges (lots of them)
 
 **PyPI:**
 
-Note that 0.0.6 of the PyPI package you get with pip does not work on Linux and on Windows it will try to download the latest
-NumPy if you don't have that. I'm fixing this issue in 0.0.7 and will hopefully have it up soon.
+Note that the 0.0.6 version of the PyPI package you get with pip does not work on Linux, and on Windows it will try to download the latest
+NumPy (which you might now want). I'm fixing this issue in 0.0.7 and will hopefully have it up soon.
 
 [![Downloads](https://pypip.in/download/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
 [![Latest Version](https://pypip.in/version/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
