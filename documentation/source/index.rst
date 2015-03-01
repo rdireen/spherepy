@@ -15,6 +15,7 @@
 .. image:: images/logo_spherepy.png
    :height: 200px
    :align: right
+   
 
    
 SpherePy
