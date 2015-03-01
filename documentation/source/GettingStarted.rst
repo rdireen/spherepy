@@ -74,8 +74,8 @@ SpherePy on Windows
 -------------------
 
 SpherePy requires NumPy, which contains a lot of binaries. There are a lot of ways to get 
-NumPy installed on Windows, but one of the easiest ways is to install a Python distribution
-such as `Anaconda <http://continuum.io/downloads>`_. 
+NumPy installed on Windows, but one of the easiest ways is to install a package
+like `Anaconda <http://continuum.io/downloads>`_. 
 
 Now we should be able to install SpherePy::	
 
@@ -107,8 +107,10 @@ Ubuntu you'll need build-essentials and python-dev::
     $ apt-get install build-essentials python-dev
 
 .. note::
-    I've been able to develop these extensions on Windows as well by using 
-    the compiler `here <http://www.microsoft.com/en-us/download/details.aspx?id=44266>`_.
+    I've been able to develop Python 2.7 extensions on Windows using 
+    the compiler `here <http://www.microsoft.com/en-us/download/details.aspx?id=44266>`_. For
+    Python 3.x it looks like you have to use Visual Studio 2010, which I did get working, but
+    I had to download the Express version of VS.
 
 Building C extensions also requires NumPy to be installed::
 
@@ -119,11 +121,15 @@ You should now be able to install the code by entering the directory containing 
 
     $ python setup.py install
 
+If you install nose you should be able to run all of the unittests::
+
+    $ pip install nose
+    $ python setup.py test
+
 To see if things are working, start python and type::
 
     >>> import spherepy
-
-
+    >>> spherepy.__version__
 
 To plot stuff you'll need matplotlib::
 

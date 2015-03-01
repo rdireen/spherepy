@@ -41,12 +41,11 @@ Scalar Case
    :members:
    :undoc-members:
    
+Scalar Routines
+===============
 
 
 .. _fun-ispht:
-
-Scalar Routines
-===============
 
 *ispht*
 -------
@@ -74,12 +73,14 @@ Scalar Routines
 
 .. autofunction:: spherepy.random_coefs
 
-.. _fun-prettycoefs:
+
+.. _fun-pcoefs:
 
 *pretty_coefs*
 --------------
 
 .. autofunction:: spherepy.pretty_coefs
+
 
 .. _fun-zerospattuniform:
 

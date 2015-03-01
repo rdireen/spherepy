@@ -29,7 +29,7 @@ each element is set to zero::
 .. sidebar:: Documentation
 
    Here is the documentation for the functions used above: :ref:`fun-zeroscoefs`,
-   :ref:`fun-prettycoefs`. If you execute :samp:`type(c)`, you'll notice that :samp:`c` 
+   :ref:`fun-pcoefs`. If you execute :samp:`type(c)`, you'll notice that :samp:`c` 
    is a :ref:`fun-scalarcoefs`
    
 The object :samp:`c` has 9 elements, the largest :samp:`n` value (referred to as :samp:`nmax`) is 2 and the largest 
