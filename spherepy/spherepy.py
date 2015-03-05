@@ -115,6 +115,8 @@ err_msg['scoef_size'] = "vec must have length = " + \
 err_msg['vcoef_size'] = "vec1 and vec2 must have length = " + \
                               "nmax + 1 + mmax * (2 * (nmax + 1) - mmax - 1)"
 
+err_msg['inverse_terr'] = "can't have nrows < nmax + 2 or " + \
+                               "ncols < 2 * mmax + 2"
 
 pretty_display_string = """
 
@@ -922,7 +924,7 @@ class ScalarPatternUniform(object):
     def nrows(self):
         """Returns the number of rows in the NumPy array."""
 
-        return int(self._dsphere.shape[0] / 2 + 1)
+        return int(self._dsphere.shape[0] / 2) + 1
 
     @property
     def ncols(self):
@@ -1108,7 +1110,7 @@ class VectorPatternUniform:
 
     @property
     def nrows(self):
-        return self._tdsphere.shape[0] / 2 + 1 
+        return int(self._tdsphere.shape[0] / 2) + 1 
 
     @property
     def ncols(self):
@@ -1759,15 +1761,15 @@ def spht(ssphere, nmax = None, mmax = None):
     """
 
     if nmax == None:
-        nmax = ssphere.nrows - 1 
+        nmax = ssphere.nrows - 2 
 
     if mmax == None:
-        mmax = ssphere.ncols / 2 - 1
+        mmax = int(ssphere.ncols / 2) - 1
 
     if mmax > nmax:
         raise ValueError(err_msg['nmax_g_mmax'])
 
-    if nmax >= ssphere.nrows:
+    if nmax >= ssphere.nrows - 1:
         raise ValueError(err_msg['nmax_too_lrg'])
 
     if mmax >= ssphere.ncols / 2:
@@ -1804,15 +1806,15 @@ def vspht(vsphere, nmax = None, mmax = None):
     coefficients of the VectorPatternUniform object"""
     
     if nmax == None:
-        nmax = vsphere.nrows - 1 
+        nmax = vsphere.nrows - 2
 
     if mmax == None:
-        mmax = vsphere.ncols / 2 - 1
+        mmax = int(vsphere.ncols / 2) - 1
 
     if mmax > nmax:
         raise ValueError(err_msg['nmax_g_mmax'])
 
-    if nmax >= vsphere.nrows:
+    if nmax >= vsphere.nrows - 1:
         raise ValueError(err_msg['nmax_too_lrg'])
 
     if mmax >= vsphere.ncols / 2:
@@ -1917,7 +1919,7 @@ def spht_slow(ssphere, nmax, mmax):
                                 
     return ScalarCoefs(sc, nmax, mmax)
 
-def ispht(scoefs, nrows, ncols):
+def ispht(scoefs, nrows = None, ncols = None):
     """Transforms ScalarCoefs object *scoefs* into a scalar pattern 
     ScalarPatternUniform.
 
@@ -1944,7 +1946,21 @@ def ispht(scoefs, nrows, ncols):
     Raises:
       ValueError: Is raised if *ncols* isn't even.
 
+      ValueError: Is raised if *nrows* < *nmax* + 2 or *ncols* < 2 * *mmax* + 2.
+
     """
+
+    if nrows == None:
+        nrows = scoefs.nmax + 2 
+
+    if ncols == None:
+        ncols = 2 * scoefs.mmax + 2
+
+    if nrows <= scoefs.nmax:
+        raise ValueError(err_msg['inverse_terr'])
+
+    if ncols < 2 * scoefs.mmax + 2:
+        raise ValueError(err_msg['inverse_terr'])
 
     dnrows = int(2 * nrows - 2)
 
@@ -1964,9 +1980,24 @@ def ispht(scoefs, nrows, ncols):
 
     return ScalarPatternUniform(ds, doublesphere=True)
 
-def vispht(vcoefs, nrows, ncols):
+def vispht(vcoefs, nrows = None, ncols = None):
 
-    dnrows = 2 * nrows - 2
+
+
+    if nrows == None:
+        nrows = vcoefs.nmax + 2 
+
+    if ncols == None:
+        ncols = 2 * vcoefs.mmax + 2
+
+    if nrows < vcoefs.nmax + 2:
+        raise ValueError(err_msg['inverse_terr'])
+
+    if ncols < 2 * vcoefs.mmax + 2:
+        raise ValueError(err_msg['inverse_terr'])
+
+
+    dnrows = int(2 * nrows - 2)
 
     if np.mod(ncols, 2) == 1:
         raise ValueError(err_msg['ncols_even'])

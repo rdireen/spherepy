@@ -172,5 +172,60 @@ class TestScalarSphericalTransform(TestCase):
             res = False
             
         self.assertTrue(res)
+
+    def test_spht_ispht_no_added_args(self):
+        """::Test spht and ispht when nmax, mmax, nrows, ncols are not passed.
+        """
+        c = sp.random_coefs(100, 100)
+        p = sp.ispht(c)
+        c2 = sp.spht(p)
+
+        res = True
+        if (sp.L2_coef(c - c2) / sp.L2_coef(c))  > 1e-13:
+            res = False
+            
+        self.assertTrue(res)
+
+    def test_ispht_size_error1(self):
+        """::Test ispht error when nrows is too small.
+        """
+        c = sp.random_coefs(100, 100)
+        with self.assertRaises(ValueError):
+            p = sp.ispht(c,100,204)
+
+    def test_ispht_size_error2(self):
+        """::Test ispht error when ncols is too small.
+        """
+        c = sp.random_coefs(100, 100)
+        with self.assertRaises(ValueError):
+            p = sp.ispht(c,104,198)
+
+    def test_vspht_vispht_no_added_args(self):
+        """::Test spht and ispht when nmax, mmax, nrows, ncols are not passed.
+        """
+        c = sp.random_coefs(100, 100, coef_type = sp.vector)
+        p = sp.vispht(c)
+        c2 = sp.vspht(p)
+
+        res = True
+        if (sp.L2_coef(c - c2) / sp.L2_coef(c))  > 1e-13:
+            res = False
+            
+        self.assertTrue(res)
+
+    def test_vispht_size_error1(self):
+        """::Test ispht error when nrows is too small.
+        """
+        c = sp.random_coefs(100, 100, coef_type = sp.vector)
+        with self.assertRaises(ValueError):
+            p = sp.vispht(c,100,204)
+
+    def test_vispht_size_error2(self):
+        """::Test ispht error when ncols is too small.
+        """
+        c = sp.random_coefs(100, 100, coef_type = sp.vector)
+        with self.assertRaises(ValueError):
+            p = sp.vispht(c,104,198)
+
                     
         
