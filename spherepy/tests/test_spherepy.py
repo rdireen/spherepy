@@ -103,12 +103,12 @@ class TestSBessel(TestCase):
 class TestScalarSphericalTransform(TestCase):
     """Testing the scalar spherical harmonic transforms"""
     def test_with_individual_coefficients_set(self):
-        """::Testing spht and ispht with single coefficients, first 10 modes.
+        """::Testing spht and ispht with single coefficients, first 5 modes.
         """
         res = True
         
         try:
-            for n in xrange(0, 11):
+            for n in xrange(0, 6):
                 for m in xrange(-n, n + 1):
                     rnd = np.random.normal(0, 10)
                     c = sp.zeros_coefs(15, 15)
@@ -125,11 +125,11 @@ class TestScalarSphericalTransform(TestCase):
         self.assertTrue(res)
 
     def test_vec_with_individual_coefficients_set(self):
-        """::Testing vspht and vispht with single coefficients, first 10 modes.
+        """::Testing vspht and vispht with single coefficients, first 5 modes.
         """
         res = True
         
-        for n in xrange(1, 11):
+        for n in xrange(1, 6):
             for m in xrange(-n, n + 1):
                 rnd1 = np.random.normal(0, 10)
                 rnd2 = np.random.normal(0, 10)
@@ -145,12 +145,12 @@ class TestScalarSphericalTransform(TestCase):
         self.assertTrue(res)
 
     def test_spht_with_large_random(self):
-        """::Generate 500 random modes and test both spht and ispht.
+        """::Generate 100 random modes and test both spht and ispht.
         """
 
-        c = sp.random_coefs(500, 498)
-        p = sp.ispht(c, 506, 1010)
-        c2 = sp.spht(p, 500, 498)
+        c = sp.random_coefs(100, 100)
+        p = sp.ispht(c, 202, 202)
+        c2 = sp.spht(p, 100, 100)
 
         res = True
         if (sp.L2_coef(c - c2) / sp.L2_coef(c))  > 1e-13:
@@ -159,13 +159,13 @@ class TestScalarSphericalTransform(TestCase):
         self.assertTrue(res)
 
     def test_vspht_with_large_random(self):
-        """::Generate 500 random modes and test both vspht and vispht.
+        """::Generate 100 random modes and test both vspht and vispht.
         """
 
-        c = sp.random_coefs(500, 498, coef_type = sp.vector)
-        p = sp.vispht(c, 506, 1010)
+        c = sp.random_coefs(100, 100, coef_type = sp.vector)
+        p = sp.vispht(c, 202, 202)
 
-        c2 = sp.vspht(p, 500, 498)
+        c2 = sp.vspht(p, 100, 100)
 
         res = True
         if (sp.L2_coef(c - c2) / sp.L2_coef(c))  > 1e-13:

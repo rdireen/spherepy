@@ -34,7 +34,7 @@ import numpy as np
 #and do a 'from six.moves import range' here
 from six.moves import xrange
 
-Nmodes = 100
+Nmodes = 20
 
 class TestSphi(TestCase):
     """Tests for the low level numeric functions. This isn't a good test to 
@@ -74,7 +74,7 @@ class TestSphi(TestCase):
         """::Compare s_data within pysphi and csphi"""
         
         res = True
-        for Nmax in xrange(10, 50):
+        for Nmax in xrange(10, 20):
             for Nrows in xrange(2 * Nmax + 2, 20 * Nmax + 2, 2):
                 Q = Nrows + Nmax + 1
                 pyn = sp.pysphi.s_data(Nrows, Nmax, Q)
@@ -90,16 +90,16 @@ class TestSphi(TestCase):
     def test_spht(self):
         """::Compare spht within pysphi and csphi"""
         
-        Nrows = 303
-        Ncols = 310
+        Nrows = 100
+        Ncols = 200
         res = True
         
-        for MM in xrange(2, 16, 2):
+        for MM in xrange(2, 8, 2):
             NNcols = Ncols - MM
             p = sp.random_patt_uniform(Nrows, NNcols)
             
-            spy = sp.spht_slow(p, 100, 85)
-            sc = sp.spht(p, 100, 85)
+            spy = sp.spht_slow(p, 50, 46)
+            sc = sp.spht(p, 50, 46)
             
             rerr = sp.compare_relative(spy, sc)
             if (rerr > 1e-13):
@@ -110,11 +110,11 @@ class TestSphi(TestCase):
     def test_ispht(self):
         """::Compare ispht within pysphi and csphi""" 
         
-        Nmax = 100
-        Nrows = 1000
+        Nmax = 50
+        Nrows = 102
         res = True
         
-        for MM in xrange(1, 5):
+        for MM in xrange(1, 3):
             Mmax = Nmax - MM
             c = sp.random_coefs(Nmax, Mmax)
             
