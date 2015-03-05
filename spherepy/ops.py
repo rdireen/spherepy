@@ -16,6 +16,7 @@
 # along with SpherePy.  If not, see <http://www.gnu.org/licenses/>
 
 
+
 """***************************************************************************
 
                 ops: Operators on coefficients and patterns 
