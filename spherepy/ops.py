@@ -25,13 +25,14 @@ Randy Direen
 2/11/2015
 
 These operations are applied to the theta-phi data and the coefficients. They
-are needed for both calculating the scalar coefficients and the vector 
-coefficients.
+are needed for both calculating the scalar and the vector coefficients.
 
 ***************************************************************************"""
 
 #---------------------------------------------------------------------Built-ins
 from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
 
 #---------------------------------------------------------------------3rd Party
 import numpy as np

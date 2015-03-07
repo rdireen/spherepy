@@ -31,7 +31,13 @@ The file format is expected to be in the form specified in the file.py
 module. 
 
 ***************************************************************************"""
+
+#---------------------------------------------------------------------Built-ins
 from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
+
+#---------------------------------------------------------------------3rd Party
 import sys
 import spherepy as sp
 import numpy as np
@@ -40,12 +46,7 @@ import numpy as np
 #and do a 'from six.moves import range' here
 from six.moves import xrange
 
-if sys.version_info < (2, 8):
-    #Python27
-    import file as fl
-else: 
-    #Python3x
-    import spherepy.file as fl
+import spherepy.file as fl
 
 def verify_spht(pattfile, scoeffile):
 

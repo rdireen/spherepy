@@ -33,6 +33,9 @@
 
 #---------------------------------------------------------------------Built-ins
 from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
+
 import sys
 import json
 import os
@@ -50,15 +53,10 @@ import numpy as np
 from six.moves import xrange
 
 #------------------------------------------------------------------------Custom
-#Test Python version an import accordingly 
-if sys.version_info < (2, 8):
-    import pysphi  # python versions of the low level routines
-    import ops
-    import csphi  # c extensions of the low level routines
-else:
-    import spherepy.pysphi as pysphi  # python versions of the low level routines
-    import spherepy.ops as ops
-    import spherepy.csphi as csphi # c extensions of the low level routines
+
+import spherepy.pysphi as pysphi  # python versions of the low level routines
+import spherepy.ops as ops
+import spherepy.csphi as csphi # c extensions of the low level routines
 
 #==============================================================================
 # Global Declarations
@@ -731,6 +729,29 @@ class VectorCoefs(object):
                 raise AttributeError(err_msg['no_v0_mode'])
             m = arg[1]
             return (self.scoef1[n, m], self.scoef2[n, m])
+
+        elif isinstance(arg[0], slice) and isinstance(arg[1], slice):
+
+            if ((arg[1].start is None) and
+                (arg[1].step is None) and
+                (arg[1].stop is None) and
+                (arg[0].start == 0) and
+                (arg[0].step is None) and
+                isinstance(arg[0].stop, int)):
+                
+                if (arg[0].stop > self.nmax):
+                    raise AttributeError(err_msg['n_out_bound'])
+
+                new_nmax = arg[0].stop
+                if new_nmax > self.mmax:
+                    new_mmax = self.mmax
+                else:
+                    new_mmax = new_nmax
+                return VectorCoefs(self.scoef1[0:new_nmax, :]._vec, 
+                                   self.scoef2[0:new_nmax, :]._vec,
+                                   new_nmax, new_mmax)
+            else:
+                raise AttributeError(err_msg['idx_no_rec'])
 
         else:
             raise AttributeError(err_msg['idx_no_rec'])
@@ -1762,9 +1783,9 @@ def spht(ssphere, nmax = None, mmax = None):
 
     if nmax == None:
         nmax = ssphere.nrows - 2 
-
-    if mmax == None:
         mmax = int(ssphere.ncols / 2) - 1
+    elif mmax == None:
+        mmax = nmax
 
     if mmax > nmax:
         raise ValueError(err_msg['nmax_g_mmax'])
@@ -1806,10 +1827,10 @@ def vspht(vsphere, nmax = None, mmax = None):
     coefficients of the VectorPatternUniform object"""
     
     if nmax == None:
-        nmax = vsphere.nrows - 2
-
-    if mmax == None:
+        nmax = vsphere.nrows - 2 
         mmax = int(vsphere.ncols / 2) - 1
+    elif mmax == None:
+        mmax = nmax
 
     if mmax > nmax:
         raise ValueError(err_msg['nmax_g_mmax'])

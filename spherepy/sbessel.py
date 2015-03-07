@@ -26,6 +26,8 @@ TODO: Describe how I came to these routines and site Gouchie
 """
 #---------------------------------------------------------------------Built-ins
 from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
 
 #---------------------------------------------------------------------3rd Party
 import numpy as np

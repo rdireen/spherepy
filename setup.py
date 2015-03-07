@@ -75,11 +75,8 @@ except ImportError:
 
 description = 'Numerical routines for working with spherical harmonic ' + \
               'coefficients' 
- 
 
-#TODO: I really don't know how to get my header files into my sdist
 srcs = ['src/csphi.c', 'src/csphi_wrap.c', 'src/kiss_fft.c']  
-#headers=['src/csphi.h', 'src/kiss_fft.h', 'src/_kiss_fft_guts.h']          
 csphi_module = Extension('_csphi',
                          sources=srcs,
                          include_dirs=['src', numpy_include]

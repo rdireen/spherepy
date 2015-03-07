@@ -16,30 +16,20 @@
 # along with SpherePy.  If not, see <http://www.gnu.org/licenses/>
 
 from __future__ import division
-
-__all__ = ['pysphi']
+from __future__ import print_function
+from __future__ import absolute_import
 
 import json
 import os
 from os.path import dirname
 import sys
 
-if sys.version_info < (2, 8):
-    #Python27
-    import pysphi
-    import csphi
-    import file
-    import verify
-    from .spherepy import *
-    from .sbessel import *
-else:
-    #Python3x
-    import spherepy.pysphi as pysphi
-    import spherepy.csphi as csphi
-    import spherepy.file as file
-    import spherepy.verify as verify
-    from spherepy.spherepy import *
-    from spherepy.sbessel import *
+import spherepy.pysphi as pysphi
+import spherepy.csphi as csphi
+import spherepy.file as file
+import spherepy.verify as verify
+from spherepy.spherepy import *
+from spherepy.sbessel import *
 
 with open(dirname(__file__) + '/pkg_info.json') as fp:
     _info = json.load(fp)
@@ -50,16 +40,9 @@ __use_cext__ = _info['use_cext']
 
 
 #Import matplotlib plotting if it has been installed
-if sys.version_info < (2, 8):
-    #Python27
-    try:
-        from .plot_sphere import *
-    except ImportError:
-        pass
-else:
-    try:
-        #Python3x
-        from spherepy.plot_sphere import *
-    except ImportError:
-        pass
+try:
+    #Python3x
+    from spherepy.plot_sphere import *
+except ImportError:
+    pass
 
