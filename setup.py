@@ -65,7 +65,7 @@ try:
     try:
         numpy_include = numpy.get_include()
     except AttributeError:
-        numpy_include = numpy.get_numpy_include()
+        numpy_include = numpy.get_numpy_include()  # @UndefinedVariable
     
 except ImportError:
     print("SpherePy requires NumPy for compiling c extensions. Install " + \

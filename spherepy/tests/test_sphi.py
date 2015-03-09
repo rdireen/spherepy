@@ -30,9 +30,9 @@ from unittest import TestCase
 import spherepy as sp
 import numpy as np
 
-#TODO: Change all xrange instances to range
-#and do a 'from six.moves import range' here
-from six.moves import xrange
+# TODO: Change all xrange instances to range
+# and do a 'from six.moves import range' here
+from six.moves import xrange  # @UnresolvedImport
 
 Nmodes = 20
 
@@ -118,8 +118,8 @@ class TestSphi(TestCase):
             Mmax = Nmax - MM
             c = sp.random_coefs(Nmax, Mmax)
             
-            ppy = sp.ispht_slow(c, Nrows/2, Nrows)
-            pc = sp.ispht(c, Nrows/2, Nrows)
+            ppy = sp.ispht_slow(c, Nrows / 2, Nrows)
+            pc = sp.ispht(c, Nrows / 2, Nrows)
             
             rerr = np.sum(sp.abs(ppy - pc)) / np.sum(sp.abs(ppy))
             

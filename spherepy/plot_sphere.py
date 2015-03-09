@@ -37,9 +37,9 @@ from functools import wraps
 import numpy as np
 
 
-#TODO: Change all xrange instances to range
-#and do a 'from six.moves import range' here
-from six.moves import xrange
+# TODO: Change all xrange instances to range
+# and do a 'from six.moves import range' here
+from six.moves import xrange  # @UnresolvedImport
 
 #------------------------------------------------------------------------Custom
 import spherepy as sp
@@ -50,13 +50,13 @@ import spherepy as sp
 
 MPLINSTALLED = True
 try:
-    from mpl_toolkits.mplot3d import Axes3D
+    from mpl_toolkits.mplot3d import Axes3D  # @UnresolvedImport
     import matplotlib.pyplot as plt
 except:
     MPLINSTALLED = False
 
-msg = "Plotting requires matplotlib. You can install matplotlib by typing " +\
-      "'pip install matplotlib' at the command line. If that doesn't work," +\
+msg = "Plotting requires matplotlib. You can install matplotlib by typing " + \
+      "'pip install matplotlib' at the command line. If that doesn't work," + \
       " google it."
 
 def matplotlibensure(func):
@@ -95,7 +95,7 @@ def plot_mag_on_sphere(T):
     phi, theta = np.meshgrid(np.linspace(0, 2 * np.pi, ncols + 1),
                              np.linspace(0, np.pi, nrows))
 
-    v = np.array(T[:,0]).reshape(-1, 1)
+    v = np.array(T[:, 0]).reshape(-1, 1)
     T = np.hstack((T, v))
 
     X = T * np.cos(phi) * np.sin(theta)
@@ -140,7 +140,7 @@ def plot_sphere_mag(patt):
     phi, theta = np.meshgrid(np.linspace(0, 2 * np.pi, ncols + 1),
                              np.linspace(0, np.pi, nrows))
 
-    v = np.array(T[:,0]).reshape(-1, 1)
+    v = np.array(T[:, 0]).reshape(-1, 1)
     T = np.hstack((T, v))
 
     X = T * np.cos(phi) * np.sin(theta)

@@ -36,27 +36,23 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
-import sys
 import json
-import os
 from os.path import dirname
 from functools import wraps
 import numbers
 
-
-
 #---------------------------------------------------------------------3rd Party
 import numpy as np
 
-#TODO: Change all xrange instances to range
-#and do a 'from six.moves import range' here
-from six.moves import xrange
+# TODO: Change all xrange instances to range
+# and do a 'from six.moves import range' here
+from six.moves import xrange  # @UnresolvedImport
 
 #------------------------------------------------------------------------Custom
 
 import spherepy.pysphi as pysphi  # python versions of the low level routines
 import spherepy.ops as ops
-import spherepy.csphi as csphi # c extensions of the low level routines
+import spherepy.csphi as csphi  # c extensions of the low level routines
 
 #==============================================================================
 # Global Declarations
@@ -240,7 +236,7 @@ class ScalarCoefs(object):
         vec = np.copy(self._vec)
         return ScalarCoefs(vec, self.nmax, self.mmax)
 
-    def window(self,vec):
+    def window(self, vec):
         """Apply a window to the coefficients defined by *vec*. *vec* must
         have length *nmax* + 1.  This is good way to filter the pattern by
         windowing in the coefficient domain.
@@ -259,12 +255,12 @@ class ScalarCoefs(object):
 
         """
 
-        slce = slice(None,None,None)
+        slce = slice(None, None, None)
         
-        self.__setitem__((slce,0),self.__getitem__((slce,0)) * vec)  
-        for m in xrange(1,self.mmax + 1):
-            self.__setitem__((slce,-m),self.__getitem__((slce,-m)) * vec[m:])
-            self.__setitem__((slce,m),self.__getitem__((slce,m)) * vec[m:])
+        self.__setitem__((slce, 0), self.__getitem__((slce, 0)) * vec)  
+        for m in xrange(1, self.mmax + 1):
+            self.__setitem__((slce, -m), self.__getitem__((slce, -m)) * vec[m:])
+            self.__setitem__((slce, m), self.__getitem__((slce, m)) * vec[m:])
 
     def _array_2d_repr(self):
         """creates a 2D array that has nmax + 1 rows and 2*mmax + 1 columns
@@ -474,10 +470,10 @@ class ScalarCoefs(object):
 
                 N = new_nmax + 1;
                 NC = N + new_mmax * (2 * N - new_mmax - 1);
-                vec = np.zeros(NC,dtype = np.complex128)
+                vec = np.zeros(NC, dtype=np.complex128)
 
                 vec[0:new_nmax + 1] = self._vec[0:new_nmax + 1]
-                for m in xrange(1,new_mmax + 1):
+                for m in xrange(1, new_mmax + 1):
                     idx = pysphi.mindx(-m, self.nmax, self.mmax)
                     nidx = pysphi.mindx(-m, new_nmax, new_mmax)
                     ln = new_nmax - np.abs(m) + 1
@@ -605,7 +601,7 @@ class VectorCoefs(object):
         if NC != len(vec1):
             raise ValueError(err_msg['vcoef_size'])
 
-        #There are no monopoles for structure VectorCoefs
+        # There are no monopoles for structure VectorCoefs
         vec1[0] = 0
         vec2[0] = 0
 
@@ -629,8 +625,8 @@ class VectorCoefs(object):
         """The number of modes in the structure"""
         N = self.nmax + 1;
         NC = N + self.mmax * (2 * N - self.mmax - 1);
-        assert NC  == len(self.scoef1._vec)
-        assert NC  == len(self.scoef2._vec)
+        assert NC == len(self.scoef1._vec)
+        assert NC == len(self.scoef2._vec)
         return N
 
     def _array_2d_repr(self):
@@ -747,7 +743,7 @@ class VectorCoefs(object):
                     new_mmax = self.mmax
                 else:
                     new_mmax = new_nmax
-                return VectorCoefs(self.scoef1[0:new_nmax, :]._vec, 
+                return VectorCoefs(self.scoef1[0:new_nmax, :]._vec,
                                    self.scoef2[0:new_nmax, :]._vec,
                                    new_nmax, new_mmax)
             else:
@@ -1455,7 +1451,7 @@ def random_coefs(nmax, mmax, mu=0.0, sigma=1.0, coef_type=scalar):
         vec2[0] = 0
         return  VectorCoefs(vec1, vec2, nmax, mmax)
     else:
-        raise SpherePyError(err_msg['ukn_coef_t'])
+        raise TypeError(err_msg['ukn_coef_t'])
 
 def zeros_patt_uniform(nrows, ncols, patt_type=scalar):
     """Returns a ScalarPatternUniform object or a VectorPatternUniform object
@@ -1706,7 +1702,7 @@ def double_sphere(cdata, sym):
 def _tiny_rep(c):
     sr = "{0:.2}".format(c)
     if sr[0] == '(':
-        sr =  sr[1:-1]
+        sr = sr[1:-1]
     return sr
 
 def pretty_coefs(c):
@@ -1735,8 +1731,7 @@ def pretty_coefs(c):
 
     """
 
-    sa = []
-    cfit = c[0:2,:]
+    cfit = c[0:2, :]
     cvec = cfit._vec
 
     sa = [_tiny_rep(val) for val in cvec]
@@ -1746,12 +1741,12 @@ def pretty_coefs(c):
 
     sa = [sa[n].center(13) for n in range(0, 9)]
 
-    print(pretty_display_string.format(sa[0],sa[1],sa[2],
-                                       sa[3],sa[4],sa[5],
-                                       sa[6],sa[7],sa[8]))
+    print(pretty_display_string.format(sa[0], sa[1], sa[2],
+                                       sa[3], sa[4], sa[5],
+                                       sa[6], sa[7], sa[8]))
 
 
-def spht(ssphere, nmax = None, mmax = None):
+def spht(ssphere, nmax=None, mmax=None):
     """Transforms ScalarPatternUniform object *ssphere* into a set of scalar
     spherical harmonics stored in ScalarCoefs.
 
@@ -1822,7 +1817,7 @@ def spht(ssphere, nmax = None, mmax = None):
                                 
     return ScalarCoefs(sc, nmax, mmax)
 
-def vspht(vsphere, nmax = None, mmax = None):
+def vspht(vsphere, nmax=None, mmax=None):
     """Returns a VectorCoefs object containt the vector spherical harmonic
     coefficients of the VectorPatternUniform object"""
     
@@ -1862,7 +1857,7 @@ def vspht(vsphere, nmax = None, mmax = None):
     ftmp = np.copy(ft_extended)
     ptmp = np.copy(pt_extended)
     Lf1 = ops.sinLdot_fc(ft_extended, pt_extended)
-    Lf2 = ops.sinLdot_fc(-1j*ptmp, 1j*ftmp)
+    Lf2 = ops.sinLdot_fc(-1j * ptmp, 1j * ftmp)
     
     # check if we are using c extended versions of the code or not
     if use_cext: 
@@ -1878,7 +1873,7 @@ def vspht(vsphere, nmax = None, mmax = None):
 
     vcoefs = VectorCoefs(sc1, sc2, nmax, mmax)
 
-    nvec = np.zeros(nmax + 1, dtype = np.complex128)
+    nvec = np.zeros(nmax + 1, dtype=np.complex128)
 
     for n in xrange(1, nmax + 1):
         nvec[n] = 1.0 / np.sqrt(n * (n + 1.0))
@@ -1925,7 +1920,7 @@ def spht_slow(ssphere, nmax, mmax):
     ncols = ssphere._dsphere.shape[1]
 
     if np.mod(nrows, 2) == 1 or np.mod(ncols, 2) == 1:
-        raise SpherePyError(err_msg['ncols_even'])
+        raise ValueError(err_msg['ncols_even'])
 
     fdata = np.fft.fft2(ssphere._dsphere) / (nrows * ncols)
     ops.fix_even_row_data_fc(fdata)
@@ -1940,7 +1935,7 @@ def spht_slow(ssphere, nmax, mmax):
                                 
     return ScalarCoefs(sc, nmax, mmax)
 
-def ispht(scoefs, nrows = None, ncols = None):
+def ispht(scoefs, nrows=None, ncols=None):
     """Transforms ScalarCoefs object *scoefs* into a scalar pattern 
     ScalarPatternUniform.
 
@@ -2001,7 +1996,7 @@ def ispht(scoefs, nrows = None, ncols = None):
 
     return ScalarPatternUniform(ds, doublesphere=True)
 
-def vispht(vcoefs, nrows = None, ncols = None):
+def vispht(vcoefs, nrows=None, ncols=None):
 
 
 
@@ -2023,7 +2018,7 @@ def vispht(vcoefs, nrows = None, ncols = None):
     if np.mod(ncols, 2) == 1:
         raise ValueError(err_msg['ncols_even'])
 
-    nvec = np.zeros(vcoefs.nmax + 1, dtype = np.complex128)
+    nvec = np.zeros(vcoefs.nmax + 1, dtype=np.complex128)
     for n in xrange(1, vcoefs.nmax + 1):
         nvec[n] = 1.0 / np.sqrt(n * (n + 1.0))
 

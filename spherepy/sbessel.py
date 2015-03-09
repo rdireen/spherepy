@@ -32,9 +32,9 @@ from __future__ import absolute_import
 #---------------------------------------------------------------------3rd Party
 import numpy as np
 
-#TODO: Change all xrange instances to range
-#and do a 'from six.moves import range' here
-from six.moves import xrange
+# TODO: Change all xrange instances to range
+# and do a 'from six.moves import range' here
+from six.moves import xrange  # @UnresolvedImport
 
 #==============================================================================
 # Routines

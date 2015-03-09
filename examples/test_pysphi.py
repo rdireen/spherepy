@@ -17,7 +17,7 @@
 
 #TODO: Change all xrange instances to range
 #and do a 'from six.moves import range' here
-from six.moves import xrange
+from six.moves import xrange # @UnresolvedImport
 
 
 import spherepy as sp

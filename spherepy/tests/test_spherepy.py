@@ -28,9 +28,9 @@ from unittest import TestCase
 import spherepy as sp
 import numpy as np
 
-#TODO: Change all xrange instances to range
-#and do a 'from six.moves import range' here
-from six.moves import xrange
+# TODO: Change all xrange instances to range
+# and do a 'from six.moves import range' here
+from six.moves import xrange  # @UnresolvedImport
 
 
 
@@ -40,10 +40,10 @@ class TestSBessel(TestCase):
     def test_misc_excercise(self):
         """:: Just exercise routines I know work"""
 
-        a = sp.sbesselh1(1.0, 3)
-        a = sp.sbesselh2(1.0, 3)
-        a = sp.sbesselj_array([1.0, 2.0], 3)
-        a = sp.sbessely_array([1.0, 2.0], 3)
+        _ = sp.sbesselh1(1.0, 3)
+        _ = sp.sbesselh2(1.0, 3)
+        _ = sp.sbesselj_array([1.0, 2.0], 3)
+        _ = sp.sbessely_array([1.0, 2.0], 3)
 
         self.assertTrue(True)
 
@@ -133,7 +133,7 @@ class TestScalarSphericalTransform(TestCase):
             for m in xrange(-n, n + 1):
                 rnd1 = np.random.normal(0, 10)
                 rnd2 = np.random.normal(0, 10)
-                vc = sp.zeros_coefs(15, 15, coef_type = sp.vector)
+                vc = sp.zeros_coefs(15, 15, coef_type=sp.vector)
                 vc[n, m] = (rnd1, rnd2)
                 p = sp.vispht(vc, 50, 50)
                 vc2 = sp.vspht(p, 15, 15)
@@ -153,7 +153,7 @@ class TestScalarSphericalTransform(TestCase):
         c2 = sp.spht(p, 100, 100)
 
         res = True
-        if (sp.L2_coef(c - c2) / sp.L2_coef(c))  > 1e-13:
+        if (sp.L2_coef(c - c2) / sp.L2_coef(c)) > 1e-13:
             res = False
             
         self.assertTrue(res)
@@ -162,13 +162,13 @@ class TestScalarSphericalTransform(TestCase):
         """::Generate 100 random modes and test both vspht and vispht.
         """
 
-        c = sp.random_coefs(100, 100, coef_type = sp.vector)
+        c = sp.random_coefs(100, 100, coef_type=sp.vector)
         p = sp.vispht(c, 202, 202)
 
         c2 = sp.vspht(p, 100, 100)
 
         res = True
-        if (sp.L2_coef(c - c2) / sp.L2_coef(c))  > 1e-13:
+        if (sp.L2_coef(c - c2) / sp.L2_coef(c)) > 1e-13:
             res = False
             
         self.assertTrue(res)
@@ -181,7 +181,7 @@ class TestScalarSphericalTransform(TestCase):
         c2 = sp.spht(p)
 
         res = True
-        if (sp.L2_coef(c - c2) / sp.L2_coef(c))  > 1e-13:
+        if (sp.L2_coef(c - c2) / sp.L2_coef(c)) > 1e-13:
             res = False
             
         self.assertTrue(res)
@@ -191,10 +191,10 @@ class TestScalarSphericalTransform(TestCase):
         """
         c = sp.random_coefs(100, 100)
         p = sp.ispht(c)
-        c2 = sp.spht(p,5)
+        c2 = sp.spht(p, 5)
 
         res = True
-        if (sp.L2_coef(c[0:5,:] - c2) / sp.L2_coef(c[0:5,:]))  > 1e-13:
+        if (sp.L2_coef(c[0:5, :] - c2) / sp.L2_coef(c[0:5, :])) > 1e-13:
             res = False
             
         self.assertTrue(res)
@@ -204,24 +204,24 @@ class TestScalarSphericalTransform(TestCase):
         """
         c = sp.random_coefs(100, 100)
         with self.assertRaises(ValueError):
-            p = sp.ispht(c,100,204)
+            _ = sp.ispht(c, 100, 204)
 
     def test_ispht_size_error2(self):
         """::Test ispht error when ncols is too small.
         """
         c = sp.random_coefs(100, 100)
         with self.assertRaises(ValueError):
-            p = sp.ispht(c,104,198)
+            _ = sp.ispht(c, 104, 198)
 
     def test_vspht_vispht_no_added_args(self):
         """::Test spht and ispht when nmax, mmax, nrows, ncols are not passed.
         """
-        c = sp.random_coefs(100, 100, coef_type = sp.vector)
+        c = sp.random_coefs(100, 100, coef_type=sp.vector)
         p = sp.vispht(c)
         c2 = sp.vspht(p)
 
         res = True
-        if (sp.L2_coef(c - c2) / sp.L2_coef(c))  > 1e-13:
+        if (sp.L2_coef(c - c2) / sp.L2_coef(c)) > 1e-13:
             res = False
             
         self.assertTrue(res)
@@ -229,12 +229,12 @@ class TestScalarSphericalTransform(TestCase):
     def test_vspht_vispht_one_added_args(self):
         """::Test vspht when only nmax is passed.
         """
-        c = sp.random_coefs(100, 100, coef_type = sp.vector)
+        c = sp.random_coefs(100, 100, coef_type=sp.vector)
         p = sp.vispht(c)
-        c2 = sp.vspht(p,5)
+        c2 = sp.vspht(p, 5)
 
         res = True
-        if (sp.L2_coef(c[0:5,:] - c2) / sp.L2_coef(c[0:5,:]))  > 1e-13:
+        if (sp.L2_coef(c[0:5, :] - c2) / sp.L2_coef(c[0:5, :])) > 1e-13:
             res = False
             
         self.assertTrue(res)
@@ -242,16 +242,16 @@ class TestScalarSphericalTransform(TestCase):
     def test_vispht_size_error1(self):
         """::Test ispht error when nrows is too small.
         """
-        c = sp.random_coefs(100, 100, coef_type = sp.vector)
+        c = sp.random_coefs(100, 100, coef_type=sp.vector)
         with self.assertRaises(ValueError):
-            p = sp.vispht(c,100,204)
+            _ = sp.vispht(c, 100, 204)
 
     def test_vispht_size_error2(self):
         """::Test ispht error when ncols is too small.
         """
-        c = sp.random_coefs(100, 100, coef_type = sp.vector)
+        c = sp.random_coefs(100, 100, coef_type=sp.vector)
         with self.assertRaises(ValueError):
-            p = sp.vispht(c,104,198)
+            _ = sp.vispht(c, 104, 198)
 
                     
         

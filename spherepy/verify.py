@@ -38,13 +38,12 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 #---------------------------------------------------------------------3rd Party
-import sys
 import spherepy as sp
 import numpy as np
 
-#TODO: Change all xrange instances to range
-#and do a 'from six.moves import range' here
-from six.moves import xrange
+# TODO: Change all xrange instances to range
+# and do a 'from six.moves import range' here
+from six.moves import xrange  # @UnresolvedImport
 
 import spherepy.file as fl
 
@@ -52,11 +51,11 @@ def verify_spht(pattfile, scoeffile):
 
     fpatt = fl.load_patt(pattfile)
     fsc = fl.load_coef(scoeffile)
-    sc = sp.spht(fpatt,fsc.nmax,fsc.mmax)
+    sc = sp.spht(fpatt, fsc.nmax, fsc.mmax)
 
     diff = fsc - sc
     
-    return (sp.L2_coef(diff) ,sp.LInf_coef(diff),
+    return (sp.L2_coef(diff) , sp.LInf_coef(diff),
             sp.L2_coef(diff) / sp.L2_coef(fsc),
             sp.LInf_coef(diff) / sp.LInf_coef(fsc))
 
@@ -64,11 +63,11 @@ def verify_ispht(pattfile, scoeffile):
     
     fsc = fl.load_coef(scoeffile)
     fpatt = fl.load_patt(pattfile)
-    patt = sp.ispht(fsc,fpatt.nrows,fpatt.ncols)
+    patt = sp.ispht(fsc, fpatt.nrows, fpatt.ncols)
 
     diff = fpatt - patt
 
-    return (sp.L2_patt(diff),sp.LInf_patt(diff),
+    return (sp.L2_patt(diff), sp.LInf_patt(diff),
             sp.L2_patt(diff) / sp.L2_patt(fpatt),
             sp.LInf_patt(diff) / sp.LInf_patt(fpatt))
 
@@ -76,8 +75,8 @@ def verify_fdata(fdatafile, scoeffile):
 
     fsc = fl.load_coef(scoeffile)
     fdata = fl.load_fdata(fdatafile)
-    ffdata = np.zeros([fdata.shape[0], fdata.shape[1]],dtype = np.complex128)
-    sp.csphi.sc_to_fc(ffdata,fsc._vec,fsc.nmax,fsc.mmax)
+    ffdata = np.zeros([fdata.shape[0], fdata.shape[1]], dtype=np.complex128)
+    sp.csphi.sc_to_fc(ffdata, fsc._vec, fsc.nmax, fsc.mmax)
 
     diff = np.abs(fdata - ffdata)
     return np.max(diff)
@@ -89,9 +88,9 @@ def verify_vspht(pattf1, pattf2, scoeff1, scoeff2):
     fsc1 = fl.load_coef(scoeff1)
     fsc2 = fl.load_coef(scoeff2)
 
-    vfsc = sp.VectorCoefs(fsc1._vec,fsc2._vec,fsc1.nmax,fsc1.mmax)
+    vfsc = sp.VectorCoefs(fsc1._vec, fsc2._vec, fsc1.nmax, fsc1.mmax)
 
-    vsc = sp.vspht(vfpatt,fsc1.nmax,fsc1.mmax)
+    vsc = sp.vspht(vfpatt, fsc1.nmax, fsc1.mmax)
 
     diff = vfsc - vsc
     
@@ -106,9 +105,9 @@ def verify_vispht(pattf1, pattf2, scoeff1, scoeff2):
     fsc1 = fl.load_coef(scoeff1)
     fsc2 = fl.load_coef(scoeff2)
 
-    vfsc = sp.VectorCoefs(fsc1._vec,fsc2._vec,fsc1.nmax,fsc1.mmax)
+    vfsc = sp.VectorCoefs(fsc1._vec, fsc2._vec, fsc1.nmax, fsc1.mmax)
 
-    vpatt = sp.vispht(vfsc,vfpatt.nrows,vfpatt.ncols)
+    vpatt = sp.vispht(vfsc, vfpatt.nrows, vfpatt.ncols)
 
     diff = vfpatt - vpatt
     

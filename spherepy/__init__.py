@@ -39,9 +39,9 @@ __author__ = _info['author']
 __use_cext__ = _info['use_cext']
 
 
-#Import matplotlib plotting if it has been installed
+# Import matplotlib plotting if it has been installed
 try:
-    #Python3x
+    # Python3x
     from spherepy.plot_sphere import *
 except ImportError:
     pass

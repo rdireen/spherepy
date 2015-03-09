@@ -34,16 +34,12 @@ from __future__ import absolute_import
 #---------------------------------------------------------------------3rd Party
 import numpy as np
 
-#TODO: Change all xrange instances to range
-#and do a 'from six.moves import range' here
-from six.moves import xrange
+# TODO: Change all xrange instances to range
+# and do a 'from six.moves import range' here
+from six.moves import xrange  # @UnresolvedImport
 
 #------------------------------------------------------------------------Custom
 import spherepy as sp
-
-#TODO: Change all xrange instances to range
-#and do a 'from six.moves import range' here
-from six.moves import xrange
 
 def save_patt(patt, filename):
     """Saves ScalarPatternUniform object 'patt' to file. The first line of the 
@@ -65,11 +61,11 @@ def save_patt(patt, filename):
     ar = patt.array
 
     with open(filename, 'w') as f: 
-        f.write("{0},{1}\n".format(nrows,ncols))
-        for nr in xrange(0,nrows):
-            for nc in xrange(0,ncols):
-                f.write(frmstr.format(nr,nc,ar[nr,nc].real,
-                                            ar[nr,nc].imag))
+        f.write("{0},{1}\n".format(nrows, ncols))
+        for nr in xrange(0, nrows):
+            for nc in xrange(0, ncols):
+                f.write(frmstr.format(nr, nc, ar[nr, nc].real,
+                                            ar[nr, nc].imag))
     
 
 def save_coef(scoef, filename):
@@ -88,11 +84,11 @@ def save_coef(scoef, filename):
 
     frmstr = "{0:.16e},{1:.16e}\n"
 
-    L = (nmax+1) + mmax*(2*nmax-mmax+1);
+    L = (nmax + 1) + mmax * (2 * nmax - mmax + 1);
 
     with open(filename, 'w') as f: 
-        f.write("{0},{1}\n".format(nmax,mmax))
-        for n in xrange(0,L):
+        f.write("{0},{1}\n".format(nmax, mmax))
+        for n in xrange(0, L):
             f.write(frmstr.format(scoef._vec[n].real,
                                   scoef._vec[n].imag))
 
@@ -105,8 +101,8 @@ def load_patt(filename):
 
         lst = lines[0].split(',')
 
-        patt = np.zeros([int(lst[0]),int(lst[1])],
-                        dtype = np.complex128)
+        patt = np.zeros([int(lst[0]), int(lst[1])],
+                        dtype=np.complex128)
 
         lines.pop(0)
 
@@ -116,9 +112,9 @@ def load_patt(filename):
             m = int(lst[1])
             re = float(lst[2])
             im = float(lst[3])
-            patt[n,m] = re + 1j * im
+            patt[n, m] = re + 1j * im
 
-    return sp.ScalarPatternUniform(patt, doublesphere = False)
+    return sp.ScalarPatternUniform(patt, doublesphere=False)
 
 def load_vpatt(filename1, filename2):
     """Loads a VectorPatternUniform pattern that is saved between two files.
@@ -129,8 +125,8 @@ def load_vpatt(filename1, filename2):
 
         lst = lines[0].split(',')
 
-        patt1 = np.zeros([int(lst[0]),int(lst[1])],
-                        dtype = np.complex128)
+        patt1 = np.zeros([int(lst[0]), int(lst[1])],
+                        dtype=np.complex128)
 
         lines.pop(0)
 
@@ -140,15 +136,15 @@ def load_vpatt(filename1, filename2):
             m = int(lst[1])
             re = float(lst[2])
             im = float(lst[3])
-            patt1[n,m] = re + 1j * im
+            patt1[n, m] = re + 1j * im
 
     with open(filename2) as f: 
         lines2 = f.readlines()
 
         lst = lines2[0].split(',')
 
-        patt2 = np.zeros([int(lst[0]),int(lst[1])],
-                        dtype = np.complex128)
+        patt2 = np.zeros([int(lst[0]), int(lst[1])],
+                        dtype=np.complex128)
 
         lines2.pop(0)
 
@@ -158,7 +154,7 @@ def load_vpatt(filename1, filename2):
             m = int(lst[1])
             re = float(lst[2])
             im = float(lst[3])
-            patt2[n,m] = re + 1j * im
+            patt2[n, m] = re + 1j * im
 
     return sp.VectorPatternUniform(patt1, patt2)
 
@@ -169,8 +165,8 @@ def load_fdata(filename):
 
         lst = lines[0].split(',')
 
-        patt = np.zeros([int(lst[0]),int(lst[1])],
-                        dtype = np.complex128)
+        patt = np.zeros([int(lst[0]), int(lst[1])],
+                        dtype=np.complex128)
 
         lines.pop(0)
 
@@ -180,9 +176,9 @@ def load_fdata(filename):
             m = int(lst[1])
             re = float(lst[2])
             im = float(lst[3])
-            patt[n,m] = re + 1j * im
+            patt[n, m] = re + 1j * im
 
-    return np.array(patt, dtype = np.complex128)
+    return np.array(patt, dtype=np.complex128)
 
 def load_coef(filename):
     """Loads a file that was saved with save_coef."""
@@ -195,13 +191,13 @@ def load_coef(filename):
         nmax = int(lst[0])
         mmax = int(lst[1])
 
-        L = (nmax+1) + mmax*(2*nmax-mmax+1);
+        L = (nmax + 1) + mmax * (2 * nmax - mmax + 1);
 
-        vec = np.zeros(L,dtype = np.complex128)
+        vec = np.zeros(L, dtype=np.complex128)
    
         lines.pop(0)
 
-        for n,line in enumerate(lines):
+        for n, line in enumerate(lines):
             lst = line.split(',')
             re = float(lst[0])
             im = float(lst[1])

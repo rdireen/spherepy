@@ -20,7 +20,7 @@ import profile
 
 #TODO: Change all xrange instances to range
 #and do a 'from six.moves import range' here
-from six.moves import xrange
+from six.moves import xrange # @UnresolvedImport
 
 c = sp.random_coefs(500, 498)
 

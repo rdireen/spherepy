@@ -37,9 +37,9 @@ from __future__ import absolute_import
 #---------------------------------------------------------------------3rd Party
 import numpy as np
 
-#TODO: Change all xrange instances to range
-#and do a 'from six.moves import range' here
-from six.moves import xrange
+# TODO: Change all xrange instances to range
+# and do a 'from six.moves import range' here
+from six.moves import xrange  # @UnresolvedImport
 
 #==============================================================================
 # Operators on Fourier Data
@@ -100,10 +100,10 @@ def divsin_fc(fdata):
     nrows = fdata.shape[0]
     ncols = fdata.shape[1]
 
-    L = int(nrows / 2) # Assuming nrows is even, which it should be.
-    L2 = L - 2 # This is the last index in the recursion for division by sine.
+    L = int(nrows / 2)  # Assuming nrows is even, which it should be.
+    L2 = L - 2  # This is the last index in the recursion for division by sine.
     
-    g = np.zeros([nrows, ncols], dtype = np.complex128)
+    g = np.zeros([nrows, ncols], dtype=np.complex128)
     g[L2, :] = 2 * 1j * fdata[L - 1, :]
 
     for k in xrange(L2, -L2, -1):
@@ -116,18 +116,18 @@ def dtheta_fc(fdata):
     
     nrows = fdata.shape[0]
     ncols = fdata.shape[1]
-    B = int(nrows / 2) #As always, we assume nrows and ncols are even
+    B = int(nrows / 2)  # As always, we assume nrows and ncols are even
     
-    a = list(range(0,B))
-    ap = list(range(-B,0))
+    a = list(range(0, B))
+    ap = list(range(-B, 0))
     a.extend(ap)
     
-    dtheta = np.zeros([nrows,ncols],np.complex128)
+    dtheta = np.zeros([nrows, ncols], np.complex128)
     
-    for k in xrange(0,ncols):
-        dtheta[:,k] = a
+    for k in xrange(0, ncols):
+        dtheta[:, k] = a
         
-    fdata[:,:] = 1j*dtheta * fdata
+    fdata[:, :] = 1j * dtheta * fdata
     
 
 def dphi_fc(fdata):
@@ -136,20 +136,20 @@ def dphi_fc(fdata):
     nrows = fdata.shape[0]
     ncols = fdata.shape[1]
     
-    B= int(ncols / 2) #As always, we assume nrows and ncols are even
+    B = int(ncols / 2)  # As always, we assume nrows and ncols are even
     
-    a = list(range(0,int(B)))
-    ap = list(range(-int(B),0))
+    a = list(range(0, int(B)))
+    ap = list(range(-int(B), 0))
     a.extend(ap)
     
-    dphi = np.zeros([nrows,ncols],np.complex128)
+    dphi = np.zeros([nrows, ncols], np.complex128)
     
-    for k in xrange(0,nrows):
-        dphi[k,:] = a
+    for k in xrange(0, nrows):
+        dphi[k, :] = a
         
-    fdata[:,:] = 1j*dphi * fdata
+    fdata[:, :] = 1j * dphi * fdata
     
-def sinLdot_fc(tfdata,pfdata):
+def sinLdot_fc(tfdata, pfdata):
     """Apply sin of theta times the L operator to the data in the Fourier 
     domain."""
     
@@ -158,7 +158,7 @@ def sinLdot_fc(tfdata,pfdata):
     sin_fc(pfdata)
     dtheta_fc(pfdata)
     
-    return 1j*(tfdata - pfdata)
+    return 1j * (tfdata - pfdata)
 
 def L_fc(fdata):
     """Apply L in the Fourier domain."""
@@ -170,7 +170,7 @@ def L_fc(fdata):
 
     dtheta_fc(fd)
 
-    return (1j * fdata, - 1j * fd)
+    return (1j * fdata, -1j * fd)
 
 
 
