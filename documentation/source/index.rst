@@ -4,10 +4,9 @@
    contain the root `toctree` directive.
  
 
-**********************
 
 
-.. image:: images/logo_spherepy2.png
+.. image:: images/logo_spherepy3.png
    :height: 200px
    :align: right
    
