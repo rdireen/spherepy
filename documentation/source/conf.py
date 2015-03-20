@@ -67,7 +67,7 @@ copyright = u'2015, Randy Direen, James Direen'
 # built documents.
 #
 # The short X.Y version.
-version = '0.1'
+version = '0.0'
 # The full version, including alpha/beta/rc tags.
 release = '0.0.7'
 
@@ -115,6 +115,7 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #html_theme = 'default'
+
 
 html_theme = 'bootstrap'
 html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()

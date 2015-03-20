@@ -7,7 +7,7 @@
 **********************
 
 
-.. image:: images/logo_spherepy.png
+.. image:: images/logo_spherepy2.png
    :height: 200px
    :align: right
    
@@ -15,12 +15,6 @@
    
 SpherePy
 ********
-
-.. warning:: 
-
-   In mega alpha mode. Please fork this on GitHub (`spherepy <http://github.com/rdireen/spherepy>`_)
-   and help me. 
-
 
 **Jump straight to** :doc:`GettingStarted` **or the** :ref:`ref-toc`
 
