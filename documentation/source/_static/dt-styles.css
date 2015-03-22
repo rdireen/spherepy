@@ -1,3 +1,18 @@
-#sidebar {
+.bs-sidenav {
 	background-color: #E4EBF5;
+}
+
+.bs-sidenav .nav > li > a:hover,
+.bs-sidenav .nav > li > a:focus {
+  text-decoration: none;
+  background-color: #eef3f9;
+  border-right: 1px solid #dbd8e0;
+}
+.bs-sidenav .nav > .active > a,
+.bs-sidenav .nav > .active:hover > a,
+.bs-sidenav .nav > .active:focus > a {
+  font-weight: bold;
+  color: #563d7c;
+  background-color: transparent;
+  border-right: 1px solid #563d7c;
 }

@@ -2,9 +2,8 @@
    sphinx-quickstart on Sat Feb  7 21:35:42 2015.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
- 
 
-
+   
 
 .. image:: images/logo_spherepy3.png
    :height: 200px
