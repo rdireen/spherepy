@@ -16,3 +16,13 @@
   background-color: transparent;
   border-right: 1px solid #563d7c;
 }
+
+body {
+	background-image: url("../_images/bg.jpg");
+
+}
+
+.col-md-9 {
+	background-color: #FFFFFF;
+	
+}
