@@ -33,7 +33,7 @@ environment:
 cache:
   # I keep pre-built python wheels in this tmp folder so that I don't 
   # compile them each session. (This is where I put the numpy wheels.)
-  # The file install_numpy.ps1 has been set as a cach item dependency,
+  # The file install_numpy.ps1 has been set as a cache item dependency,
   # numpy will be rebuilt.
   - C:\tmp -> \appveyor\install_numpy.ps1
  
