@@ -602,8 +602,8 @@ class VectorCoefs(object):
             raise ValueError(err_msg['vcoef_size'])
 
         # There are no monopoles for structure VectorCoefs
-        vec1[0] = 0
-        vec2[0] = 0
+        vec1[0] = 0 + 1j*0
+        vec2[0] = 0 + 1j*0
 
         self.scoef1 = ScalarCoefs(vec1, nmax, mmax)
         self.scoef2 = ScalarCoefs(vec2, nmax, mmax)
@@ -627,7 +627,19 @@ class VectorCoefs(object):
         NC = N + self.mmax * (2 * N - self.mmax - 1);
         assert NC == len(self.scoef1._vec)
         assert NC == len(self.scoef2._vec)
-        return N
+        return NC
+
+    def copy(self):
+        """Make a deep copy of this object.
+        
+        Example::
+
+            >>> c2 = c.copy()
+        
+        """
+        vec1 = np.copy(self.scoef1._vec)
+        vec2 = np.copy(self.scoef2._vec)
+        return VectorCoefs(vec1, vec2, self.nmax, self.mmax)
 
     def _array_2d_repr(self):
         """creates a 2D array that has nmax + 1 rows and 2*mmax + 1 columns
@@ -1107,7 +1119,7 @@ class ScalarPatternUniform(object):
 class ScalarPatternNonUniform:
     pass
 
-class VectorPatternUniform:
+class TransversePatternUniform:
     
     def __init__(self, tcdata, pcdata, doublesphere=False):
         
@@ -1202,9 +1214,9 @@ class VectorPatternUniform:
         the left"""
         @wraps(func)
         def verif(self, patt):
-            if isinstance(patt, VectorPatternUniform):
+            if isinstance(patt, TransversePatternUniform):
                 if self._tdsphere.shape == patt._tdsphere.shape:
-                    return VectorPatternUniform(func(self, self._tdsphere,
+                    return TransversePatternUniform(func(self, self._tdsphere,
                                                      patt._tdsphere),
                                                 func(self, self._pdsphere,
                                                      patt._pdsphere),
@@ -1215,7 +1227,7 @@ class VectorPatternUniform:
                                             patt.nrows, patt.ncols))
         
             elif isinstance(patt, numbers.Number):
-                return VectorPatternUniform(func(self, self._tdsphere, patt),
+                return TransversePatternUniform(func(self, self._tdsphere, patt),
                                             func(self, self._pdsphere, patt),
                                             doublesphere=True)
             else:
@@ -1228,7 +1240,7 @@ class VectorPatternUniform:
         @wraps(func)
         def verif(self, patt):
             if isinstance(patt, numbers.Number):
-                return VectorPatternUniform(func(self, self._tdsphere, patt),
+                return TransversePatternUniform(func(self, self._tdsphere, patt),
                                             func(self, self._pdsphere, patt),
                                             doublesphere=True)
             else:
@@ -1296,7 +1308,7 @@ class VectorPatternUniform:
             return b / a    
 
 
-class VectorPatternNonUniform:
+class TransversePatternNonUniform:
     pass
 
 #==============================================================================
@@ -1498,7 +1510,7 @@ def zeros_patt_uniform(nrows, ncols, patt_type=scalar):
     elif(patt_type == vector):
         tcdata = np.zeros((2 * nrows - 2, ncols), dtype=np.complex128)
         pcdata = np.zeros((2 * nrows - 2, ncols), dtype=np.complex128)
-        return VectorPatternUniform(tcdata, pcdata, doublesphere=True)
+        return TransversePatternUniform(tcdata, pcdata, doublesphere=True)
 
     else:
         raise TypeError(err_msg['ukn_patt_t'])
@@ -1548,7 +1560,7 @@ def ones_patt_uniform(nrows, ncols, patt_type=scalar):
     elif(patt_type == vector):
         tcdata = np.ones((2 * nrows - 2, ncols), dtype=np.complex128)
         pcdata = np.ones((2 * nrows - 2, ncols), dtype=np.complex128)
-        return VectorPatternUniform(tcdata, pcdata, doublesphere=True)
+        return TransversePatternUniform(tcdata, pcdata, doublesphere=True)
 
     else:
         raise TypeError(err_msg['ukn_patt_t'])
@@ -1603,7 +1615,7 @@ def random_patt_uniform(nrows, ncols, patt_type=scalar):
               1j * np.random.normal(0.0, 1.0, nrows * ncols)
         vec2 = np.random.normal(0.0, 1.0, nrows * ncols) + \
               1j * np.random.normal(0.0, 1.0, nrows * ncols)
-        return VectorPatternUniform(vec1.reshape((nrows, ncols)),
+        return TransversePatternUniform(vec1.reshape((nrows, ncols)),
                                     vec2.reshape((nrows, ncols)),
                                     doublesphere=False)
 
@@ -1624,7 +1636,7 @@ def array(patt):
 
     if isinstance(patt, ScalarPatternUniform):
         return patt.array
-    elif isinstance(patt, VectorPatternUniform):
+    elif isinstance(patt, TransversePatternUniform):
         return patt.array
     else:
         raise TypeError(err_msg['uknown_typ'])
@@ -1642,7 +1654,7 @@ def mag2(sobj):
         return np.abs(sobj.array) ** 2
     elif isinstance(sobj, ScalarCoefs):
         return ScalarCoefs(np.abs(sobj._vec), sobj.nmax, sobj.mmax)
-    elif isinstance(sobj, VectorPatternUniform):
+    elif isinstance(sobj, TransversePatternUniform):
         return np.abs(sobj.theta) ** 2 + np.abs(sobj.phi) ** 2
     elif isinstance(sobj, VectorCoefs):
         return ScalarCoefs(np.abs(sobj.scoef1._vec) ** 2 + \
@@ -1656,7 +1668,7 @@ def mag(sobj):
         return np.abs(sobj.array)
     elif isinstance(sobj, ScalarCoefs):
         return ScalarCoefs(np.abs(sobj._vec), sobj.nmax, sobj.mmax)
-    elif isinstance(sobj, VectorPatternUniform):
+    elif isinstance(sobj, TransversePatternUniform):
         return np.sqrt(mag2(sobj))
     elif isinstance(sobj, VectorCoefs):
         return ScalarCoefs(np.sqrt(mag2(sobj)._vec),
@@ -1680,6 +1692,19 @@ def continue_sphere(cdata, sym):
 
 
 def double_sphere(cdata, sym):
+    """ Ensures that the data within cdata has double sphere symmetry.
+
+    Example::
+
+        >>> spherepy.doublesphere(cdata, 1)
+
+    Args:
+        sym (int): is 1 for scalar data and -1 for vector data
+
+    Returns:
+        numpy.array([*,*], dtype=np.complex128) containing array with 
+        doublesphere symmetry.
+    """
     
     nrows = cdata.shape[0]
     ncols = cdata.shape[1]
@@ -2054,7 +2079,7 @@ def vispht(vcoefs, nrows=None, ncols=None):
     dtheta = np.fft.ifft2(ftheta) * dnrows * ncols
     dphi = np.fft.ifft2(fphi) * dnrows * ncols
 
-    return VectorPatternUniform(dtheta, dphi, doublesphere=True)
+    return TransversePatternUniform(dtheta, dphi, doublesphere=True)
 
 def ispht_slow(scoefs, nrows, ncols):
     """(PURE PYTHON) Transforms ScalarCoefs object *scoefs* into a scalar
@@ -2112,7 +2137,7 @@ def L2_patt(patt):
 
     if isinstance(patt, ScalarPatternUniform):
         return np.sqrt(np.sum(np.abs(patt._dsphere) ** 2))
-    elif isinstance(patt, VectorPatternUniform):
+    elif isinstance(patt, TransversePatternUniform):
         l1 = np.sqrt(np.sum(np.abs(patt._tdsphere) ** 2))
         l2 = np.sqrt(np.sum(np.abs(patt._pdsphere) ** 2))
         return np.sqrt(l1 ** 2 + l2 ** 2)
@@ -2123,14 +2148,14 @@ def LInf_coef(coef):
         return np.max(np.abs(coef._vec))
     elif isinstance(coef, VectorCoefs):
         l1 = np.max(np.abs(coef.scoef1._vec))
-        l2 = np.max(np.abs(coef.scoef1._vec))
+        l2 = np.max(np.abs(coef.scoef2._vec))
         return np.sqrt(l1 ** 2 + l2 ** 2)
     
 def LInf_patt(patt):
 
     if isinstance(patt, ScalarPatternUniform):
         return np.amax(np.abs(patt._dsphere))
-    elif isinstance(patt, VectorPatternUniform):
+    elif isinstance(patt, TransversePatternUniform):
         l1 = np.amax(np.abs(patt._tdsphere))
         l2 = np.amax(np.abs(patt._pdsphere))
         return np.sqrt(l1 ** 2 + l2 ** 2)
