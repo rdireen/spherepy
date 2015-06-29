@@ -33,7 +33,6 @@ Badges
 Better Documentation
 --------------------
 
-
 I'm working on a more complete set of documentation 
 [HERE](http://www.direentech.com/docs/spherepy).
 
@@ -95,6 +94,12 @@ sp.pretty_coefs(c)
 p = sp.ispht(c, 50, 50) # inverse spherical transform to pattern
 sp.plot_sphere_mag(p) # plot the magnitude of the pattern
 ```
+
+Credits
+=======
+The algorithms within this package have been implemented, in part, using the documentation within 
+the NIST Interagency/Internal Report (NISTIR) - 3955 [citation](http://www.nist.gov/manuscript-publication-search.cfm?pub_id=1051).
+The majority or the code, however, has been developed using Ronald C. Wittmann's unpublished notes.
 
 Contributing
 ============

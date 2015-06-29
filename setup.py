@@ -82,6 +82,15 @@ csphi_module = Extension('_csphi',
                          include_dirs=['src', numpy_include]
                        )
 
+""" ***IMPORTANT*** note about distutils
+
+package_data is only for binary builds and not source distributions.
+MANIFEST.in is for source and not binary.
+
+So if you want a data file in the binary builds and the source builds
+you have to point to them with package_data AND MANIFEST.in.
+"""
+
 setup(name='spherepy',
       version=__version__,
       author=__author__,
