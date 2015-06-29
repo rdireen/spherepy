@@ -99,3 +99,20 @@ Scalar Routines
 Vector Case
 ===========
 
+.. _fun-scalarcoefs:
+
+*VectorCoefs*
+-------------
+     
+.. autoclass:: spherepy.VectorCoefs
+   :members:
+   :undoc-members:
+ 
+.. _fun-vectorpatt:
+
+*VectorPatternUniform*
+---------------------- 
+
+.. autoclass:: spherepy.VectorPatternUniform
+   :members:
+   :undoc-members:

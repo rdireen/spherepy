@@ -1,4 +1,5 @@
 include COPYING README.md
+include spherepy/pkg_info.json
 include spherepy/tests/*.py
 recursive-include src *
 
