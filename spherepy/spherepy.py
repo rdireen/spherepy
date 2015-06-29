@@ -1167,6 +1167,14 @@ class TransversePatternUniform:
         return self._pdsphere[0:self.nrows, :]
 
     @property
+    def theta_double(self):
+        return self._tdsphere
+
+    @property
+    def phi_double(self):
+        return self._pdsphere
+
+    @property
     def is_symmetric(self):
         """return true if the data is symmetric"""
         if (self.single_val[0] < 1e-13) and (self.single_val[1] < 1e-13):

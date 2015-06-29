@@ -946,7 +946,11 @@ class TestVectorPatternUniform(TestCase):
         # if z1.single_val > 1e-10:
         #   self.assertTrue(False)
 
+        z1 = sp.random_patt_uniform(11, 10, patt_type=sp.vector)
+        mag_calc = z1.theta
+
         self.assertTrue(True)
+
 
     def test_is_symmetric(self):
         """::test single_val method"""
