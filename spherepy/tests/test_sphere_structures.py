@@ -416,6 +416,18 @@ class TestScalarCoefsStructure(TestCase):
         _ = sp.zeros_coefs(10, 10);
         
         self.assertTrue(True)
+
+    def test_scalar_power_spectrum(self):
+        """ test the power spectrum routines
+        """
+
+        c = sp.random_coefs(10, 10)
+        aps = c.angular_power_spectrum()
+        p = c.power()
+
+        msg = "not calculating power spectrum to good enough precision"
+        self.assertAlmostEqual(np.sum(aps), p, places = 10, msg = msg)
+
         
 class TestVectorCoefsStructure(TestCase):
 

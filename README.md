@@ -22,11 +22,11 @@ Badges
 
 **PyPI:**
 
-[![Latest Version](https://pypip.in/version/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
-[![Supported Python versions](https://pypip.in/py_versions/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
-[![Supported Python implementations](https://pypip.in/implementation/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
-[![Development Status](https://pypip.in/status/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
-[![Download format](https://pypip.in/format/spherepy/badge.svg)](https://pypi.python.org/pypi/spherepy/)
+[![Latest Version](https://img.shields.io/pypi/v/spherepy.svg)](https://pypi.python.org/pypi/spherepy/)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/spherepy.svg)](https://pypi.python.org/pypi/spherepy/)
+[![Supported Python implementations](https://img.shields.io/pypi/implementation/spherepy.svg)](https://pypi.python.org/pypi/spherepy/)
+[![Development Status](https://img.shields.io/pypi/status/spherepy.svg)](https://pypi.python.org/pypi/spherepy/)
+[![Download format](https://img.shields.io/pypi/format/spherepy.svg)](https://pypi.python.org/pypi/spherepy/)
 
 
 

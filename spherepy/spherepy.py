@@ -268,6 +268,49 @@ class ScalarCoefs(object):
             self.__setitem__((slce, -m), self.__getitem__((slce, -m)) * vec[m:])
             self.__setitem__((slce, m), self.__getitem__((slce, m)) * vec[m:])
 
+    def angular_power_spectrum(self):
+        """Returns the angular power spectrum for the set of coefficients.
+        That is, we compute
+
+                   n
+            c_n = sum  cnm * conj( cnm )
+                  m=-n 
+
+        Returns:
+          power_spectrum (numpy.array, dtype=double) spectrum as a function of n.
+        """
+
+        # Added this routine as a result of my discussions with Ajinkya Nene	 
+        #https://github.com/anene
+        list_of_modes = self._reshape_m_vecs() 
+        Nmodes = len(list_of_modes)
+
+        angular_power = np.zeros( Nmodes, dtype = np.double)
+
+        for n in range(0, Nmodes):
+            mode = np.array( list_of_modes[n], dtype = np.complex128 )
+            angular_power[n] = np.sum( np.abs(mode) ** 2 )
+            
+        return angular_power 
+
+    def power(self):
+        """ Returns the total power of the spectrum.
+        That is, we compute
+
+                Nmax  n
+            P = sum  sum  cnm * conj( cnm )
+                n=0  m=-n
+
+        Returns:
+           power (float): The total power in the coefficients.
+
+        """
+
+        # Added this routine as a result of my discussions with Ajinkya Nene	
+        #https://github.com/anene
+        return np.sum( np.abs(self._vec) ** 2)
+
+
     def _array_2d_repr(self):
         """creates a 2D array that has nmax + 1 rows and 2*mmax + 1 columns
         and provides a representation for the coefficients that makes 
