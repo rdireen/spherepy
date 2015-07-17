@@ -21,6 +21,12 @@
 Randy Direen
 1/28/2015
 
+Credits:
+The algorithms within this package have been implemented, in part, using the 
+documentation within  the NIST Interagency/Internal Report (NISTIR) - 3955.
+The majority or the code, however, has been developed using 
+Ronald C. Wittmann's unpublished notes.
+
 TODO: Describe how I came to these routines and site Gouchie
 
 """

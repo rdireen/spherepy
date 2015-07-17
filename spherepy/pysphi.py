@@ -27,6 +27,12 @@ These routines are used in the process of calculating the scalar
 spherical harmonic coefficients from spherical pattern information.
 For c versions, see csphi.c in src folder.
 
+Credits:
+The algorithms within this package have been implemented, in part, using the 
+documentation within  the NIST Interagency/Internal Report (NISTIR) - 3955.
+The majority or the code, however, has been developed using 
+Ronald C. Wittmann's unpublished notes.
+
 ***************************************************************************"""
 
 #---------------------------------------------------------------------Built-ins

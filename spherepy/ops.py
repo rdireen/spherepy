@@ -27,6 +27,13 @@ Randy Direen
 These operations are applied to the theta-phi data and the coefficients. They
 are needed for both calculating the scalar and the vector coefficients.
 
+Credits:
+The algorithms within this package have been implemented, in part, using the 
+documentation within  the NIST Interagency/Internal Report (NISTIR) - 3955.
+The majority or the code, however, has been developed using 
+Ronald C. Wittmann's unpublished notes.
+
+
 ***************************************************************************"""
 
 #---------------------------------------------------------------------Built-ins
