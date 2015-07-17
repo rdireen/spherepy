@@ -8,8 +8,8 @@ It provides:
 * objects for algebraically manipulating coefficients
 * the ability to plot coefficients and patterns
 
-Badges
-------
+Metrics
+-------
 
 **AppVeyor:**
 
@@ -28,13 +28,11 @@ Badges
 [![Development Status](https://img.shields.io/pypi/status/spherepy.svg)](https://pypi.python.org/pypi/spherepy/)
 [![Download format](https://img.shields.io/pypi/format/spherepy.svg)](https://pypi.python.org/pypi/spherepy/)
 
-
-
-Better Documentation
---------------------
+Documentation
+-------------
 
 I'm working on a more complete set of documentation 
-[HERE](http://www.direentech.com/docs/spherepy).
+[here](http://www.direentech.com/docs/spherepy).
 
 	
 Install
@@ -97,6 +95,8 @@ sp.plot_sphere_mag(p) # plot the magnitude of the pattern
 
 Credits
 =======
+A list of the [contributors](CONTRIBUTORS.md) to spherepy can be found [here](CONTRIBUTORS.md).
+
 The algorithms within this package have been implemented, in part, using the documentation within 
 the NIST Interagency/Internal Report (NISTIR) - 3955 [citation](http://www.nist.gov/manuscript-publication-search.cfm?pub_id=1051).
 The majority or the code, however, has been developed using Ronald C. Wittmann's unpublished notes.
