@@ -8,5 +8,9 @@ SpherePy Contributors
   
 * **[James Direen](https://github.com/jdireen)**
 
-  * Documentation
+  * Documentation writer
+
+* **[Ajinkya Nene](https://github.com/anene)**
+
+  * Beta Tester
   

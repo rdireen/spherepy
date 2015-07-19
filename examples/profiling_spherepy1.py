@@ -14,8 +14,8 @@ import profile
 #and do a 'from six.moves import range' here
 from six.moves import xrange # @UnresolvedImport
 
-Nmax = 400
 Nrows = 1024
+Nmax = Nrows - 2
 
 ISPHT = 0
 SPHT = 1
@@ -32,7 +32,7 @@ if ctrl == ISPHT:
     profile.run('p = sp.ispht(c,Nrows,Nrows)',sort=1)
 
 if ctrl == SPHT:
-    p = sp.ispht(c, Nrows, Nrows)
+    p = sp.ispht(c, Nrows, 2*Nrows + 2)
     profile.run('c2 = sp.spht(p,Nmax,Nmax)',sort=1)
 
 if ctrl == VISPHT:

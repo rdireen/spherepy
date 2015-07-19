@@ -12,6 +12,7 @@ from six.moves import range
 TEST_YNNM_HDR = False
 TEST_YNUNM_HDR = False
 TEST_YNUNM_HDR_C = False
+TEST_YNUNM_HDR_YNUNM_C = False
 
 if TEST_YNNM_HDR:
     #This will test to see that all the starting values within double precision work
@@ -51,6 +52,22 @@ if TEST_YNUNM_HDR_C:
             (valn, EE) = pysphi.ynunm_hdr(n,m,n+1)
             ex10 = 10 ** (np.array(e1 + EE,dtype=np.double))
             zz = valn * norm / ex10 
+
+            E = np.zeros(n + 1, dtype=np.int32)
+            z = np.zeros(n + 1, dtype=np.float64)
+            csphi.ynunm_hdr(n, m,E, z)
+            
+            diff =  np.sum(np.abs(z - zz)) / np.sum(np.abs(z))
+            assert diff < 1e-12
+        print("n = %d :: max(z) = %.18e :: diff = %.18e" % (n, np.max(z),diff))
+    print("SUCCESS")
+    
+if TEST_YNUNM_HDR_YNUNM_C:  
+    print("Testing ynunm_hdr in python and in c")
+    for n in range(0, 1030):
+        for m in range(-n, n + 1):
+            zz = np.zeros(n + 1, dtype=np.float64)
+            csphi.ynunm(n, m,zz) 
 
             E = np.zeros(n + 1, dtype=np.int32)
             z = np.zeros(n + 1, dtype=np.float64)
