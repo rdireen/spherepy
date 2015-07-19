@@ -167,7 +167,6 @@ void ynunm_hdr(int en, int em, SINT* EE, int len_e, SFLOAT* y, int len) {
     
     ynnm_hdr(en, em, val_p, ee_p);  
     
-    
 
     for (k = 0; k < len; k++)
         *(y + k) = 0;
@@ -348,6 +347,7 @@ void bnm_fc_hdr(SCOMPLEX * fdata, int Nrow, int Ncol,
             kiss_cfg_bw);
 
     for (n = absm; n <= Nmax; n++) {
+        memset(EE, 0, Le * sizeof (SINT));
         ynunm_hdr(n, m,EE, Le, y, Ly);
 
         vec[n - absm].r = hkm[0].r * y[0];
@@ -628,6 +628,7 @@ void fcvec_m_sc_hdr(SCOMPLEX * vec,
     SFLOAT tmpr;
 
     for (n = absm; n <= Nmax; n++) {
+        memset(EE, 0, len_e * sizeof (SINT));
         ynunm_hdr(n, m, EE, len_e, y, len);
 
         //TODO: this loop can be made faster

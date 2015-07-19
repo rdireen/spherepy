@@ -1828,6 +1828,80 @@ def pretty_coefs(c):
                                        sa[6], sa[7], sa[8]))
 
 
+def spht_ldr(ssphere, nmax=None, mmax=None):
+    """ LOW DYNAMIC RANGE VERSION 7/19/2015
+    
+    Transforms ScalarPatternUniform object *ssphere* into a set of scalar
+    spherical harmonics stored in ScalarCoefs.
+
+    Example::
+
+        >>> p = spherepy.random_patt_uniform(6, 8)
+        >>> c = spherepy.spht(p)
+        >>> spherepy.pretty_coefs(c)
+
+    Args:
+      ssphere (ScalarPatternUniform): The pattern to be transformed.
+
+      nmax (int, optional): The maximum number of *n* values required. If a 
+      value isn't passed, *nmax* is the number of rows in ssphere minus one.
+
+      mmax (int, optional): The maximum number of *m* values required. If a 
+      value isn't passed, *mmax* is half the number of columns in ssphere
+      minus one.
+
+    Returns:
+      ScalarCoefs: The object containing the coefficients of the scalar
+      spherical harmonic transform.
+
+
+    Raises:
+      ValueError: If *nmax* and *mmax* are too large or *mmax* > *nmax*.
+
+    """
+
+    if nmax == None:
+        nmax = ssphere.nrows - 2 
+        mmax = int(ssphere.ncols / 2) - 1
+    elif mmax == None:
+        mmax = nmax
+
+    if mmax > nmax:
+        raise ValueError(err_msg['nmax_g_mmax'])
+
+    if nmax >= ssphere.nrows - 1:
+        raise ValueError(err_msg['nmax_too_lrg'])
+
+    if mmax >= ssphere.ncols / 2:
+        raise ValueError(err_msg['mmax_too_lrg'])
+
+    dnrows = ssphere._dsphere.shape[0]
+    ncols = ssphere._dsphere.shape[1]
+
+    if np.mod(ncols, 2) == 1:
+        raise ValueError(err_msg['ncols_even'])
+
+    fdata = np.fft.fft2(ssphere._dsphere) / (dnrows * ncols)
+    ops.fix_even_row_data_fc(fdata)
+    
+    fdata_extended = np.zeros([dnrows + 2, ncols], dtype=np.complex128)
+
+    ops.pad_rows_fdata(fdata, fdata_extended)
+
+    ops.sin_fc(fdata_extended)
+    
+    N = nmax + 1;
+    NC = N + mmax * (2 * N - mmax - 1);
+    sc = np.zeros(NC, dtype=np.complex128)
+    # check if we are using c extended versions of the code or not
+    if use_cext: 
+        # Changed this to high dynamic range version so nmax can be > 1000
+        csphi.fc_to_sc(fdata_extended, sc, nmax, mmax)
+    else:   
+        sc = pysphi.fc_to_sc(fdata_extended, nmax, mmax)
+                                
+    return ScalarCoefs(sc, nmax, mmax)
+    
 def spht(ssphere, nmax=None, mmax=None):
     """Transforms ScalarPatternUniform object *ssphere* into a set of scalar
     spherical harmonics stored in ScalarCoefs.
@@ -2018,6 +2092,70 @@ def spht_slow(ssphere, nmax, mmax):
                                 
     return ScalarCoefs(sc, nmax, mmax)
 
+def ispht_ldr(scoefs, nrows=None, ncols=None):
+    """ LOW DYNAMIC RANGE VERSION 7/19/2015    
+    
+    Transforms ScalarCoefs object *scoefs* into a scalar pattern 
+    ScalarPatternUniform.
+
+    Example::
+
+        >>> c = spherepy.random_coefs(3,3)
+        >>> p = spherepy.ispht(c)
+        >>> print(p)
+
+    Args:
+      scoefs (ScalarCoefs): The coefficients to be transformed to pattern
+      space.
+
+      nrows (int): The number of rows desired in the pattern.
+
+      ncols (int): The number of columns desired in the pattern. This must be 
+      an even number.
+
+    Returns:
+      ScalarPatternUniform: This is the pattern. It contains a NumPy array that
+      can be viewed with *patt.cdata*.
+
+
+    Raises:
+      ValueError: Is raised if *ncols* isn't even.
+
+      ValueError: Is raised if *nrows* < *nmax* + 2 or *ncols* < 2 * *mmax* + 2.
+
+    """
+
+    if nrows == None:
+        nrows = scoefs.nmax + 2 
+
+    if ncols == None:
+        ncols = 2 * scoefs.mmax + 2
+
+    if nrows <= scoefs.nmax:
+        raise ValueError(err_msg['inverse_terr'])
+
+    if ncols < 2 * scoefs.mmax + 2:
+        raise ValueError(err_msg['inverse_terr'])
+
+    dnrows = int(2 * nrows - 2)
+
+    if np.mod(ncols, 2) == 1:
+        raise ValueError(err_msg['ncols_even'])
+
+    if use_cext: 
+        fdata = np.zeros([dnrows, ncols], dtype=np.complex128)
+        # Changed this to high dynamic range version so nmax can be > 1000
+        csphi.sc_to_fc(fdata, scoefs._vec, scoefs._nmax, scoefs._mmax)
+    else:   
+        fdata = pysphi.sc_to_fc(scoefs._vec,
+                            scoefs._nmax,
+                            scoefs._mmax,
+                            dnrows, ncols)
+    
+    ds = np.fft.ifft2(fdata) * dnrows * ncols
+
+    return ScalarPatternUniform(ds, doublesphere=True)
+    
 def ispht(scoefs, nrows=None, ncols=None):
     """Transforms ScalarCoefs object *scoefs* into a scalar pattern 
     ScalarPatternUniform.
