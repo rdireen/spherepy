@@ -72,10 +72,51 @@ def ynnm(n, m):
                 out *= np.sqrt((n + k + 1.0) / (n - k))
     return out
 
+def ynnm_hdr(n, m):
+    """Initial value for recursion formula
+    
+    There was a problem pointed out by Ajinkya Nene (https://github.com/anene
+    concerning an underflow issue when n ~ 1050. The first for loop within 
+    ynnm obviously underflows when n is too large. In this implementation of 
+    ynnm we extend the precision by keeping track of our own exponent.
+    """ 
+    a = 1.0 / np.sqrt(4.0 * np.pi)
+    pm = np.abs(m)
+
+    # parameters for higher precision answers
+    cst = 100;  #TODO: Is 100 a good number here? I set it arbitrarily. 
+    ee = 0;
+    low_bound = 1e-100; #TODO: This is arbitrary too.
+    high_bound = 1e100;
+
+    out = 0.0
+
+    if(n < pm):
+        out = 0.0
+    elif(n == 0):
+        out = a
+    else:
+        out = a
+        for k in xrange(1, n + 1):
+            out *= np.sqrt((2.0 * k + 1.0) / (8.0 * k))
+            if out < low_bound:
+                out *= float(10 ** cst)
+                ee += cst
+
+        if(n != pm):
+            for k in xrange(n - 1, pm - 1, -1):
+                out *= np.sqrt((n + k + 1.0) / (n - k))
+                if out > high_bound:
+                    out *= float(10 ** (-cst))
+                    ee -= cst
+
+    return (out, ee)
+
 def ynunm(n, m, L):
     """Fourier coefficients for spherical harmonics"""
 
     out = np.zeros(L, dtype=np.float64)
+
     tmp1 = 0 
     tmp2 = 0
     tmp3 = 0
@@ -95,7 +136,48 @@ def ynunm(n, m, L):
                 tmp3 = (n - k - 3.0) * (n + k + 4.0);
                 tmp4 = ((n - k) * (n + k + 1.0))
                 out[k] = ((tmp1 + tmp2) * out[k + 2] - tmp3 * out[k + 4]) / tmp4
-    return out    
+    return out 
+
+def ynunm_hdr(n, m, L):
+    """Fourier coefficients for spherical harmonics
+    
+    There was a problem pointed out by Ajinkya Nene concerning an underflow 
+    issue when n ~ 1050. We fix that here using an extended precision method.
+    """
+
+    out = np.zeros(L, dtype=np.float64)
+    EE = np.zeros(L, dtype=np.int)
+
+    cst = 100;
+    ee = 0;
+    high_bound = 1e100;
+
+    tmp1 = 0 
+    tmp2 = 0
+    tmp3 = 0
+    tmp4 = 0       
+    if(np.abs(m) <= n):
+        out[n] = 1.0
+        k = n - 2
+        if(k >= 0):
+            tmp1 = (n - k - 1.0) * (n + k + 2.0)
+            tmp2 = (n - k - 2.0) * (n + k + 3.0) - 4.0 * m ** 2
+            tmp4 = ((n - k) * (n + k + 1.0))
+            out[k] = (tmp1 + tmp2) * out[k + 2] / tmp4
+
+            for k in xrange(n - 4, -1, -2):
+                tmp1 = (n - k - 1.0) * (n + k + 2.0)
+                tmp2 = (n - k - 2.0) * (n + k + 3.0) - 4.0 * m ** 2
+                tmp3 = (n - k - 3.0) * (n + k + 4.0);
+                tmp4 = ((n - k) * (n + k + 1.0))
+                out[k] = ((tmp1 + tmp2) * out[k + 2] - tmp3 * out[k + 4]) / tmp4
+                EE[k] = ee
+                if out[k] > high_bound:
+                    out[k] = out[k] * 10 ** (-cst)
+                    out[k + 2] = out[k + 2] * 10 ** (-cst)
+                    ee -= cst
+                    EE[k] = ee
+    return (out, EE)       
     
 
 def smallest_prime_factor(Q):
