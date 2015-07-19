@@ -158,6 +158,8 @@ void ynunm_hdr(int en, int em, SINT* EE, int len_e, SFLOAT* y, int len) {
     
     double exp10 = 1.0;
     int mod_odd = 0;
+	
+	int k;
     
     cst = 100;
     ee = 0;
@@ -165,7 +167,7 @@ void ynunm_hdr(int en, int em, SINT* EE, int len_e, SFLOAT* y, int len) {
     
     ynnm_hdr(en, em, val_p, ee_p);  
     
-    int k;
+    
 
     for (k = 0; k < len; k++)
         *(y + k) = 0;
