@@ -70,6 +70,27 @@ class TestSphi(TestCase):
                     
         self.assertTrue(res)
         
+    def test_ynunm_hdr(self):
+        """::Compare ynunm_hdr within pysphi and csphi
+        
+        A longer test is in the examples"""
+        
+        res = True
+        for n in xrange(0, Nmodes + 1):
+            for m in xrange(-n, n + 1):
+                (norm, e1) = sp.pysphi.ynnm_hdr(n,m)
+                (valn, EE) = sp.pysphi.ynunm_hdr(n,m,n+1)
+                ex10 = 10 ** (np.array(e1 + EE,dtype=np.double))
+                zz = valn * norm / ex10 
+
+                E = np.zeros(n + 1, dtype=np.int32)
+                z = np.zeros(n + 1, dtype=np.float64)
+                sp.csphi.ynunm_hdr(n, m,E, z)
+            
+                diff =  np.sum(np.abs(z - zz)) / np.sum(np.abs(z))
+                
+                self.assertAlmostEqual(diff,0,12)
+        
     def test_s_data(self):
         """::Compare s_data within pysphi and csphi"""
         

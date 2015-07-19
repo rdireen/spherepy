@@ -13,6 +13,8 @@ import_array();
 
 %numpy_typemaps(SCOMPLEX, NPY_CDOUBLE, int)
 
+%apply (int* INPLACE_ARRAY1, int DIM1) {(int* EE, int len_e)};
+
 %apply (double* INPLACE_ARRAY1, int DIM1) {(double* y, int len)};
 
 %apply (SCOMPLEX* INPLACE_ARRAY1, int DIM1) {(SCOMPLEX* s, int Q)};

@@ -177,6 +177,7 @@ def ynunm_hdr(n, m, L):
                     out[k + 2] = out[k + 2] * 10 ** (-cst)
                     ee -= cst
                     EE[k] = ee
+                    EE[k + 2] = ee
     return (out, EE)       
     
 

@@ -147,20 +147,52 @@ void ynunm(int en, int em, SFLOAT* y, int len) {
 }
 
 void ynunm_hdr(int en, int em, SINT* EE, int len_e, SFLOAT* y, int len) {
+    
+    SFLOAT ynnm_norm = 0;
+    SINT e1 = 0;
+    SFLOAT *val_p = &ynnm_norm;
+    SINT *ee_p = &e1;
+    
+    int cst, ee;
+    double high_bound;
+    
+    double exp10 = 1.0;
+    int mod_odd = 0;
+    
+    cst = 100;
+    ee = 0;
+    high_bound = 1e100;
+    
+    ynnm_hdr(en, em, val_p, ee_p);  
+    
     int k;
 
     for (k = 0; k < len; k++)
         *(y + k) = 0;
 
     if (abs(em) <= en) {
-        *(y + en) = ynnm(en, em);
+        *(y + en) = 1.0;  // Start from 1.0 instead of ynnm 
         k = en - 2;
         if (k >= 0) {
             *(y + k) = (B(en, k + 1.0) + B(en, k + 2.0) - 4.0 * em * em)*(*(y + k + 2)) / B(en, k);
             for (k = k - 2; k >= 0; k -= 2) {
                 (*(y + k)) = ((B(en, k + 1.0) + B(en, k + 2.0) - 4.0 * em * em)*(*(y + k + 2)) - B(en, k + 3.0)*(*(y + k + 4))) / B(en, k);
+                *(EE + k) = ee;
+                if (*(y + k) > high_bound){
+                    *(y + k) *= pow(10, -cst);
+                    *(y + k + 2) *= pow(10, -cst);
+                    ee -= cst;
+                    *(EE + k) = ee;
+                    *(EE + k + 2) = ee;
+                }
             }
         }
+    }
+    
+    mod_odd = en % 2;
+    for (k = mod_odd; k < len; k+=2){
+        exp10 = pow(10, *(EE + k) + e1);
+        *(y + k) *= ynnm_norm / exp10; 
     }
 }
 

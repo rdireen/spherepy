@@ -3975,19 +3975,16 @@ SWIGINTERN PyObject *_wrap_ynunm_hdr(PyObject *SWIGUNUSEDPARM(self), PyObject *a
   int ecode1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
-  void *argp3 = 0 ;
-  int res3 = 0 ;
-  int val4 ;
-  int ecode4 = 0 ;
+  PyArrayObject *array3 = NULL ;
+  int i3 = 1 ;
   PyArrayObject *array5 = NULL ;
   int i5 = 1 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
-  PyObject * obj4 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOO:ynunm_hdr",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:ynunm_hdr",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
   ecode1 = SWIG_AsVal_int(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "ynunm_hdr" "', argument " "1"" of type '" "int""'");
@@ -3998,18 +3995,16 @@ SWIGINTERN PyObject *_wrap_ynunm_hdr(PyObject *SWIGUNUSEDPARM(self), PyObject *a
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ynunm_hdr" "', argument " "2"" of type '" "int""'");
   } 
   arg2 = (int)(val2);
-  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_int, 0 |  0 );
-  if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "ynunm_hdr" "', argument " "3"" of type '" "int *""'"); 
-  }
-  arg3 = (int *)(argp3);
-  ecode4 = SWIG_AsVal_int(obj3, &val4);
-  if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "ynunm_hdr" "', argument " "4"" of type '" "int""'");
-  } 
-  arg4 = (int)(val4);
   {
-    array5 = obj_to_array_no_conversion(obj4, NPY_DOUBLE);
+    array3 = obj_to_array_no_conversion(obj2, NPY_INT);
+    if (!array3 || !require_dimensions(array3,1) || !require_contiguous(array3)
+      || !require_native(array3)) SWIG_fail;
+    arg3 = (int*) array_data(array3);
+    arg4 = 1;
+    for (i3=0; i3 < array_numdims(array3); ++i3) arg4 *= array_size(array3,i3);
+  }
+  {
+    array5 = obj_to_array_no_conversion(obj3, NPY_DOUBLE);
     if (!array5 || !require_dimensions(array5,1) || !require_contiguous(array5)
       || !require_native(array5)) SWIG_fail;
     arg5 = (double*) array_data(array5);
@@ -4782,10 +4777,8 @@ SWIGINTERN PyObject *_wrap_fcvec_m_sc_hdr(PyObject *SWIGUNUSEDPARM(self), PyObje
   PyArrayObject *array4 = NULL ;
   int val7 ;
   int ecode7 = 0 ;
-  void *argp8 = 0 ;
-  int res8 = 0 ;
-  int val9 ;
-  int ecode9 = 0 ;
+  PyArrayObject *array8 = NULL ;
+  int i8 = 1 ;
   PyArrayObject *array10 = NULL ;
   int i10 = 1 ;
   PyObject * obj0 = 0 ;
@@ -4795,9 +4788,8 @@ SWIGINTERN PyObject *_wrap_fcvec_m_sc_hdr(PyObject *SWIGUNUSEDPARM(self), PyObje
   PyObject * obj4 = 0 ;
   PyObject * obj5 = 0 ;
   PyObject * obj6 = 0 ;
-  PyObject * obj7 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOO:fcvec_m_sc_hdr",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:fcvec_m_sc_hdr",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_SCOMPLEX, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "fcvec_m_sc_hdr" "', argument " "1"" of type '" "SCOMPLEX *""'"); 
@@ -4826,18 +4818,16 @@ SWIGINTERN PyObject *_wrap_fcvec_m_sc_hdr(PyObject *SWIGUNUSEDPARM(self), PyObje
     SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "fcvec_m_sc_hdr" "', argument " "7"" of type '" "int""'");
   } 
   arg7 = (int)(val7);
-  res8 = SWIG_ConvertPtr(obj5, &argp8,SWIGTYPE_p_int, 0 |  0 );
-  if (!SWIG_IsOK(res8)) {
-    SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "fcvec_m_sc_hdr" "', argument " "8"" of type '" "int *""'"); 
-  }
-  arg8 = (int *)(argp8);
-  ecode9 = SWIG_AsVal_int(obj6, &val9);
-  if (!SWIG_IsOK(ecode9)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "fcvec_m_sc_hdr" "', argument " "9"" of type '" "int""'");
-  } 
-  arg9 = (int)(val9);
   {
-    array10 = obj_to_array_no_conversion(obj7, NPY_DOUBLE);
+    array8 = obj_to_array_no_conversion(obj5, NPY_INT);
+    if (!array8 || !require_dimensions(array8,1) || !require_contiguous(array8)
+      || !require_native(array8)) SWIG_fail;
+    arg8 = (int*) array_data(array8);
+    arg9 = 1;
+    for (i8=0; i8 < array_numdims(array8); ++i8) arg9 *= array_size(array8,i8);
+  }
+  {
+    array10 = obj_to_array_no_conversion(obj6, NPY_DOUBLE);
     if (!array10 || !require_dimensions(array10,1) || !require_contiguous(array10)
       || !require_native(array10)) SWIG_fail;
     arg10 = (double*) array_data(array10);

@@ -1893,7 +1893,8 @@ def spht(ssphere, nmax=None, mmax=None):
     sc = np.zeros(NC, dtype=np.complex128)
     # check if we are using c extended versions of the code or not
     if use_cext: 
-        csphi.fc_to_sc(fdata_extended, sc, nmax, mmax)
+        # Changed this to high dynamic range version so nmax can be > 1000
+        csphi.fc_to_sc_hdr(fdata_extended, sc, nmax, mmax)
     else:   
         sc = pysphi.fc_to_sc(fdata_extended, nmax, mmax)
                                 
@@ -2067,7 +2068,8 @@ def ispht(scoefs, nrows=None, ncols=None):
 
     if use_cext: 
         fdata = np.zeros([dnrows, ncols], dtype=np.complex128)
-        csphi.sc_to_fc(fdata, scoefs._vec, scoefs._nmax, scoefs._mmax)
+        # Changed this to high dynamic range version so nmax can be > 1000
+        csphi.sc_to_fc_hdr(fdata, scoefs._vec, scoefs._nmax, scoefs._mmax)
     else:   
         fdata = pysphi.sc_to_fc(scoefs._vec,
                             scoefs._nmax,
