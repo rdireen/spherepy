@@ -882,7 +882,7 @@ void power_n(int Nmax, int Mmax, SCOMPLEX* sc, int L, SFLOAT* out, int Lout) {
         }
 
         if (lim == 0) {
-            *(out + n) = sqrt(*(work + n));
+            *(out + n) = *(work + n);
         } else {
             qsort(work + ii, 2 * lim + 1, sizeof (SFLOAT), _cmp_func);
             for (m = -lim; m <= lim; m++) {
