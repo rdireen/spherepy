@@ -888,7 +888,6 @@ void power_n(int Nmax, int Mmax, SCOMPLEX* sc, int L, SFLOAT* out, int Lout) {
             for (m = -lim; m <= lim; m++) {
                 *(out + n) += *(work + ii + lim + m);         
             }
-            *(out + n) = sqrt(*(out + n));
         }
         ii += 2 * lim + 1;
     }
