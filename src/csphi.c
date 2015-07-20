@@ -16,17 +16,7 @@
  * along with SpherePy.  If not, see <http://www.gnu.org/licenses/>
  */
 
-
 #include "csphi.h"
-
-
-/** 
- * @file csphi.c
- * @brief Low level routines for spherical transforms
- * @author Randy Direen
- * @version 0.0.1
- * @date 2009-09-09
- */
 
 /**
  * This is a MACRO that helps in the ynunm routine
@@ -35,6 +25,7 @@
  */
 #define B(n,v) (((n)-(v))*((n)+(v)+1.0))
 
+/*----------------------------------------------------------------------------*/
 double ynnm(int n, int m) {
     int pm, k;
     double a, ynnm;
@@ -60,31 +51,32 @@ double ynnm(int n, int m) {
     return ynnm;
 }
 
-SFLOAT *new_SFLOAT(SFLOAT val){
-    SFLOAT *d = (SFLOAT *) malloc(sizeof(val));
+/*----------------------------------------------------------------------------*/
+SFLOAT *new_SFLOAT(SFLOAT val) {
+    SFLOAT *d = (SFLOAT *) malloc(sizeof (val));
     *d = val;
     return d;
 }
 
-SINT *new_SINT(SINT val){
-    SINT *i = (SINT *) malloc(sizeof(val));
+SINT *new_SINT(SINT val) {
+    SINT *i = (SINT *) malloc(sizeof (val));
     *i = val;
     return i;
 }
 
-SFLOAT get_SFLOAT(SFLOAT *d){
+SFLOAT get_SFLOAT(SFLOAT *d) {
     return *d;
 }
 
-SINT get_SINT(SINT *i){
+SINT get_SINT(SINT *i) {
     return *i;
 }
 
-void delete_SFLOAT(SFLOAT *d){
+void delete_SFLOAT(SFLOAT *d) {
     free(d);
 }
 
-void delete_SINT(SINT *i){
+void delete_SINT(SINT *i) {
     free(i);
 }
 
@@ -118,16 +110,17 @@ void ynnm_hdr(int n, int m, SFLOAT *val, SINT *ee) {
         if (n != pm) {
             for (k = n - 1; k >= pm; k--) {
                 ynnm = sqrt(1.0 * (n + k + 1.0) / (n - k)) * ynnm;
-                if(ynnm > high_bound){
+                if (ynnm > high_bound) {
                     ynnm *= pow(10, -cst);
                     (*ee) -= cst;
                 }
             }
         }
     }
-    (*val) =  ynnm;
+    (*val) = ynnm;
 }
 
+/*----------------------------------------------------------------------------*/
 void ynunm(int en, int em, SFLOAT* y, int len) {
     int k;
 
@@ -146,40 +139,41 @@ void ynunm(int en, int em, SFLOAT* y, int len) {
     }
 }
 
+/*----------------------------------------------------------------------------*/
 void ynunm_hdr(int en, int em, SINT* EE, int len_e, SFLOAT* y, int len) {
-    
+
     SFLOAT ynnm_norm = 0;
     SINT e1 = 0;
     SFLOAT *val_p = &ynnm_norm;
     SINT *ee_p = &e1;
-    
+
     int cst, ee;
     double high_bound;
-    
+
     double exp10 = 1.0;
     int mod_odd = 0;
-	
-	int k;
-    
+
+    int k;
+
     cst = 100;
     ee = 0;
     high_bound = 1e100;
-    
-    ynnm_hdr(en, em, val_p, ee_p);  
-    
+
+    ynnm_hdr(en, em, val_p, ee_p);
+
 
     for (k = 0; k < len; k++)
         *(y + k) = 0;
 
     if (abs(em) <= en) {
-        *(y + en) = 1.0;  // Start from 1.0 instead of ynnm 
+        *(y + en) = 1.0; // Start from 1.0 instead of ynnm 
         k = en - 2;
         if (k >= 0) {
             *(y + k) = (B(en, k + 1.0) + B(en, k + 2.0) - 4.0 * em * em)*(*(y + k + 2)) / B(en, k);
             for (k = k - 2; k >= 0; k -= 2) {
                 (*(y + k)) = ((B(en, k + 1.0) + B(en, k + 2.0) - 4.0 * em * em)*(*(y + k + 2)) - B(en, k + 3.0)*(*(y + k + 4))) / B(en, k);
                 *(EE + k) = ee;
-                if (*(y + k) > high_bound){
+                if (*(y + k) > high_bound) {
                     *(y + k) *= pow(10, -cst);
                     *(y + k + 2) *= pow(10, -cst);
                     ee -= cst;
@@ -189,14 +183,15 @@ void ynunm_hdr(int en, int em, SINT* EE, int len_e, SFLOAT* y, int len) {
             }
         }
     }
-    
+
     mod_odd = en % 2;
-    for (k = mod_odd; k < len; k+=2){
+    for (k = mod_odd; k < len; k += 2) {
         exp10 = pow(10, *(EE + k) + e1);
-        *(y + k) *= ynnm_norm / exp10; 
+        *(y + k) *= ynnm_norm / exp10;
     }
 }
 
+/*----------------------------------------------------------------------------*/
 int FindQ(int S) {
     int A;
     int Q = S;
@@ -218,6 +213,7 @@ int FindQ(int S) {
     return Q;
 }
 
+/*----------------------------------------------------------------------------*/
 void SData(SCOMPLEX* s, int Q, int Nrows, int Nmax) {
     int mm, k;
     int nn = Nmax + 1;
@@ -235,6 +231,7 @@ void SData(SCOMPLEX* s, int Q, int Nrows, int Nmax) {
             s[Q + k - mm].i = -1 / ((SFLOAT) k);
 }
 
+/*----------------------------------------------------------------------------*/
 void hkm_fc(SCOMPLEX* gcoef, int Nrow, int Ncol,
         int n, int m,
         SCOMPLEX* hkm, int len,
@@ -279,6 +276,7 @@ void hkm_fc(SCOMPLEX* gcoef, int Nrow, int Ncol,
 
 }
 
+/*----------------------------------------------------------------------------*/
 void bnm_fc(SCOMPLEX * fdata, int Nrow, int Ncol,
         int Nmax, int m,
         SCOMPLEX* vec, int L,
@@ -324,16 +322,17 @@ void bnm_fc(SCOMPLEX * fdata, int Nrow, int Ncol,
     }
 }
 
+/*----------------------------------------------------------------------------*/
 void bnm_fc_hdr(SCOMPLEX * fdata, int Nrow, int Ncol,
-            int Nmax, int m,
-            SCOMPLEX* vec, int L,
-            SCOMPLEX* ss, int Q,
-            SCOMPLEX* ff, int Q2,
-            SCOMPLEX* hkm, int Lhkm,
-            SINT* EE, int Le,
-            SFLOAT* y, int Ly,
-            kiss_fft_cfg kiss_cfg_fw,
-            kiss_fft_cfg kiss_cfg_bw) {
+        int Nmax, int m,
+        SCOMPLEX* vec, int L,
+        SCOMPLEX* ss, int Q,
+        SCOMPLEX* ff, int Q2,
+        SCOMPLEX* hkm, int Lhkm,
+        SINT* EE, int Le,
+        SFLOAT* y, int Ly,
+        kiss_fft_cfg kiss_cfg_fw,
+        kiss_fft_cfg kiss_cfg_bw) {
     int n, k;
     int absm = abs(m);
     SFLOAT vecr;
@@ -348,7 +347,7 @@ void bnm_fc_hdr(SCOMPLEX * fdata, int Nrow, int Ncol,
 
     for (n = absm; n <= Nmax; n++) {
         memset(EE, 0, Le * sizeof (SINT));
-        ynunm_hdr(n, m,EE, Le, y, Ly);
+        ynunm_hdr(n, m, EE, Le, y, Ly);
 
         vec[n - absm].r = hkm[0].r * y[0];
         vec[n - absm].i = hkm[0].i * y[0];
@@ -371,6 +370,7 @@ void bnm_fc_hdr(SCOMPLEX * fdata, int Nrow, int Ncol,
     }
 }
 
+/*----------------------------------------------------------------------------*/
 void fc_to_sc(SCOMPLEX* fdata, int Nrow, int Ncol,
         SCOMPLEX* sc, int L,
         int Nmax, int Mmax) {
@@ -461,6 +461,7 @@ void fc_to_sc(SCOMPLEX* fdata, int Nrow, int Ncol,
     free(inds);
 }
 
+/*----------------------------------------------------------------------------*/
 void fc_to_sc_hdr(SCOMPLEX* fdata, int Nrow, int Ncol,
         SCOMPLEX* sc, int L,
         int Nmax, int Mmax) {
@@ -556,12 +557,13 @@ void fc_to_sc_hdr(SCOMPLEX* fdata, int Nrow, int Ncol,
     free(inds);
 }
 
+/*----------------------------------------------------------------------------*/
 void fcvec_m_sc(SCOMPLEX * vec,
         int m, int Nmax,
         SCOMPLEX * fdata, int Nrow, int Ncol,
         int M,
         SFLOAT* y, int len) {
-    
+
     int n, k, mm, H;
     int K = Nmax + 1;
     int absm = abs(m);
@@ -614,6 +616,7 @@ void fcvec_m_sc(SCOMPLEX * vec,
     }
 }
 
+/*----------------------------------------------------------------------------*/
 void fcvec_m_sc_hdr(SCOMPLEX * vec,
         int m, int Nmax,
         SCOMPLEX * fdata, int Nrow, int Ncol,
@@ -673,6 +676,7 @@ void fcvec_m_sc_hdr(SCOMPLEX * vec,
     }
 }
 
+/*----------------------------------------------------------------------------*/
 void sc_to_fc(SCOMPLEX* fdata, int Nrow, int Ncol,
         SCOMPLEX* sc, int L,
         int Nmax, int Mmax) {
@@ -682,7 +686,7 @@ void sc_to_fc(SCOMPLEX* fdata, int Nrow, int Ncol,
     int N = Nmax + 1;
     int QQ = Nmax;
 
-   
+
     y = (SFLOAT*) malloc((Nmax + 1) * sizeof (SFLOAT));
     inds = (int*) malloc((2 * Mmax + 1) * sizeof (int));
     memset(inds, 0, (2 * Mmax + 1) * sizeof (int));
@@ -719,11 +723,12 @@ void sc_to_fc(SCOMPLEX* fdata, int Nrow, int Ncol,
         }
     }
 
-    
+
     free(y);
     free(inds);
 }
 
+/*----------------------------------------------------------------------------*/
 void sc_to_fc_hdr(SCOMPLEX* fdata, int Nrow, int Ncol,
         SCOMPLEX* sc, int L,
         int Nmax, int Mmax) {
@@ -777,5 +782,117 @@ void sc_to_fc_hdr(SCOMPLEX* fdata, int Nrow, int Ncol,
     free(EE);
     free(y);
     free(inds);
+}
+
+/*----------------------------------------------------------------------------*/
+int mindx(int m, int Nmax, int Mmax) {
+
+    int ind = 0;
+    int NN = Nmax + 1;
+    int ii = 0;
+    int i;
+
+    if (m != 0) {
+        ind = NN;
+        ii = 1;
+        for (i = 1; i < abs(m); i++) {
+            ind = ind + 2 * (NN - i);
+            ii = i + 1;
+        }
+
+        if (m > 0)
+            ind = ind + NN - ii;
+    }
+    return ind;
+}
+
+/*----------------------------------------------------------------------------*/
+void mode_nmajor_to_mmajor(int Nmax, int Mmax,
+        SCOMPLEX* vec_nmajor, int len_nmajor,
+        SCOMPLEX* vec_mmajor, int len_mmajor) {
+
+    int n, m;
+    int idx;
+    int lim;
+    int ii = 0;
+
+    for (n = 0; n <= Nmax; n++) {
+        if (n > Mmax) {
+            lim = Mmax;
+        } else {
+            lim = n;
+        }
+
+        for (m = -lim; m <= lim; m++) {
+            idx = mindx(m, Nmax, Mmax);
+            *(vec_mmajor + ii + lim + m) = *(vec_nmajor + idx + n - abs(m));
+        }
+
+        ii += 2 * lim + 1;
+    }
+}
+
+void mag_square_vec(SCOMPLEX* sc, int L, SFLOAT* out, int Lout) {
+
+    int n = 0;
+    SCOMPLEX* p;
+
+    for (n = 0; n < L; n++) {
+        p = sc + n;
+        *(out + n) = (p->r * p->r) + (p->i * p->i);
+    }
+}
+
+void abs_vec(SCOMPLEX* sc, int L, SFLOAT* out, int Lout) {
+
+    int n = 0;
+    SFLOAT* p;
+
+    mag_square_vec(sc, L, out, Lout);
+
+    for (n = 0; n < L; n++) {
+        p = out + n;
+        *(p) = sqrt(*p);
+    }
+}
+
+int _cmp_func(const void * a, const void * b) {
+    double aa = *(double*)a;
+    double bb = *(double*)b;
+    if (aa < bb) return -1;
+    if (aa > bb) return 1;
+    return 0;
+}
+
+void power_n(int Nmax, int Mmax, SCOMPLEX* sc, int L, SFLOAT* out, int Lout) {
+
+    int n, m;
+    int ii = 0;
+    int lim;
+    SFLOAT* work;
+
+    work = (SFLOAT*) malloc(L * sizeof (SFLOAT));
+    mag_square_vec(sc, L, work, L);
+
+    for (n = 0; n <= Nmax; n++) {
+        if (n > Mmax) {
+            lim = Mmax;
+        } else {
+            lim = n;
+        }
+
+        if (lim == 0) {
+            *(out + n) = sqrt(*(work + n));
+        } else {
+            qsort(work + ii, 2 * lim + 1, sizeof (SFLOAT), _cmp_func);
+            for (m = -lim; m <= lim; m++) {
+                *(out + n) += *(work + ii + lim + m);         
+            }
+            *(out + n) = sqrt(*(out + n));
+        }
+        ii += 2 * lim + 1;
+    }
+
+    free(work);
 }
 

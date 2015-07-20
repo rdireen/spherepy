@@ -177,6 +177,26 @@ sc_to_fc = _csphi.sc_to_fc
 def sc_to_fc_hdr(*args):
   return _csphi.sc_to_fc_hdr(*args)
 sc_to_fc_hdr = _csphi.sc_to_fc_hdr
+
+def mindx(*args):
+  return _csphi.mindx(*args)
+mindx = _csphi.mindx
+
+def mode_nmajor_to_mmajor(*args):
+  return _csphi.mode_nmajor_to_mmajor(*args)
+mode_nmajor_to_mmajor = _csphi.mode_nmajor_to_mmajor
+
+def mag_square_vec(*args):
+  return _csphi.mag_square_vec(*args)
+mag_square_vec = _csphi.mag_square_vec
+
+def abs_vec(*args):
+  return _csphi.abs_vec(*args)
+abs_vec = _csphi.abs_vec
+
+def power_n(*args):
+  return _csphi.power_n(*args)
+power_n = _csphi.power_n
 # This file is compatible with both classic and new-style classes.
 
 

@@ -282,16 +282,13 @@ class ScalarCoefs(object):
 
         # Added this routine as a result of my discussions with Ajinkya Nene	 
         #https://github.com/anene
-        list_of_modes = self._reshape_m_vecs() 
-        Nmodes = len(list_of_modes)
-
-        angular_power = np.zeros( Nmodes, dtype = np.double)
-
-        for n in range(0, Nmodes):
-            mode = np.array( list_of_modes[n], dtype = np.complex128 )
-            angular_power[n] = np.sum( np.abs(mode) ** 2 )
+        
+        mmajor = np.zeros(self._vec.shape[0], dtype=np.complex128)
+        csphi.mode_nmajor_to_mmajor(self.nmax ,self.mmax ,self._vec,mmajor)
+        zpower = np.zeros(self.nmax + 1,dtype= np.double)
+        csphi.power_n(self.nmax, self.mmax ,mmajor,zpower)
             
-        return angular_power 
+        return zpower 
 
     def power(self):
         """ Returns the total power of the spectrum.

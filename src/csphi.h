@@ -16,6 +16,14 @@
  * along with SpherePy.  If not, see <http://www.gnu.org/licenses/>
  */
 
+/** 
+ * @file csphi.c
+ * @brief Low level routines for spherical transforms
+ * @author Randy Direen
+ * @version 0.0.1
+ * @date 2009-09-09
+ */
+
 /*****************************************************************************
 
 
@@ -69,8 +77,8 @@ extern "C" {
      * @see ynunm()
      */
     SFLOAT ynnm(int n, int m);
-    
-    
+
+
     //Some helper functions to use pointers in python
     SFLOAT *new_SFLOAT(SFLOAT val);
     SINT *new_SINT(SINT val);
@@ -335,6 +343,46 @@ extern "C" {
     void sc_to_fc_hdr(SCOMPLEX* fdata, int Nrow, int Ncol,
             SCOMPLEX* sc, int L,
             int Nmax, int Mmax);
+
+
+    /**
+     */
+    int mindx(int m, int Nmax, int Mmax);
+
+    /**
+     * @brief Change order of modes from n-major to m-major
+     * Takes the memory that varies fastest along n and changes it to vary 
+     * fastest along m. This is useful for getting the power in individual 
+     * modes, or getting data in the right form for rotating modes.
+     * @param Nmax is the maximum n value of the coefficient set.
+     * @param Mmax is the maximum m value of the coefficient set.
+     * @param vec_nmajor is the input coefficient set in n-major form.
+     * @param vec_mmajor is the output coefficient set in m-major form.
+     */
+    void mode_nmajor_to_mmajor(int Nmax, int Mmax,
+            SCOMPLEX* vec_nmajor, int len_nmajor,
+            SCOMPLEX* vec_mmajor, int len_mmajor);
+    
+    /**
+     * @brief Computes magnitude squared.
+     * @param sc vector of complex values.
+     * @param L length of vector.
+     * @param out vector of mag squared values.
+     * @param L length of vector.
+     */
+    void mag_square_vec(SCOMPLEX* sc, int L, SFLOAT* out, int Lout);
+    
+    /**
+     * @brief Computes abs.
+     * @param sc vector of complex values.
+     * @param L length of vector.
+     * @param out vector of abs values.
+     * @param L length of vector.
+     */
+    void abs_vec(SCOMPLEX* sc, int L, SFLOAT* out, int Lout);
+    
+    
+    void power_n(int Nmax, int Mmax, SCOMPLEX* sc, int L, SFLOAT* out, int Lout);
 
 #ifdef __cplusplus
 }
