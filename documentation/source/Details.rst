@@ -110,9 +110,9 @@ Vector Case
  
 .. _fun-vectorpatt:
 
-*VectorPatternUniform*
+*TranseversePatternUniform*
 ---------------------- 
 
-.. autoclass:: spherepy.VectorPatternUniform
+.. autoclass:: spherepy.TransversePatternUniform
    :members:
    :undoc-members:

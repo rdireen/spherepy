@@ -90,12 +90,12 @@ err_msg['VC_sz_msmtch'] = "VectorCoefs could not be combined with sizes " + \
                           "(%d,%d) and (%d,%d)"
 err_msg['SP_sz_msmtch'] = "ScalarPatternUniform could not be combined " + \
                           " with sizes (%d,%d) and (%d,%d)"
-err_msg['VP_sz_msmtch'] = "VectorPatternUniform could not be combined " + \
+err_msg['VP_sz_msmtch'] = "TransversePatternUniform could not be combined " + \
                           "with sizes (%d,%d) and (%d,%d)"
 err_msg['no_combi_SC'] = "cannot combine type with ScalarCoefs"
 err_msg['no_combi_VC'] = "cannot combine type with VectorCoefs"
 err_msg['no_combi_SP'] = "cannot combine type with ScalarPatternUniform"
-err_msg['no_combi_VP'] = "cannot combine type with VectorPatternUniform"
+err_msg['no_combi_VP'] = "cannot combine type with TransversePatternUniform"
 err_msg['vec1_s_vec2'] = "shape of vec1 and vec2 must be the the same"
 err_msg['set_vc_val'] = "set coefficients like this vsc[n,m] = (val1,val2)"
 err_msg['val_2tuple'] = "the value needs to be a tuple with length = 2 and" + \
@@ -1267,7 +1267,7 @@ class TransversePatternUniform:
         return sv
         
     def _vector_pattern_uniform_op_left(func):
-        """decorator for operator overloading when VectorPatternUniform is on 
+        """decorator for operator overloading when TransversePatternUniform is on 
         the left"""
         @wraps(func)
         def verif(self, patt):
@@ -1292,7 +1292,7 @@ class TransversePatternUniform:
         return verif
 
     def _vector_pattern_uniform_op_right(func):
-        """decorator for operator overloading when VectorPatternUniform is on
+        """decorator for operator overloading when TransversePatternUniform is on
         the right"""
         @wraps(func)
         def verif(self, patt):
@@ -1523,12 +1523,12 @@ def random_coefs(nmax, mmax, mu=0.0, sigma=1.0, coef_type=scalar):
         raise TypeError(err_msg['ukn_coef_t'])
 
 def zeros_patt_uniform(nrows, ncols, patt_type=scalar):
-    """Returns a ScalarPatternUniform object or a VectorPatternUniform object
+    """Returns a ScalarPatternUniform object or a TransversePatternUniform object
     where each of the elements is set to 0. *nrows* is the number of rows in 
     the pattern, which corresponds to the theta axis. *ncols* must be even
     and is the number of columns in the pattern and corresponds to the phi 
     axis.
-    (See *ScalarPatternUniform* and *VectorPatternUniform* for details.)
+    (See *ScalarPatternUniform* and *TransversePatternUniform* for details.)
     
     Examples::
         
@@ -1547,7 +1547,7 @@ def zeros_patt_uniform(nrows, ncols, patt_type=scalar):
 
     Returns:
       coefs: Returns a ScalarPatternUniform object if coef_type is either 
-      blank or set to 0. Returns a VectorPatternUniform object if 
+      blank or set to 0. Returns a TransversePatternUniform object if 
       coef_type = 1.
 
     Raises:
@@ -1573,12 +1573,12 @@ def zeros_patt_uniform(nrows, ncols, patt_type=scalar):
         raise TypeError(err_msg['ukn_patt_t'])
 
 def ones_patt_uniform(nrows, ncols, patt_type=scalar):
-    """Returns a ScalarPatternUniform object or a VectorPatternUniform object
+    """Returns a ScalarPatternUniform object or a TransversePatternUniform object
     where each of the elements is set to 1. *nrows* is the number of rows in 
     the pattern, which corresponds to the theta axis. *ncols* must be even
     and is the number of columns in the pattern and corresponds to the phi 
     axis.
-    (See *ScalarPatternUniform* and *VectorPatternUniform* for details.)
+    (See *ScalarPatternUniform* and *TransversePatternUniform* for details.)
     
     Examples::
         
@@ -1597,7 +1597,7 @@ def ones_patt_uniform(nrows, ncols, patt_type=scalar):
 
     Returns:
       coefs: Returns a ScalarPatternUniform object if coef_type is either 
-      blank or set to 0. Returns a VectorPatternUniform object if 
+      blank or set to 0. Returns a TransversePatternUniform object if 
       coef_type = 1.
 
     Raises:
@@ -1623,13 +1623,13 @@ def ones_patt_uniform(nrows, ncols, patt_type=scalar):
         raise TypeError(err_msg['ukn_patt_t'])
 
 def random_patt_uniform(nrows, ncols, patt_type=scalar):
-    """Returns a ScalarPatternUniform object or a VectorPatternUniform object
+    """Returns a ScalarPatternUniform object or a TransversePatternUniform object
     where each of the elements is set to a normal random variable with zero 
     mean and unit standard deviation. *nrows* is the number of rows in 
     the pattern, which corresponds to the theta axis. *ncols* must be even
     and is the number of columns in the pattern and corresponds to the phi 
     axis.
-    (See *ScalarPatternUniform* and *VectorPatternUniform* for details.)
+    (See *ScalarPatternUniform* and *TransversePatternUniform* for details.)
     
     Examples::
         
@@ -1648,7 +1648,7 @@ def random_patt_uniform(nrows, ncols, patt_type=scalar):
 
     Returns:
       coefs: Returns a ScalarPatternUniform object if coef_type is either 
-      blank or set to 0. Returns a VectorPatternUniform object if 
+      blank or set to 0. Returns a TransversePatternUniform object if 
       coef_type = 1.
 
     Raises:
@@ -1901,7 +1901,7 @@ def spht(ssphere, nmax=None, mmax=None):
 
 def vspht(vsphere, nmax=None, mmax=None):
     """Returns a VectorCoefs object containt the vector spherical harmonic
-    coefficients of the VectorPatternUniform object"""
+    coefficients of the TransversePatternUniform object"""
     
     if nmax == None:
         nmax = vsphere.nrows - 2 

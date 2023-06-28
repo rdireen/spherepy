@@ -117,7 +117,7 @@ def load_patt(filename):
     return sp.ScalarPatternUniform(patt, doublesphere=False)
 
 def load_vpatt(filename1, filename2):
-    """Loads a VectorPatternUniform pattern that is saved between two files.
+    """Loads a TransversePatternUniform pattern that is saved between two files.
     """
 
     with open(filename1) as f: 
@@ -156,7 +156,7 @@ def load_vpatt(filename1, filename2):
             im = float(lst[3])
             patt2[n, m] = re + 1j * im
 
-    return sp.VectorPatternUniform(patt1, patt2)
+    return sp.TransversePatternUniform(patt1, patt2)
 
 def load_fdata(filename):
 

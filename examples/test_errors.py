@@ -218,7 +218,7 @@ if test_scalar_patt_unif:
 if test_vector_patt_unif:
     print("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")
     print("")
-    print("           VectorPatternUniform structure with exceptions")
+    print("           TransversePatternUniform structure with exceptions")
     print("")
     print("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")  
     

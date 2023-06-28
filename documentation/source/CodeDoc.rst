@@ -13,6 +13,6 @@ ScalarPatternUniform
 ====================
 
 
-VectorPatternUniform
+TransversePatternUniform
 ====================
 

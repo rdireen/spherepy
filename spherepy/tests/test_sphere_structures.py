@@ -19,7 +19,7 @@ Randy Direen
 2/14/2015
 
 I test the objects ScalarCoef, VectorCoef, ScalarPatternUniver, and 
-VectorPatternUniform in this file. I test the exceptions, the indexing, and
+TransversePatternUniform in this file. I test the exceptions, the indexing, and
 how the overloaded operators work.
 
 TODO: Test the single_val, doublesphere, continue, etc. functions in here as
@@ -894,7 +894,7 @@ class TestScalarPatternUniform(TestCase):
         self.assertTrue(res)
             
         
-class TestVectorPatternUniform(TestCase):
+class TestTransversePatternUniform(TestCase):
         
     def test_make_sure_even_cols_z(self):
         """::raise an error if I try to set ncol odd zeros"""       
@@ -912,28 +912,28 @@ class TestVectorPatternUniform(TestCase):
             _ = sp.random_patt_uniform(13, 17, patt_type=sp.vector)
             
     def test_add_diff_sizes(self):
-        """::can't add two VectorPatternUniform that are different """
+        """::can't add two TransversePatternUniform that are different """
         z1 = sp.zeros_patt_uniform(11, 10, patt_type=sp.vector)
         z2 = sp.random_patt_uniform(12, 10, patt_type=sp.vector)
         with self.assertRaises(ValueError):
             _ = z1 + z2
             
     def test_sub_diff_sizes(self):
-        """::can't sub two VectorPatternUniform that are different """
+        """::can't sub two TransversePatternUniform that are different """
         z1 = sp.zeros_patt_uniform(11, 10, patt_type=sp.vector)
         z2 = sp.random_patt_uniform(11, 12, patt_type=sp.vector)
         with self.assertRaises(ValueError):
             _ = z1 - z2
             
     def test_mult_diff_sizes(self):
-        """::can't mult two VectorPatternUniform that are different """
+        """::can't mult two TransversePatternUniform that are different """
         z1 = sp.ones_patt_uniform(12, 12, patt_type=sp.vector)
         z2 = sp.random_patt_uniform(12, 10, patt_type=sp.vector)
         with self.assertRaises(ValueError):
             _ = z1 * z2
             
     def test_div_diff_sizes(self):
-        """::can't div two VectorPatternUniform that are different """
+        """::can't div two TransversePatternUniform that are different """
         z1 = sp.zeros_patt_uniform(11, 10, patt_type=sp.vector)
         z2 = sp.ones_patt_uniform(12, 12, patt_type=sp.vector)
         with self.assertRaises(ValueError):
@@ -970,7 +970,7 @@ class TestVectorPatternUniform(TestCase):
         self.assertTrue(z2.is_symmetric)
             
     def test_add_same_sizes(self):
-        """::can add two VectorPatternUniform that are same sized """
+        """::can add two TransversePatternUniform that are same sized """
         z1 = sp.zeros_patt_uniform(11, 10, patt_type=sp.vector)
         z2 = sp.random_patt_uniform(11, 10, patt_type=sp.vector)
         a = z1 + z2
@@ -985,7 +985,7 @@ class TestVectorPatternUniform(TestCase):
         
             
     def test_sub_same_sizes(self):
-        """::can sub two VectorPatternUniform that are same sized """
+        """::can sub two TransversePatternUniform that are same sized """
         z1 = sp.ones_patt_uniform(11, 10, patt_type=sp.vector)
         z2 = sp.random_patt_uniform(11, 10, patt_type=sp.vector)
         a = z1 - z2
@@ -999,7 +999,7 @@ class TestVectorPatternUniform(TestCase):
         self.assertTrue(res)
             
     def test_mult_same_sizes(self):
-        """::can mult two VectorPatternUniform that are same sized """
+        """::can mult two TransversePatternUniform that are same sized """
         z1 = sp.ones_patt_uniform(11, 10, patt_type=sp.vector)
         z2 = sp.random_patt_uniform(11, 10, patt_type=sp.vector)
         a = z1 * z2
@@ -1013,7 +1013,7 @@ class TestVectorPatternUniform(TestCase):
         self.assertTrue(res)
             
     def test_div_same_sizes(self):
-        """::can add two VectorPatternUniform that are same sized """
+        """::can add two TransversePatternUniform that are same sized """
         z1 = sp.ones_patt_uniform(11, 10, patt_type=sp.vector)
         z2 = sp.random_patt_uniform(11, 10, patt_type=sp.vector)
         a = z1 / (z2 + 0.0001)
@@ -1027,7 +1027,7 @@ class TestVectorPatternUniform(TestCase):
         self.assertTrue(res)
         
     def test_add_constant_left_right(self):
-        """::can add a scalar to VectorPatternUniform from both sides"""
+        """::can add a scalar to TransversePatternUniform from both sides"""
         z1 = sp.ones_patt_uniform(11, 10, patt_type=sp.vector)
         
         a = z1 + 1j * 1.1
@@ -1049,7 +1049,7 @@ class TestVectorPatternUniform(TestCase):
         
             
     def test_sub_constant_left_right(self):
-        """::can sub a scalar to VectorPatternUniform from both sides"""
+        """::can sub a scalar to TransversePatternUniform from both sides"""
         z1 = sp.ones_patt_uniform(11, 10, patt_type=sp.vector)
         
         a = z1 - 1j * 1.1
@@ -1070,7 +1070,7 @@ class TestVectorPatternUniform(TestCase):
         self.assertTrue(res)
             
     def test_mult_constant_left_right(self):
-        """::can multiply a scalar to VectorPatternUniform from both sides"""
+        """::can multiply a scalar to TransversePatternUniform from both sides"""
         z1 = sp.random_patt_uniform(11, 10, patt_type=sp.vector)
         
         a = z1 * 1j * 1.1
@@ -1092,7 +1092,7 @@ class TestVectorPatternUniform(TestCase):
         self.assertTrue(res)
             
     def test_div_constant_left_right(self):
-        """::can div a scalar to VectorPatternUniform from both sides"""
+        """::can div a scalar to TransversePatternUniform from both sides"""
         z1 = sp.random_patt_uniform(11, 10, patt_type=sp.vector)
         
         a = z1 / 1j * 1.1
